@@ -6,12 +6,11 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
-import { Length, IsNotEmpty, IsEmail } from "class-validator";
-import * as bcrypt from "bcryptjs";
+import { IsNotEmpty, IsEmail, Length } from "class-validator";
 import { Testlab } from ".";
 
 @Entity()
-export class Patient {
+export class Doctor {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
@@ -45,26 +44,9 @@ export class Patient {
 
   @Column()
   @IsNotEmpty()
-  @Length(8)
-  password: string;
-
-  @Column()
-  @IsNotEmpty()
-  representativeName: string;
-
-  @Column()
-  @IsNotEmpty()
-  representativePhone: string;
-
-  @Column()
-  @IsNotEmpty()
-  representativeRelationship: string;
-
-  @Column()
-  @IsNotEmpty()
   status: number;
 
-  @OneToMany((type) => Testlab, (testLab) => testLab.patient)
+  @OneToMany((type) => Testlab, (testLab) => testLab.doctor)
   testLabs: Testlab[];
 
   @Column()
@@ -74,12 +56,4 @@ export class Patient {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
-
-  hashPassword() {
-    this.password = bcrypt.hashSync(this.password, 8);
-  }
-
-  checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
-    return bcrypt.compareSync(unencryptedPassword, this.password);
-  }
 }
