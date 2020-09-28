@@ -7,7 +7,7 @@ class PatientController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Patient);
-    const doctors = await repository.find();
+    const doctors = await repository.find({ where: { status: 1 } });
     doctors.forEach((element) => {
       delete element.password;
     });
@@ -27,7 +27,9 @@ class PatientController {
     //Get the user from database
     const repository = getRepository(Patient);
     try {
-      const doctor = await repository.findOneOrFail({ where: { id: id } });
+      const doctor = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
       //Send the users object
       res.status(200).send({
         error: false,

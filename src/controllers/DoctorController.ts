@@ -7,7 +7,7 @@ class DoctorController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Doctor);
-    const doctors = await repository.find();
+    const doctors = await repository.find({ where: { status: 1 } });
 
     //Send the users object
     res.status(200).send({
@@ -24,7 +24,9 @@ class DoctorController {
     //Get the user from database
     const repository = getRepository(Doctor);
     try {
-      const doctor = await repository.findOneOrFail({ where: { id: id } });
+      const doctor = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
       //Send the users object
       res.status(200).send({
         error: false,
