@@ -15,20 +15,20 @@ export class Testlab {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
-  @ManyToOne((type) => Patient, (patient) => patient.testLabs)
+  @ManyToOne(() => Patient, (patient) => patient.testLabs)
   patient: Patient;
 
-  @ManyToOne((type) => TestlabType, (testLabType) => testLabType.testLabs)
+  @ManyToOne(() => TestlabType, (testLabType) => testLabType.testLabs)
   testLabType: TestlabType;
 
-  @ManyToOne((type) => Laboratorium, (laboratorium) => laboratorium.testLabs)
+  @ManyToOne(() => Laboratorium, (laboratorium) => laboratorium.testLabs)
   laboratorium: Laboratorium;
 
-  @ManyToOne((type) => Doctor, (doctor) => doctor.testLabs)
+  @ManyToOne(() => Doctor, (doctor) => doctor.testLabs)
   doctor: Doctor;
 
   @OneToMany(
-    (type) => TestLabEvidence,
+    () => TestLabEvidence,
     (testLabEvidence) => testLabEvidence.testLab
   )
   testLabEvidences: TestLabEvidence[];
