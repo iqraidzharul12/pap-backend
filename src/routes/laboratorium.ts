@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { DoctorController } from "../controllers";
+import { LaboratoriumController } from "../controllers";
 import { checkJwt } from "../middlewares/checkJwt";
 
 const router = Router();
 
 //Get all data
-router.get("/", [checkJwt], DoctorController.listAll);
+router.get("/", [checkJwt], LaboratoriumController.listAll);
 
 // Get one data
-router.get("/:id", [checkJwt], DoctorController.getOneById);
+router.get("/:id", [checkJwt], LaboratoriumController.getOneById);
 
 //Create a new data
-router.post("/", [checkJwt], DoctorController.newDoctor);
+router.post("/", [checkJwt], LaboratoriumController.newLaboratorium);
 
 // //Edit one data
 // router.patch(
