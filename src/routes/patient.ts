@@ -20,11 +20,7 @@ router.post("/", PatientController.newPatient);
 //   UserController.editUser
 // );
 
-// //Delete one data
-// router.delete(
-//   "/:id([0-9]+)",
-//   [checkJwt, checkRole(["ADMIN"])],
-//   UserController.deleteUser
-// );
+//Delete one data
+router.delete("/:id", [checkJwt], PatientController.delete);
 
 export default router;

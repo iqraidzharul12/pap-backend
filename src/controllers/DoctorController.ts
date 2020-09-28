@@ -135,23 +135,24 @@ class DoctorController {
   //   res.status(204).send();
   // };
 
-  // static deleteUser = async (req: Request, res: Response) => {
-  //   //Get the ID from the url
-  //   const id = req.params.id;
+  static delete = async (req: Request, res: Response) => {
+    //Get the ID from the url
+    const id = req.params.id;
 
-  //   const userRepository = getRepository(Patient);
-  //   let patient: Patient;
-  //   try {
-  //     patient = await userRepository.findOneOrFail(id);
-  //   } catch (error) {
-  //     res.status(404).send("User not found");
-  //     return;
-  //   }
-  //   userRepository.delete(id);
+    const repository = getRepository(Doctor);
+    let doctor: Doctor;
+    try {
+      doctor = await repository.findOneOrFail({ where: { id: id } });
+    } catch (error) {
+      res.status(404).send("Data not found");
+      return;
+    }
+    doctor.status = 0;
+    repository.save(doctor);
 
-  //   //After all send a 204 (no content, but accepted) response
-  //   res.status(204).send();
-  // };
+    //After all send a 204 (no content, but accepted) response
+    res.status(204).send();
+  };
 }
 
 export default DoctorController;
