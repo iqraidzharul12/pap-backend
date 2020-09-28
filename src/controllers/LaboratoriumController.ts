@@ -34,7 +34,11 @@ class LaboratoriumController {
         data: doctor,
       });
     } catch (error) {
-      res.status(404).send("Data not found");
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
     }
   };
 
@@ -131,9 +135,13 @@ class LaboratoriumController {
     const repository = getRepository(Laboratorium);
     let lab: Laboratorium;
     try {
-      lab = await repository.findOneOrFail({ where: { id: id } });
+      lab = await repository.findOneOrFail({ where: { id: id, status: 1 } });
     } catch (error) {
-      res.status(404).send("Data not found");
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
       return;
     }
     lab.status = 0;

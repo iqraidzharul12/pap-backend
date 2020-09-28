@@ -37,7 +37,11 @@ class PatientController {
         data: doctor,
       });
     } catch (error) {
-      res.status(404).send("Data not found");
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
     }
   };
 
@@ -158,9 +162,15 @@ class PatientController {
     const repository = getRepository(Patient);
     let patient: Patient;
     try {
-      patient = await repository.findOneOrFail({ where: { id: id } });
+      patient = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
     } catch (error) {
-      res.status(404).send("Data not found");
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
       return;
     }
     patient.status = 0;
