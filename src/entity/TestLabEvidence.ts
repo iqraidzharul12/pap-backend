@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { Testlab } from ".";
+import { TestLab } from ".";
 
 @Entity()
 export class TestLabEvidence {
@@ -18,8 +18,8 @@ export class TestLabEvidence {
   @IsNotEmpty()
   url: string;
 
-  @ManyToOne((type) => Testlab, (testLab) => testLab.testLabEvidences)
-  testLab: Testlab;
+  @ManyToOne(() => TestLab, (testLab) => testLab.testLabEvidences)
+  testLab: TestLab;
 
   @Column()
   @IsNotEmpty()
