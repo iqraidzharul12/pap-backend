@@ -46,7 +46,7 @@ class AuthController {
       const token = jwt.sign(
         { userId: patient.id, email: patient.email },
         config.jwtSecret,
-        { expiresIn: "1h" }
+        { expiresIn: "3h" }
       );
 
       delete patient.password;
