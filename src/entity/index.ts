@@ -1,7 +1,7 @@
 import { Patient } from "./Patient";
-import { Testlab } from "./Testlab";
 import { TestLabEvidence } from "./TestLabEvidence";
 import { TestlabType } from "./TestlabType";
+import { Testlab } from "./Testlab";
 import { ProgramType } from "./ProgramType";
 import { Laboratorium } from "./Laboratorium";
 import { Doctor } from "./Doctor";
