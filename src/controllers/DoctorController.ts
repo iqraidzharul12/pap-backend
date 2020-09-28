@@ -1,16 +1,13 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Patient } from "../entity";
+import { Doctor } from "../entity";
 
-class PatientController {
+class DoctorController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(Patient);
+    const repository = getRepository(Doctor);
     const doctors = await repository.find();
-    doctors.forEach((element) => {
-      delete element.password;
-    });
 
     //Send the users object
     res.status(200).send({
@@ -25,7 +22,7 @@ class PatientController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(Patient);
+    const repository = getRepository(Doctor);
     try {
       const doctor = await repository.findOneOrFail({ where: { id: id } });
       //Send the users object
@@ -39,7 +36,7 @@ class PatientController {
     }
   };
 
-  static newPatient = async (req: Request, res: Response) => {
+  static newDoctor = async (req: Request, res: Response) => {
     //Get parameters from the body
     let {
       fullname,
@@ -49,27 +46,19 @@ class PatientController {
       selfiePicture,
       gender,
       email,
-      password,
-      representativeName,
-      representativePhone,
-      representativeRelationship,
     } = req.body;
-    let patient = new Patient();
-    patient.fullname = fullname;
-    patient.dateOfBirth = dateOfBirth;
-    patient.idNumber = idNumber;
-    patient.idPicture = idPicture;
-    patient.selfiePicture = selfiePicture;
-    patient.gender = gender;
-    patient.email = email;
-    patient.password = password;
-    patient.representativeName = representativeName;
-    patient.representativePhone = representativePhone;
-    patient.representativeRelationship = representativeRelationship;
-    patient.status = 1;
+    let doctor = new Doctor();
+    doctor.fullname = fullname;
+    doctor.dateOfBirth = dateOfBirth;
+    doctor.idNumber = idNumber;
+    doctor.idPicture = idPicture;
+    doctor.selfiePicture = selfiePicture;
+    doctor.gender = gender;
+    doctor.email = email;
+    doctor.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(patient);
+    const errors = await validate(doctor);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -86,13 +75,10 @@ class PatientController {
       return;
     }
 
-    //Hash the password, to securely store on DB
-    patient.hashPassword();
-
     //Try to save. If fails, the username is already in use
-    const userRepository = getRepository(Patient);
+    const repository = getRepository(Doctor);
     try {
-      await userRepository.save(patient);
+      await repository.save(doctor);
     } catch (e) {
       errorList.push("email already in use");
       res.status(409).send({
@@ -107,7 +93,7 @@ class PatientController {
     res.status(201).send({
       error: false,
       errorList: [],
-      data: "Patient created",
+      data: "Doctor created",
     });
   };
 
@@ -168,4 +154,4 @@ class PatientController {
   // };
 }
 
-export default PatientController;
+export default DoctorController;
