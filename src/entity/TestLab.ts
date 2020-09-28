@@ -11,7 +11,7 @@ import { IsNotEmpty } from "class-validator";
 import { Doctor, Laboratorium, Patient, TestLabEvidence, TestlabType } from ".";
 
 @Entity()
-export class Testlab {
+export class TestLab {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 

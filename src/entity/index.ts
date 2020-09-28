@@ -1,7 +1,7 @@
 import { Patient } from "./Patient";
 import { TestLabEvidence } from "./TestLabEvidence";
 import { TestlabType } from "./TestlabType";
-import { Testlab } from "./Testlab";
+import { TestLab } from "./TestLab";
 import { ProgramType } from "./ProgramType";
 import { Laboratorium } from "./Laboratorium";
 import { Doctor } from "./Doctor";
@@ -10,7 +10,7 @@ export {
   Patient,
   ProgramType,
   TestlabType,
-  Testlab,
+  TestLab,
   Laboratorium,
   Doctor,
   TestLabEvidence,
