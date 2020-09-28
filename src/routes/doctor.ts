@@ -11,14 +11,10 @@ router.get("/", [checkJwt], DoctorController.listAll);
 router.get("/:id", [checkJwt], DoctorController.getOneById);
 
 //Create a new data
-router.post("/", [checkJwt], DoctorController.newDoctor);
+router.post("/", [checkJwt], DoctorController.create);
 
-// //Edit one data
-// router.patch(
-//   "/:id([0-9]+)",
-//   [checkJwt, checkRole(["ADMIN"])],
-//   UserController.editUser
-// );
+//Edit one data
+router.patch("/:id", [checkJwt], DoctorController.edit);
 
 //Delete one data
 router.delete("/:id", [checkJwt], DoctorController.delete);

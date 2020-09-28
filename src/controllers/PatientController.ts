@@ -45,7 +45,7 @@ class PatientController {
     }
   };
 
-  static newPatient = async (req: Request, res: Response) => {
+  static create = async (req: Request, res: Response) => {
     //Get parameters from the body
     let {
       fullname,
@@ -117,43 +117,84 @@ class PatientController {
     });
   };
 
-  // static editUser = async (req: Request, res: Response) => {
-  //   //Get the ID from the url
-  //   const id = req.params.id;
+  static edit = async (req: Request, res: Response) => {
+    //Get the ID from the url
+    const id = req.params.id;
 
-  //   //Get values from the body
-  //   const { username, role } = req.body;
+    //Get values from the body
+    let {
+      fullname,
+      dateOfBirth,
+      idNumber,
+      idPicture,
+      selfiePicture,
+      gender,
+      email,
+      representativeName,
+      representativePhone,
+      representativeRelationship,
+    } = req.body;
 
-  //   //Try to find user on database
-  //   const userRepository = getRepository(User);
-  //   let user;
-  //   try {
-  //     user = await userRepository.findOneOrFail(id);
-  //   } catch (error) {
-  //     //If not found, send a 404 response
-  //     res.status(404).send("User not found");
-  //     return;
-  //   }
+    //Try to find data on database
+    const repository = getRepository(Patient);
+    let patient: Patient;
+    try {
+      patient = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
+    } catch (error) {
+      //If not found, send a 404 response
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
+      return;
+    }
 
-  //   //Validate the new values on model
-  //   user.username = username;
-  //   user.role = role;
-  //   const errors = await validate(user);
-  //   if (errors.length > 0) {
-  //     res.status(400).send(errors);
-  //     return;
-  //   }
+    //Validate the new values on model
+    patient.fullname = fullname;
+    patient.dateOfBirth = dateOfBirth;
+    patient.idNumber = idNumber;
+    patient.idPicture = idPicture;
+    patient.selfiePicture = selfiePicture;
+    patient.gender = gender;
+    patient.email = email;
+    patient.representativeName = representativeName;
+    patient.representativePhone = representativePhone;
+    patient.representativeRelationship = representativeRelationship;
 
-  //   //Try to safe, if fails, that means username already in use
-  //   try {
-  //     await userRepository.save(user);
-  //   } catch (e) {
-  //     res.status(409).send("username already in use");
-  //     return;
-  //   }
-  //   //After all send a 204 (no content, but accepted) response
-  //   res.status(204).send();
-  // };
+    const errors = await validate(patient);
+    const errorList = [];
+    if (errors.length > 0) {
+      errors.forEach((item) => {
+        if (item.constraints.isNotEmpty)
+          errorList.push(item.constraints.isNotEmpty);
+        if (item.constraints.isEmail) errorList.push(item.constraints.isEmail);
+        if (item.constraints.length) errorList.push(item.constraints.length);
+      });
+      res.status(400).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    try {
+      await repository.save(patient);
+    } catch (e) {
+      errorList.push("failed to edit data");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+    //After all send a 204 (no content, but accepted) response
+    res.status(204).send();
+  };
 
   static delete = async (req: Request, res: Response) => {
     //Get the ID from the url

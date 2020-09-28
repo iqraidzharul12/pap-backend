@@ -42,7 +42,7 @@ class LaboratoriumController {
     }
   };
 
-  static newLaboratorium = async (req: Request, res: Response) => {
+  static create = async (req: Request, res: Response) => {
     //Get parameters from the body
     let { name, address } = req.body;
     let laboratorium = new Laboratorium();
@@ -90,43 +90,63 @@ class LaboratoriumController {
     });
   };
 
-  // static editUser = async (req: Request, res: Response) => {
-  //   //Get the ID from the url
-  //   const id = req.params.id;
+  static edit = async (req: Request, res: Response) => {
+    //Get the ID from the url
+    const id = req.params.id;
 
-  //   //Get values from the body
-  //   const { username, role } = req.body;
+    //Get values from the body
+    let { name, address } = req.body;
 
-  //   //Try to find user on database
-  //   const userRepository = getRepository(User);
-  //   let user;
-  //   try {
-  //     user = await userRepository.findOneOrFail(id);
-  //   } catch (error) {
-  //     //If not found, send a 404 response
-  //     res.status(404).send("User not found");
-  //     return;
-  //   }
+    //Try to find data on database
+    const repository = getRepository(Laboratorium);
+    let lab: Laboratorium;
+    try {
+      lab = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+    } catch (error) {
+      //If not found, send a 404 response
+      res.status(404).send({
+        error: false,
+        errorList: ["Data not found"],
+        data: null,
+      });
+      return;
+    }
 
-  //   //Validate the new values on model
-  //   user.username = username;
-  //   user.role = role;
-  //   const errors = await validate(user);
-  //   if (errors.length > 0) {
-  //     res.status(400).send(errors);
-  //     return;
-  //   }
+    //Validate the new values on model
+    lab.name = name;
+    lab.address = address;
 
-  //   //Try to safe, if fails, that means username already in use
-  //   try {
-  //     await userRepository.save(user);
-  //   } catch (e) {
-  //     res.status(409).send("username already in use");
-  //     return;
-  //   }
-  //   //After all send a 204 (no content, but accepted) response
-  //   res.status(204).send();
-  // };
+    const errors = await validate(lab);
+    const errorList = [];
+    if (errors.length > 0) {
+      errors.forEach((item) => {
+        if (item.constraints.isNotEmpty)
+          errorList.push(item.constraints.isNotEmpty);
+        if (item.constraints.isEmail) errorList.push(item.constraints.isEmail);
+        if (item.constraints.length) errorList.push(item.constraints.length);
+      });
+      res.status(400).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    try {
+      await repository.save(lab);
+    } catch (e) {
+      errorList.push("failed to edit data");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+    //After all send a 204 (no content, but accepted) response
+    res.status(204).send();
+  };
 
   static delete = async (req: Request, res: Response) => {
     //Get the ID from the url
