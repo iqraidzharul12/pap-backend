@@ -19,6 +19,7 @@ createConnection()
 
     //Set all routes from routes folder
     app.use("/", routes);
+    app.use("/uploads", express.static("uploads"));
 
     app.get("/", function (req, res) {
       const x = !!true;
