@@ -11,7 +11,7 @@ import { IsNotEmpty } from "class-validator";
 import { ProgramType, TestLab } from ".";
 
 @Entity()
-export class TestlabType {
+export class TestLabType {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
@@ -22,6 +22,10 @@ export class TestlabType {
   @Column()
   @IsNotEmpty()
   teraphyLine: string;
+
+  @Column()
+  @IsNotEmpty()
+  description: string;
 
   @Column()
   @IsNotEmpty()

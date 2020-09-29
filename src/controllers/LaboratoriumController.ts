@@ -68,7 +68,7 @@ class LaboratoriumController {
       return;
     }
 
-    //Try to save. If fails, the username is already in use
+    //Try to save
     const repository = getRepository(Laboratorium);
     try {
       await repository.save(laboratorium);

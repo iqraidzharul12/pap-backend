@@ -95,7 +95,7 @@ class PatientController {
     //Hash the password, to securely store on DB
     patient.hashPassword();
 
-    //Try to save. If fails, the username is already in use
+    //Try to save
     const userRepository = getRepository(Patient);
     try {
       await userRepository.save(patient);

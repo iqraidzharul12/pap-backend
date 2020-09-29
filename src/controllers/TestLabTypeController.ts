@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Doctor } from "../entity";
+import { ProgramType, TestLabType } from "../entity";
 
-class DoctorController {
+class TestLabTypeController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(Doctor);
-    const doctors = await repository.find({ where: { status: 1 } });
+    const repository = getRepository(TestLabType);
+    const results = await repository.find({ where: { status: 1 } });
 
     //Send the users object
     res.status(200).send({
       error: false,
       errorList: [],
-      data: doctors,
+      data: results,
     });
   };
 
@@ -22,16 +22,16 @@ class DoctorController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(Doctor);
+    const repository = getRepository(TestLabType);
     try {
-      const doctor = await repository.findOneOrFail({
+      const result = await repository.findOneOrFail({
         where: { id: id, status: 1 },
       });
       //Send the users object
       res.status(200).send({
         error: false,
         errorList: [],
-        data: doctor,
+        data: result,
       });
     } catch (error) {
       res.status(404).send({
@@ -44,27 +44,31 @@ class DoctorController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let {
-      fullname,
-      dateOfBirth,
-      idNumber,
-      idPicture,
-      selfiePicture,
-      gender,
-      email,
-    } = req.body;
-    let doctor = new Doctor();
-    doctor.fullname = fullname;
-    doctor.dateOfBirth = dateOfBirth;
-    doctor.idNumber = idNumber;
-    doctor.idPicture = idPicture;
-    doctor.selfiePicture = selfiePicture;
-    doctor.gender = gender;
-    doctor.email = email;
-    doctor.status = 1;
+    let { name, description, teraphyLine, programTypeId } = req.body;
+
+    const programTypeRepository = getRepository(ProgramType);
+    let programType: ProgramType;
+    try {
+      programType = await programTypeRepository.findOneOrFail({
+        where: { id: programTypeId, status: 1 },
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Program type not found"],
+        data: null,
+      });
+    }
+
+    let testLabType = new TestLabType();
+    testLabType.name = name;
+    testLabType.description = description;
+    testLabType.teraphyLine = teraphyLine;
+    testLabType.programType = programType;
+    testLabType.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(doctor);
+    const errors = await validate(TestLabType);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -81,12 +85,11 @@ class DoctorController {
       return;
     }
 
-    //Try to save
-    const repository = getRepository(Doctor);
+    const repository = getRepository(TestLabType);
     try {
-      await repository.save(doctor);
+      await repository.save(testLabType);
     } catch (e) {
-      errorList.push("email already in use");
+      errorList.push("failed to save testLab type");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -99,7 +102,7 @@ class DoctorController {
     res.status(201).send({
       error: false,
       errorList: [],
-      data: "Doctor created",
+      data: "TestLab type created",
     });
   };
 
@@ -108,21 +111,29 @@ class DoctorController {
     const id = req.params.id;
 
     //Get values from the body
-    let {
-      fullname,
-      dateOfBirth,
-      idNumber,
-      idPicture,
-      selfiePicture,
-      gender,
-      email,
-    } = req.body;
+    let { name, description, teraphyLine, programTypeId } = req.body;
+
+    const programTypeRepository = getRepository(ProgramType);
+    let programType: ProgramType;
+    try {
+      programType = await programTypeRepository.findOneOrFail({
+        where: { id: programTypeId, status: 1 },
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Program type not found"],
+        data: null,
+      });
+    }
 
     //Try to find data on database
-    const repository = getRepository(Doctor);
-    let doctor: Doctor;
+    const repository = getRepository(TestLabType);
+    let testLabType: TestLabType;
     try {
-      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      testLabType = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
     } catch (error) {
       //If not found, send a 404 response
       res.status(404).send({
@@ -134,15 +145,12 @@ class DoctorController {
     }
 
     //Validate the new values on model
-    doctor.fullname = fullname;
-    doctor.dateOfBirth = dateOfBirth;
-    doctor.idNumber = idNumber;
-    doctor.idPicture = idPicture;
-    doctor.selfiePicture = selfiePicture;
-    doctor.gender = gender;
-    doctor.email = email;
+    testLabType.name = name;
+    testLabType.description = description;
+    testLabType.teraphyLine = teraphyLine;
+    testLabType.programType = programType;
 
-    const errors = await validate(doctor);
+    const errors = await validate(testLabType);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -160,7 +168,7 @@ class DoctorController {
     }
 
     try {
-      await repository.save(doctor);
+      await repository.save(testLabType);
     } catch (e) {
       errorList.push("failed to edit data");
       res.status(409).send({
@@ -178,10 +186,12 @@ class DoctorController {
     //Get the ID from the url
     const id = req.params.id;
 
-    const repository = getRepository(Doctor);
-    let doctor: Doctor;
+    const repository = getRepository(TestLabType);
+    let testLabType: TestLabType;
     try {
-      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      testLabType = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -190,12 +200,12 @@ class DoctorController {
       });
       return;
     }
-    doctor.status = 0;
-    repository.save(doctor);
+    testLabType.status = 0;
+    repository.save(testLabType);
 
     //After all send a 204 (no content, but accepted) response
     res.status(204).send();
   };
 }
 
-export default DoctorController;
+export default TestLabTypeController;

@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { TestlabType } from ".";
+import { TestLabType } from ".";
 
 @Entity()
 export class ProgramType {
@@ -22,8 +22,12 @@ export class ProgramType {
   @IsNotEmpty()
   status: number;
 
-  @OneToMany((type) => TestlabType, (testLabType) => testLabType.programType)
-  testLabTypes: TestlabType[];
+  @Column()
+  @IsNotEmpty()
+  description: string;
+
+  @OneToMany((type) => TestLabType, (testLabType) => testLabType.programType)
+  testLabTypes: TestLabType[];
 
   @Column()
   @CreateDateColumn()
