@@ -11,11 +11,12 @@ class FileUploadController {
         data: imagePath,
       });
     } else {
-      return res.status(400).send({
+      res.status(400).send({
         error: false,
         errorList: [],
         data: null,
       });
+      return;
     }
   };
 }

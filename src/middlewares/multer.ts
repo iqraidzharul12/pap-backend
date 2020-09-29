@@ -61,43 +61,48 @@ const uploadFilter = (req: Request, res: Response, next: NextFunction) => {
   if (type === "id") {
     uploadIdPicture(req, res, function (error: any) {
       if (error instanceof multer.MulterError) {
-        return res.status(400).send({
+        res.status(400).send({
           error: false,
           errorList: [`Multer error: ${error}`],
           data: null,
         });
+        return;
       } else if (error) {
-        return res.status(400).send({
+        res.status(400).send({
           error: false,
           errorList: [`Unexpected error: ${error}`],
           data: null,
         });
+        return;
       }
       next();
     });
   } else if (type === "selfie") {
     uploadSelfiePicture(req, res, function (error: any) {
       if (error instanceof multer.MulterError) {
-        return res.status(400).send({
+        res.status(400).send({
           error: false,
           errorList: [`Multer error: ${error}`],
           data: null,
         });
+        return;
       } else if (error) {
-        return res.status(400).send({
+        res.status(400).send({
           error: false,
           errorList: [`Unexpected error: ${error}`],
           data: null,
         });
+        return;
       }
       next();
     });
   } else {
-    return res.status(400).send({
+    res.status(400).send({
       error: false,
       errorList: ["no type provided"],
       data: null,
     });
+    return;
   }
 };
 
