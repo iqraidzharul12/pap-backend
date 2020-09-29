@@ -3,8 +3,9 @@ import PatientController from "./PatientController";
 import DoctorController from "./DoctorController";
 import LaboratoriumController from "./LaboratoriumController";
 import TestLabTypeController from "./TestLabTypeController";
-import ProgramTypeController from "./ProgramTypeController";
 import TestLabController from "./TestLabController";
+import TestLabEvidenceController from "./TestLabEvidenceController";
+import ProgramTypeController from "./ProgramTypeController";
 
 export {
   AuthController,
@@ -12,6 +13,7 @@ export {
   DoctorController,
   LaboratoriumController,
   TestLabTypeController,
-  ProgramTypeController,
   TestLabController,
+  TestLabEvidenceController,
+  ProgramTypeController,
 };
