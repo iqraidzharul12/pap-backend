@@ -6,6 +6,7 @@ import TestLabTypeController from "./TestLabTypeController";
 import TestLabController from "./TestLabController";
 import TestLabEvidenceController from "./TestLabEvidenceController";
 import ProgramTypeController from "./ProgramTypeController";
+import FileUploadController from "./FileUploadController";
 
 export {
   AuthController,
@@ -16,4 +17,5 @@ export {
   TestLabController,
   TestLabEvidenceController,
   ProgramTypeController,
+  FileUploadController,
 };

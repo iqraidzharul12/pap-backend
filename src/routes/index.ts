@@ -7,6 +7,7 @@ import testLabType from "./testLabType";
 import testLab from "./testLab";
 import testLabEvidence from "./testLabEvidence";
 import programType from "./programType";
+import fileUpload from "./fileUpload";
 
 const routes = Router();
 
@@ -18,5 +19,6 @@ routes.use("/testLabType", testLabType);
 routes.use("/testLab", testLab);
 routes.use("/testLabEvidence", testLabEvidence);
 routes.use("/programType", programType);
+routes.use("/upload", fileUpload);
 
 export default routes;
