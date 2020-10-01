@@ -39,6 +39,7 @@ class ProgramTypeController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 

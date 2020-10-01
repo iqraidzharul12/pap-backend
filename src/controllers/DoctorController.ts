@@ -39,6 +39,7 @@ class DoctorController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 

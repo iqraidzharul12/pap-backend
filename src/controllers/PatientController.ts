@@ -42,6 +42,7 @@ class PatientController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 

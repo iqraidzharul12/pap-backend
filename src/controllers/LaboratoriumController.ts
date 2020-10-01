@@ -39,6 +39,7 @@ class LaboratoriumController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 

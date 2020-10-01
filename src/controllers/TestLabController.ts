@@ -7,9 +7,18 @@ class TestLabController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(TestLab);
-    const results = await repository.find({ where: { status: 1 } });
+    const results = await repository.find({
+      where: { status: 1 },
+      relations: [
+        "patient",
+        "doctor",
+        "testLabType",
+        "laboratorium",
+        "testLabEvidences",
+      ],
+    });
 
-    //Send the users object
+    //Send the users objectz
     res.status(200).send({
       error: false,
       errorList: [],
@@ -26,6 +35,13 @@ class TestLabController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1 },
+        relations: [
+          "patient",
+          "doctor",
+          "testLabType",
+          "laboratorium",
+          "testLabEvidences",
+        ],
       });
       //Send the users object
       res.status(200).send({
@@ -39,6 +55,7 @@ class TestLabController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 
@@ -73,6 +90,7 @@ class TestLabController {
         errorList: ["Parameter data not found"],
         data: null,
       });
+      return;
     }
 
     let testLab = new TestLab();
@@ -155,6 +173,7 @@ class TestLabController {
         errorList: ["Parameter data not found"],
         data: null,
       });
+      return;
     }
 
     //Try to find data on database

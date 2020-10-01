@@ -17,6 +17,7 @@ class AuthController {
         errorList: ["email and password must not empty"],
         data: null,
       });
+      return;
     }
     if (role && role.toLowerCase() === "patient") {
       //Get user from database
@@ -30,6 +31,7 @@ class AuthController {
           errorList: ["invalid email"],
           data: null,
         });
+        return;
       }
 
       //Check if encrypted password match
@@ -64,6 +66,7 @@ class AuthController {
         errorList: ["invalid email or password"],
         data: null,
       });
+      return;
     }
   };
 
@@ -80,6 +83,7 @@ class AuthController {
         errorList: ["email and password must not empty"],
         data: null,
       });
+      return;
     }
 
     if (role && role.toLowerCase() === "patient") {
@@ -94,6 +98,7 @@ class AuthController {
           errorList: ["no patient found"],
           data: null,
         });
+        return;
       }
 
       //Check if old password matchs
@@ -140,6 +145,7 @@ class AuthController {
         errorList: ["specify the role"],
         data: null,
       });
+      return;
     }
   };
 }

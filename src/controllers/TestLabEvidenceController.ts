@@ -39,6 +39,7 @@ class TestLabEvidenceController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 
@@ -58,6 +59,7 @@ class TestLabEvidenceController {
         errorList: ["Test Lab not found"],
         data: null,
       });
+      return;
     }
 
     let testLabEvidence = new TestLabEvidence();
@@ -100,7 +102,7 @@ class TestLabEvidenceController {
     res.status(201).send({
       error: false,
       errorList: [],
-      data: "TestLab type created",
+      data: "TestLab evidence created",
     });
   };
 
@@ -123,6 +125,7 @@ class TestLabEvidenceController {
         errorList: ["Test Lab not found"],
         data: null,
       });
+      return;
     }
 
     //Try to find data on database

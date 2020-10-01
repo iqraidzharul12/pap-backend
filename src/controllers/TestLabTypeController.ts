@@ -39,6 +39,7 @@ class TestLabTypeController {
         errorList: ["Data not found"],
         data: null,
       });
+      return;
     }
   };
 
@@ -58,6 +59,7 @@ class TestLabTypeController {
         errorList: ["Program type not found"],
         data: null,
       });
+      return;
     }
 
     let testLabType = new TestLabType();
@@ -125,6 +127,7 @@ class TestLabTypeController {
         errorList: ["Program type not found"],
         data: null,
       });
+      return;
     }
 
     //Try to find data on database
