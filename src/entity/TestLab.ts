@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { Doctor, Laboratorium, Patient, TestLabEvidence, TestLabType } from ".";
+import { Doctor, Laboratorium, Patient, TestLabEvidence, TestLabType, Voucher } from ".";
 
 @Entity()
 export class TestLab {
@@ -23,6 +23,9 @@ export class TestLab {
 
   @ManyToOne(() => Laboratorium, (laboratorium) => laboratorium.testLabs)
   laboratorium: Laboratorium;
+
+  @ManyToOne(() => Voucher, (voucher) => voucher.testLabs)
+  voucher: Voucher;
 
   @ManyToOne(() => Doctor, (doctor) => doctor.testLabs)
   doctor: Doctor;
