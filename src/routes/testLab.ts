@@ -12,6 +12,7 @@ router.get("/:id", [checkJwt], TestLabController.getOneById);
 
 //Create a new data
 router.post("/", TestLabController.create);
+router.post("/self-test", TestLabController.createSelfTest);
 
 //Edit one data
 router.patch("/:id", [checkJwt], TestLabController.edit);

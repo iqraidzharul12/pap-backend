@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Doctor, Laboratorium, Patient, TestLab, TestLabType } from "../entity";
+import { Doctor, Laboratorium, Patient, TestLab, TestLabType, Voucher } from "../entity";
 
 class TestLabController {
   static listAll = async (req: Request, res: Response) => {
@@ -15,6 +15,7 @@ class TestLabController {
         "testLabType",
         "laboratorium",
         "testLabEvidences",
+        "voucher"
       ],
     });
 
@@ -41,6 +42,7 @@ class TestLabController {
           "testLabType",
           "laboratorium",
           "testLabEvidences",
+          "voucher"
         ],
       });
       //Send the users object
@@ -61,16 +63,18 @@ class TestLabController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { patientId, doctorId, testLabTypeId, laboratoriumId } = req.body;
+    let { patientId, doctorId, testLabTypeId, laboratoriumId, voucherId } = req.body;
 
     const patientRepository = getRepository(Patient);
     const doctorRepository = getRepository(Doctor);
     const testLabTypeRepository = getRepository(TestLabType);
     const laboratoriumRepository = getRepository(Laboratorium);
+    const voucherRepository = getRepository(Voucher);
     let patient: Patient;
     let doctor: Doctor;
     let testLabType: TestLabType;
     let laboratorium: Laboratorium;
+    let voucher: Voucher;
     try {
       patient = await patientRepository.findOneOrFail({
         where: { id: patientId, status: 1 },
@@ -83,6 +87,9 @@ class TestLabController {
       });
       laboratorium = await laboratoriumRepository.findOneOrFail({
         where: { id: laboratoriumId, status: 1 },
+      });
+      voucher = await voucherRepository.findOneOrFail({
+        where: { id: voucherId, status: 1 },
       });
     } catch (error) {
       res.status(404).send({
@@ -98,6 +105,75 @@ class TestLabController {
     testLab.doctor = doctor;
     testLab.testLabType = testLabType;
     testLab.laboratorium = laboratorium;
+    testLab.voucher = voucher;
+    testLab.status = 1;
+
+    //Validade if the parameters are ok
+    const errors = await validate(testLab);
+    const errorList = [];
+    if (errors.length > 0) {
+      errors.forEach((item) => {
+        if (item.constraints.isNotEmpty)
+          errorList.push(item.constraints.isNotEmpty);
+        if (item.constraints.isEmail) errorList.push(item.constraints.isEmail);
+        if (item.constraints.length) errorList.push(item.constraints.length);
+      });
+      res.status(400).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    const repository = getRepository(TestLab);
+    try {
+      await repository.save(testLab);
+    } catch (e) {
+      errorList.push("failed to save testLab type");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    //If all ok, send 201 response
+    res.status(201).send({
+      error: false,
+      errorList: [],
+      data: "TestLab type created",
+    });
+  };
+
+  static createSelfTest = async (req: Request, res: Response) => {
+    //Get parameters from the body
+    let { patientId, testLabTypeId } = req.body;
+
+    const patientRepository = getRepository(Patient);
+    const testLabTypeRepository = getRepository(TestLabType);
+    let patient: Patient;
+    let testLabType: TestLabType;
+    try {
+      patient = await patientRepository.findOneOrFail({
+        where: { id: patientId, status: 1 },
+      });
+      testLabType = await testLabTypeRepository.findOneOrFail({
+        where: { id: testLabTypeId, status: 1 },
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Parameter data not found"],
+        data: null,
+      });
+      return;
+    }
+
+    let testLab = new TestLab();
+    testLab.patient = patient;
+    testLab.testLabType = testLabType;
     testLab.status = 1;
 
     //Validade if the parameters are ok
