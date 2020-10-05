@@ -1,4 +1,4 @@
 import { checkJwt } from "./checkJwt";
-import upload from "./multer";
+import {uploadId, uploadSelfie, uploadPrescription, uploadLabResult} from "./multer";
 
-export { checkJwt, upload };
+export { checkJwt, uploadId, uploadSelfie, uploadPrescription, uploadLabResult };

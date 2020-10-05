@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 class FileUploadController {
   static upload = async (req: Request, res: Response) => {
     if (req.file) {
-      const imagePath = req.file.path;
+      const imagePath = req.file.path.split(process.cwd())[1].replace("\\", "/")
       //Send the users object
       res.status(200).send({
         error: false,

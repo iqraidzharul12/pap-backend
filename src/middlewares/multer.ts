@@ -5,8 +5,8 @@ import { NextFunction, Request, Response } from "express";
 const storageIdPicture = multer.diskStorage({
   destination: (request, file, callback) => {
     let path = `${process.cwd()}/uploads/`;
-    fs.mkdirpSync(`${path}/idPicture`);
-    callback(null, `${path}/idPicture`);
+    fs.mkdirpSync(`${path}/id`);
+    callback(null, `${path}/id`);
   },
   filename: (request, file, callback) => {
     callback(
@@ -19,8 +19,8 @@ const storageIdPicture = multer.diskStorage({
 const storageSelfiePicture = multer.diskStorage({
   destination: (request, file, callback) => {
     let path = `${process.cwd()}/uploads/`;
-    fs.mkdirpSync(`${path}/selfiePicture`);
-    callback(null, `${path}/selfiePicture`);
+    fs.mkdirpSync(`${path}/selfie`);
+    callback(null, `${path}/selfie`);
   },
   filename: (request, file, callback) => {
     callback(
@@ -32,6 +32,44 @@ const storageSelfiePicture = multer.diskStorage({
     );
   },
 });
+
+const storagePrescription = (id: string) =>{
+  return multer.diskStorage({
+    destination: (request, file, callback) => {
+      let path = `${process.cwd()}/uploads/`;
+      fs.mkdirpSync(`${path}/patient/${id}/prescription`);
+      callback(null, `${path}/patient/${id}/prescription`);
+    },
+    filename: (request, file, callback) => {
+      callback(
+        null,
+        "PRESCRIPTION-" +
+          new Date().valueOf() +
+          "." +
+          file.originalname.split(".").pop()
+      );
+    },
+  });
+} 
+
+const storageLabResult = (id: string) =>{
+  return multer.diskStorage({
+    destination: (request, file, callback) => {
+      let path = `${process.cwd()}/uploads/`;
+      fs.mkdirpSync(`${path}/patient/${id}/lab-result`);
+      callback(null, `${path}/patient/${id}/lab-result`);
+    },
+    filename: (request, file, callback) => {
+      callback(
+        null,
+        "LAB-RESULT-" +
+          new Date().valueOf() +
+          "." +
+          file.originalname.split(".").pop()
+      );
+    },
+  });
+} 
 
 const fileFilter = (request: any, file: any, callback: any) => {
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
@@ -55,55 +93,111 @@ let uploadSelfiePicture = multer({
   limits,
 }).single("upload");
 
-const uploadFilter = (req: Request, res: Response, next: NextFunction) => {
-  let { type } = req.query;
+let uploadPrescriptionPicture = (id: string)=>{
+  return multer({
+    storage: storagePrescription(id),
+    fileFilter: fileFilter,
+    limits,
+  }).single("upload");
+} 
 
-  if (type === "id") {
-    uploadIdPicture(req, res, function (error: any) {
-      if (error instanceof multer.MulterError) {
-        res.status(400).send({
-          error: false,
-          errorList: [`Multer error: ${error}`],
-          data: null,
-        });
-        return;
-      } else if (error) {
-        res.status(400).send({
-          error: false,
-          errorList: [`Unexpected error: ${error}`],
-          data: null,
-        });
-        return;
-      }
-      next();
-    });
-  } else if (type === "selfie") {
-    uploadSelfiePicture(req, res, function (error: any) {
-      if (error instanceof multer.MulterError) {
-        res.status(400).send({
-          error: false,
-          errorList: [`Multer error: ${error}`],
-          data: null,
-        });
-        return;
-      } else if (error) {
-        res.status(400).send({
-          error: false,
-          errorList: [`Unexpected error: ${error}`],
-          data: null,
-        });
-        return;
-      }
-      next();
-    });
-  } else {
-    res.status(400).send({
-      error: false,
-      errorList: ["no type provided"],
-      data: null,
-    });
-    return;
-  }
+let uploadLabResultPicture = (id: string)=>{
+  return multer({
+    storage: storageLabResult(id),
+    fileFilter: fileFilter,
+    limits,
+  }).single("upload");
+} 
+
+const uploadId = (req: Request, res: Response, next: NextFunction) => {
+  uploadIdPicture(req, res, function (error: any) {
+    if (error instanceof multer.MulterError) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Multer error: ${error}`],
+        data: null,
+      });
+      return;
+    } else if (error) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Unexpected error: ${error}`],
+        data: null,
+      });
+      return;
+    }
+    next();
+  });
 };
 
-export default uploadFilter;
+const uploadSelfie = (req: Request, res: Response, next: NextFunction) => {
+  uploadSelfiePicture(req, res, function (error: any) {
+    if (error instanceof multer.MulterError) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Multer error: ${error}`],
+        data: null,
+      });
+      return;
+    } else if (error) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Unexpected error: ${error}`],
+        data: null,
+      });
+      return;
+    }
+    next();
+  });
+};
+
+const uploadPrescription = (req: Request, res: Response, next: NextFunction) => {
+  let {userId} = res.locals.jwtPayload
+  uploadPrescriptionPicture(userId)(req, res, function (error: any) {
+    if (error instanceof multer.MulterError) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Multer error: ${error}`],
+        data: null,
+      });
+      return;
+    } else if (error) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Unexpected error: ${error}`],
+        data: null,
+      });
+      return;
+    }
+    next();
+  });
+};
+
+const uploadLabResult = (req: Request, res: Response, next: NextFunction) => {
+  let {userId} = res.locals.jwtPayload
+  uploadLabResultPicture(userId)(req, res, function (error: any) {
+    if (error instanceof multer.MulterError) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Multer error: ${error}`],
+        data: null,
+      });
+      return;
+    } else if (error) {
+      res.status(400).send({
+        error: false,
+        errorList: [`Unexpected error: ${error}`],
+        data: null,
+      });
+      return;
+    }
+    next();
+  });
+};
+
+export {
+  uploadId,
+  uploadSelfie,
+  uploadPrescription,
+  uploadLabResult,
+}
