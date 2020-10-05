@@ -70,7 +70,7 @@ class TestLabTypeController {
     testLabType.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(TestLabType);
+    const errors = await validate(testLabType);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {

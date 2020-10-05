@@ -101,7 +101,7 @@ class TestLabController {
     testLab.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(TestLab);
+    const errors = await validate(testLab);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {

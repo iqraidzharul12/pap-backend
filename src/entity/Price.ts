@@ -9,7 +9,7 @@ import { IsNotEmpty } from "class-validator";
 import { ProgramType, TestLab } from ".";
 
 @Entity()
-export class Promo {
+export class Price {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
@@ -21,7 +21,11 @@ export class Promo {
   @IsNotEmpty()
   price: number;
 
-  @ManyToOne(() => ProgramType, (programType) => programType.promos)
+  @Column()
+  @IsNotEmpty()
+  status: number;
+
+  @ManyToOne(() => ProgramType, (programType) => programType.prices)
   programType: ProgramType;
 
   @Column()

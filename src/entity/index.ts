@@ -9,7 +9,7 @@ import { Laboratorium } from "./Laboratorium";
 import { Pharmacy } from "./Pharmacy";
 import { Voucher } from "./Voucher";
 import { Doctor } from "./Doctor";
-import { Promo } from "./Promo";
+import { Price } from "./Price";
 import { DefaultSchedule } from "./DefaultSchedule";
 
 export {
@@ -24,7 +24,7 @@ export {
   Voucher,
   TestLabEvidence,
   ProgramEvidence,
-  Promo,
+  Price,
   DefaultSchedule,
 };
 

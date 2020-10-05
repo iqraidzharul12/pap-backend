@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { DefaultSchedule, Program, Promo, TestLabType } from ".";
+import { DefaultSchedule, Program, Price, TestLabType } from ".";
 
 @Entity()
 export class ProgramType {
@@ -32,8 +32,8 @@ export class ProgramType {
   @OneToMany((type) => Program, (program) => program.programType)
   programs: Program[];
 
-  @OneToMany((type) => Promo, (promo) => promo.programType)
-  promos: Promo[];
+  @OneToMany((type) => Price, (price) => price.programType)
+  prices: Price[];
 
   @OneToMany((type) => DefaultSchedule, (defaultSchedule) => defaultSchedule.programType)
   defaultSchedules: DefaultSchedule[];

@@ -52,7 +52,7 @@ class ProgramTypeController {
     programType.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(ProgramType);
+    const errors = await validate(programType);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {

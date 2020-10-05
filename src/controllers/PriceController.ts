@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { ProgramType, TestLab, TestLabEvidence } from "../entity";
+import { ProgramType, Price } from "../entity";
 
-class TestLabEvidenceController {
+class PriceController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(TestLabEvidence);
+    const repository = getRepository(Price);
     const results = await repository.find({ where: { status: 1 } });
 
     //Send the users object
@@ -22,7 +22,7 @@ class TestLabEvidenceController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(TestLabEvidence);
+    const repository = getRepository(Price);
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1 },
@@ -45,30 +45,31 @@ class TestLabEvidenceController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { url, testLabId } = req.body;
+    let { count, price, programTypeId } = req.body;
 
-    const testLabRepository = getRepository(TestLab);
-    let testLab: TestLab;
+    const programTypeRepository = getRepository(ProgramType);
+    let programType: ProgramType;
     try {
-      testLab = await testLabRepository.findOneOrFail({
-        where: { id: testLabId, status: 1 },
+      programType = await programTypeRepository.findOneOrFail({
+        where: { id: programTypeId, status: 1 },
       });
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Test Lab not found"],
+        errorList: ["ProgramType not found"],
         data: null,
       });
       return;
     }
 
-    let testLabEvidence = new TestLabEvidence();
-    testLabEvidence.url = url;
-    testLabEvidence.testLab = testLab;
-    testLabEvidence.status = 1;
+    let priceData = new Price();
+    priceData.count = count;
+    priceData.price = price;
+    priceData.programType = programType;
+    priceData.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(testLabEvidence);
+    const errors = await validate(priceData);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -85,11 +86,11 @@ class TestLabEvidenceController {
       return;
     }
 
-    const repository = getRepository(TestLabEvidence);
+    const repository = getRepository(Price);
     try {
-      await repository.save(testLabEvidence);
+      await repository.save(priceData);
     } catch (e) {
-      errorList.push("failed to save testLab type");
+      errorList.push("failed to save");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -102,7 +103,7 @@ class TestLabEvidenceController {
     res.status(201).send({
       error: false,
       errorList: [],
-      data: "TestLab evidence created",
+      data: "Price created",
     });
   };
 
@@ -111,28 +112,28 @@ class TestLabEvidenceController {
     const id = req.params.id;
 
     //Get values from the body
-    let { url, testLabId } = req.body;
+    let { count, price, programTypeId } = req.body;
 
-    const testLabRepository = getRepository(TestLab);
-    let testLab: TestLab;
+    const programTypeRepository = getRepository(ProgramType);
+    let programType: ProgramType;
     try {
-      testLab = await testLabRepository.findOneOrFail({
-        where: { id: testLabId, status: 1 },
+      programType = await programTypeRepository.findOneOrFail({
+        where: { id: programTypeId, status: 1 },
       });
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Test Lab not found"],
+        errorList: ["ProgramType not found"],
         data: null,
       });
       return;
     }
 
     //Try to find data on database
-    const repository = getRepository(TestLabEvidence);
-    let testLabEvidence: TestLabEvidence;
+    const repository = getRepository(Price);
+    let priceData: Price;
     try {
-      testLabEvidence = await repository.findOneOrFail({
+      price = await repository.findOneOrFail({
         where: { id: id, status: 1 },
       });
     } catch (error) {
@@ -146,10 +147,11 @@ class TestLabEvidenceController {
     }
 
     //Validate the new values on model
-    testLabEvidence.url = url;
-    testLabEvidence.testLab = testLab;
+    priceData.count = count;
+    priceData.price = price;
+    price.programType = programType;
 
-    const errors = await validate(testLabEvidence);
+    const errors = await validate(priceData);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -167,7 +169,7 @@ class TestLabEvidenceController {
     }
 
     try {
-      await repository.save(testLabEvidence);
+      await repository.save(priceData);
     } catch (e) {
       errorList.push("failed to edit data");
       res.status(409).send({
@@ -185,10 +187,10 @@ class TestLabEvidenceController {
     //Get the ID from the url
     const id = req.params.id;
 
-    const repository = getRepository(TestLabEvidence);
-    let testLabEvidence: TestLabEvidence;
+    const repository = getRepository(Price);
+    let price: Price;
     try {
-      testLabEvidence = await repository.findOneOrFail({
+      price = await repository.findOneOrFail({
         where: { id: id, status: 1 },
       });
     } catch (error) {
@@ -199,12 +201,12 @@ class TestLabEvidenceController {
       });
       return;
     }
-    testLabEvidence.status = 0;
-    repository.save(testLabEvidence);
+    price.status = 0;
+    repository.save(price);
 
     //After all send a 204 (no content, but accepted) response
     res.status(204).send();
   };
 }
 
-export default TestLabEvidenceController;
+export default PriceController;

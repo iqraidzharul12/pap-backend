@@ -7,13 +7,13 @@ class LaboratoriumController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Laboratorium);
-    const doctors = await repository.find({ where: { status: 1 } });
+    const laboratoriums = await repository.find({ where: { status: 1 } });
 
     //Send the users object
     res.status(200).send({
       error: false,
       errorList: [],
-      data: doctors,
+      data: laboratoriums,
     });
   };
 
@@ -24,14 +24,14 @@ class LaboratoriumController {
     //Get the user from database
     const repository = getRepository(Laboratorium);
     try {
-      const doctor = await repository.findOneOrFail({
+      const laboratorium = await repository.findOneOrFail({
         where: { id: id, status: 1 },
       });
       //Send the users object
       res.status(200).send({
         error: false,
         errorList: [],
-        data: doctor,
+        data: laboratorium,
       });
     } catch (error) {
       res.status(404).send({
