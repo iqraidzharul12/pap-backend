@@ -10,11 +10,8 @@ class ProgramEvidenceController {
     const results = await repository.find({ where: { status: 1 } });
 
     //Send the users object
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: results,
-    });
+    res.status(200).send(results,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -28,11 +25,7 @@ class ProgramEvidenceController {
         where: { id: id, status: 1 },
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: result,
-      });
+      res.status(200).send(result);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -99,11 +92,8 @@ class ProgramEvidenceController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Program evidence created",
-    });
+    res.status(201).send("Program evidence created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

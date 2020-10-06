@@ -13,11 +13,8 @@ class PatientController {
     });
 
     //Send the users object
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: doctors,
-    });
+    res.status(200).send(doctors,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -31,11 +28,7 @@ class PatientController {
         where: { id: id, status: 1 },
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: doctor,
-      });
+      res.status(200).send(doctor);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -111,11 +104,8 @@ class PatientController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Patient created",
-    });
+    res.status(201).send("Patient created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

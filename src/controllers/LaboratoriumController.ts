@@ -10,11 +10,8 @@ class LaboratoriumController {
     const laboratoriums = await repository.find({ where: { status: 1 } });
 
     //Send the users object
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: laboratoriums,
-    });
+    res.status(200).send(laboratoriums,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -28,11 +25,7 @@ class LaboratoriumController {
         where: { id: id, status: 1 },
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: laboratorium,
-      });
+      res.status(200).send(laboratorium);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -84,11 +77,8 @@ class LaboratoriumController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Laboratorium created",
-    });
+    res.status(201).send("Laboratorium created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

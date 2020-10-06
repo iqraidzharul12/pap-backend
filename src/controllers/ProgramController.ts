@@ -19,11 +19,8 @@ class ProgramController {
     });
 
     //Send the users objectz
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: results,
-    });
+    res.status(200).send(results,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -44,11 +41,7 @@ class ProgramController {
         ],
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: result,
-      });
+      res.status(200).send(result);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -132,11 +125,8 @@ class ProgramController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Program created",
-    });
+    res.status(201).send("Program created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

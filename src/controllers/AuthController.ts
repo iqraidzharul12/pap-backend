@@ -55,11 +55,7 @@ class AuthController {
 
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: patient,
-      });
+      res.status(200).send(patient);
     } else {
       res.status(401).send({
         error: true,

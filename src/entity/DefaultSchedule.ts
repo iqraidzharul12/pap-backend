@@ -17,6 +17,10 @@ export class DefaultSchedule {
   @IsNotEmpty()
   time: string;
 
+  @Column()
+  @IsNotEmpty()
+  status: number;
+
   @ManyToOne(() => ProgramType, (programType) => programType.defaultSchedules)
   programType: ProgramType;
 

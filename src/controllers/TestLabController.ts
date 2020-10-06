@@ -20,11 +20,8 @@ class TestLabController {
     });
 
     //Send the users objectz
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: results,
-    });
+    res.status(200).send(results,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -46,11 +43,7 @@ class TestLabController {
         ],
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: result,
-      });
+      res.status(200).send(result);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -140,11 +133,8 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "TestLab type created",
-    });
+    res.status(201).send("TestLab type created",
+    );
   };
 
   static createSelfTest = async (req: Request, res: Response) => {
@@ -208,11 +198,8 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "TestLab type created",
-    });
+    res.status(201).send("TestLab type created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

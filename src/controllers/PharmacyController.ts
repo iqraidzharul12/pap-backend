@@ -10,11 +10,8 @@ class PharmacyController {
     const pharmacys = await repository.find({ where: { status: 1 } });
 
     //Send the users object
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: pharmacys,
-    });
+    res.status(200).send(pharmacys,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -28,11 +25,7 @@ class PharmacyController {
         where: { id: id, status: 1 },
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: pharmacy,
-      });
+      res.status(200).send(pharmacy);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -84,11 +77,8 @@ class PharmacyController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Pharmacy created",
-    });
+    res.status(201).send("Pharmacy created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {

@@ -10,11 +10,8 @@ class VoucherController {
     const vouchers = await repository.find({ where: { status: 1 } });
 
     //Send the users object
-    res.status(200).send({
-      error: false,
-      errorList: [],
-      data: vouchers,
-    });
+    res.status(200).send(vouchers,
+    );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -28,11 +25,7 @@ class VoucherController {
         where: { id: id, status: 1 },
       });
       //Send the users object
-      res.status(200).send({
-        error: false,
-        errorList: [],
-        data: voucher,
-      });
+      res.status(200).send(voucher);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -83,11 +76,8 @@ class VoucherController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      error: false,
-      errorList: [],
-      data: "Voucher created",
-    });
+    res.status(201).send("Voucher created",
+    );
   };
 
   static edit = async (req: Request, res: Response) => {
