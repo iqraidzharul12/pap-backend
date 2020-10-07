@@ -92,8 +92,7 @@ class TestLabEvidenceController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("TestLab evidence created",
-    );
+    res.status(201).send({ data: "Test Lab Evidence created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -167,8 +166,8 @@ class TestLabEvidenceController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -192,8 +191,8 @@ class TestLabEvidenceController {
     testLabEvidence.status = 0;
     repository.save(testLabEvidence);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

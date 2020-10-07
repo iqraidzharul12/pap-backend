@@ -104,8 +104,7 @@ class PatientController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("Patient created",
-    );
+    res.status(201).send({ data: "Patient created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -183,8 +182,8 @@ class PatientController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -208,8 +207,8 @@ class PatientController {
     patient.status = 0;
     repository.save(patient);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

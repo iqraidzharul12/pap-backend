@@ -133,8 +133,7 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("TestLab type created",
-    );
+    res.status(201).send({ data: "Test Lab created" });
   };
 
   static createSelfTest = async (req: Request, res: Response) => {
@@ -198,8 +197,7 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("TestLab type created",
-    );
+    res.status(201).send({ data: "Test Lab created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -290,8 +288,8 @@ class TestLabController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -315,8 +313,8 @@ class TestLabController {
     testLab.status = 0;
     repository.save(testLab);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

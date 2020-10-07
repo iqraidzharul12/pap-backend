@@ -93,8 +93,7 @@ class PriceController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("Price created",
-    );
+    res.status(201).send({ data: "Price created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -169,8 +168,8 @@ class PriceController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -194,8 +193,8 @@ class PriceController {
     price.status = 0;
     repository.save(price);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

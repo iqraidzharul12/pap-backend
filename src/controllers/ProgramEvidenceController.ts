@@ -92,8 +92,9 @@ class ProgramEvidenceController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("Program evidence created",
-    );
+    res.status(201).send({
+      data: "Program evidence created",
+    });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -167,8 +168,8 @@ class ProgramEvidenceController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -192,8 +193,8 @@ class ProgramEvidenceController {
     programEvidence.status = 0;
     repository.save(programEvidence);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

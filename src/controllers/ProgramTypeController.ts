@@ -76,8 +76,7 @@ class ProgramTypeController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("Program type created",
-    );
+    res.status(201).send({ data: "Program Type created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -136,8 +135,8 @@ class ProgramTypeController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -161,8 +160,8 @@ class ProgramTypeController {
     programType.status = 0;
     repository.save(programType);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 

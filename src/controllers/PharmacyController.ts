@@ -77,8 +77,7 @@ class PharmacyController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send("Pharmacy created",
-    );
+    res.status(201).send({ data: "Pharmacy created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -135,8 +134,8 @@ class PharmacyController {
       });
       return;
     }
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 
   static delete = async (req: Request, res: Response) => {
@@ -158,8 +157,8 @@ class PharmacyController {
     pharmacy.status = 0;
     repository.save(pharmacy);
 
-    //After all send a 204 (no content, but accepted) response
-    res.status(204).send();
+
+    res.status(200).send({ data: "success" });
   };
 }
 
