@@ -5,13 +5,13 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 
 //Get all data
-router.get("/", DoctorController.listAll);
+router.get("/", [checkJwt], DoctorController.listAll);
 
 // Get one data
-router.get("/:id", DoctorController.getOneById);
+router.get("/:id", [checkJwt], DoctorController.getOneById);
 
 //Create a new data
-router.post("/", DoctorController.create);
+router.post("/", [checkJwt], DoctorController.create);
 
 //Edit one data
 router.patch("/:id", [checkJwt], DoctorController.edit);

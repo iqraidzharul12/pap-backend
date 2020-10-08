@@ -5,7 +5,7 @@ class FileUploadController {
     if (req.file) {
       const imagePath = req.file.path.split(process.cwd())[1].replace("\\", "/")
       //Send the users object
-      res.status(200).send(imagePath,);
+      res.status(200).send({ data: imagePath });
     } else {
       res.status(400).send({
         error: false,

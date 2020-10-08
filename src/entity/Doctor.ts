@@ -42,6 +42,10 @@ export class Doctor {
   @IsEmail()
   email: string;
 
+  @Column({ nullable: true })
+  @IsNotEmpty()
+  code: string;
+
   @Column()
   @IsNotEmpty()
   status: number;

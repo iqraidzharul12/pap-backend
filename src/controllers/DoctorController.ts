@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Doctor } from "../entity";
+import { randomString } from "../utils/String";
 
 class DoctorController {
   static listAll = async (req: Request, res: Response) => {
@@ -55,6 +56,7 @@ class DoctorController {
     doctor.gender = gender;
     doctor.email = email;
     doctor.status = 1;
+    doctor.code = randomString(5)
 
     //Validade if the parameters are ok
     const errors = await validate(doctor);
