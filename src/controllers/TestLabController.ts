@@ -56,7 +56,7 @@ class TestLabController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { patientId, doctorId, testLabTypeId, laboratoriumId, voucherId } = req.body;
+    let { patientId, doctorId, testLabTypeId, laboratoriumId, voucherCode } = req.body;
 
     const patientRepository = getRepository(Patient);
     const doctorRepository = getRepository(Doctor);
@@ -82,7 +82,7 @@ class TestLabController {
         where: { id: laboratoriumId, status: 1 },
       });
       voucher = await voucherRepository.findOneOrFail({
-        where: { id: voucherId, status: 1 },
+        where: { code: voucherCode, status: 1 },
       });
     } catch (error) {
       res.status(404).send({
