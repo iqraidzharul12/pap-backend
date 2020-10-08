@@ -55,46 +55,50 @@ class ProgramEvidenceController {
       return;
     }
 
-    let programEvidence = new ProgramEvidence();
-    programEvidence.url = url;
-    programEvidence.program = program;
-    programEvidence.status = 1;
-
-    //Validade if the parameters are ok
-    const errors = await validate(programEvidence);
     const errorList = [];
-    if (errors.length > 0) {
-      errors.forEach((item) => {
-        if (item.constraints.isNotEmpty)
-          errorList.push(item.constraints.isNotEmpty);
-        if (item.constraints.isEmail) errorList.push(item.constraints.isEmail);
-        if (item.constraints.length) errorList.push(item.constraints.length);
-      });
-      res.status(400).send({
-        error: true,
-        errorList: errorList,
-        data: null,
-      });
-      return;
-    }
-
     const repository = getRepository(ProgramEvidence);
-    try {
-      await repository.save(programEvidence);
-    } catch (e) {
-      errorList.push("failed to save program evidence");
-      res.status(409).send({
-        error: true,
-        errorList: errorList,
-        data: null,
-      });
-      return;
+
+    if (Array.isArray(url)) {
+      url.forEach(async (item) => {
+        let programEvidence = new ProgramEvidence();
+        programEvidence.url = item;
+        programEvidence.program = program;
+        programEvidence.status = 1;
+
+        try {
+          await repository.save(programEvidence);
+        } catch (e) {
+          errorList.push("failed to save program evidence " + item);
+        }
+      })
+      if (errorList.length) {
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+      }
+    } else {
+      let programEvidence = new ProgramEvidence();
+      programEvidence.url = url;
+      programEvidence.program = program;
+      programEvidence.status = 1;
+
+      try {
+        await repository.save(programEvidence);
+      } catch (e) {
+        errorList.push("failed to save program evidence");
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+        return;
+      }
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      data: "Program evidence created",
-    });
+    res.status(201).send({ data: "Program evidence saved" });
   };
 
   static edit = async (req: Request, res: Response) => {

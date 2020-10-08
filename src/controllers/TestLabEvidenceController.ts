@@ -55,44 +55,49 @@ class TestLabEvidenceController {
       return;
     }
 
-    let testLabEvidence = new TestLabEvidence();
-    testLabEvidence.url = url;
-    testLabEvidence.testLab = testLab;
-    testLabEvidence.status = 1;
-
-    //Validade if the parameters are ok
-    const errors = await validate(testLabEvidence);
     const errorList = [];
-    if (errors.length > 0) {
-      errors.forEach((item) => {
-        if (item.constraints.isNotEmpty)
-          errorList.push(item.constraints.isNotEmpty);
-        if (item.constraints.isEmail) errorList.push(item.constraints.isEmail);
-        if (item.constraints.length) errorList.push(item.constraints.length);
-      });
-      res.status(400).send({
-        error: true,
-        errorList: errorList,
-        data: null,
-      });
-      return;
-    }
-
     const repository = getRepository(TestLabEvidence);
-    try {
-      await repository.save(testLabEvidence);
-    } catch (e) {
-      errorList.push("failed to save testLab type");
-      res.status(409).send({
-        error: true,
-        errorList: errorList,
-        data: null,
-      });
-      return;
-    }
 
+    if (Array.isArray(url)) {
+      url.forEach(async (item) => {
+        let testLabEvidence = new TestLabEvidence();
+        testLabEvidence.url = item;
+        testLabEvidence.testLab = testLab;
+        testLabEvidence.status = 1;
+
+        try {
+          await repository.save(testLabEvidence);
+        } catch (e) {
+          errorList.push("failed to save testLab evidence " + item);
+        }
+      })
+      if (errorList.length) {
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+      }
+    } else {
+      let testLabEvidence = new TestLabEvidence();
+      testLabEvidence.url = url;
+      testLabEvidence.testLab = testLab;
+      testLabEvidence.status = 1;
+
+      try {
+        await repository.save(testLabEvidence);
+      } catch (e) {
+        errorList.push("failed to save testLab evidence");
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+        return;
+      }
+    }
     //If all ok, send 201 response
-    res.status(201).send({ data: "Test Lab Evidence created" });
+    res.status(201).send({ data: "Test Lab Evidence saved" });
   };
 
   static edit = async (req: Request, res: Response) => {
