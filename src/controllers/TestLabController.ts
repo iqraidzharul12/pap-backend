@@ -72,22 +72,62 @@ class TestLabController {
       patient = await patientRepository.findOneOrFail({
         where: { id: patientId, status: 1 },
       });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Patient not found"],
+        data: null,
+      });
+      return;
+    }
+
+    try {
       doctor = await doctorRepository.findOneOrFail({
         where: { id: doctorId, status: 1 },
       });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Doctor not found"],
+        data: null,
+      });
+      return;
+    }
+
+    try {
       testLabType = await testLabTypeRepository.findOneOrFail({
         where: { id: testLabTypeId, status: 1 },
       });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Test Lab Type data not found"],
+        data: null,
+      });
+      return;
+    }
+
+    try {
       laboratorium = await laboratoriumRepository.findOneOrFail({
         where: { id: laboratoriumId, status: 1 },
       });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Laboratorium not found"],
+        data: null,
+      });
+      return;
+    }
+
+    try {
       voucher = await voucherRepository.findOneOrFail({
         where: { code: voucherCode, status: 1 },
       });
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Parameter data not found"],
+        errorList: ["Voucher not found"],
         data: null,
       });
       return;
