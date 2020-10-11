@@ -173,7 +173,7 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Test Lab created" });
+    res.status(201).send(testLab);
   };
 
   static createSelfTest = async (req: Request, res: Response) => {
