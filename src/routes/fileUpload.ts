@@ -7,7 +7,7 @@ const router = Router();
 //Upload ID and Selfie
 router.post("/id", [uploadId], FileUploadController.upload);
 router.post("/selfie", [uploadSelfie], FileUploadController.upload);
-router.post("/prescription", [checkJwt, uploadPrescription], FileUploadController.upload);
-router.post("/lab-result", [checkJwt, uploadLabResult], FileUploadController.upload);
+router.post("/prescription", [uploadPrescription], FileUploadController.upload);
+router.post("/lab-result", [uploadLabResult], FileUploadController.upload);
 
 export default router;
