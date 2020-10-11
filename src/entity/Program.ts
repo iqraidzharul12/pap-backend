@@ -36,6 +36,9 @@ export class Program {
   @IsNotEmpty()
   status: number;
 
+  @Column({ nullable: true })
+  checkPoint: number;
+
   @Column()
   @CreateDateColumn()
   createdAt: Date;

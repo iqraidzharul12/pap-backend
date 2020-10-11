@@ -5,18 +5,18 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 
 //Get all data
-router.get("/", [checkJwt], PatientController.listAll);
+router.get("/", PatientController.listAll);
 
 // Get one data
-router.get("/:id", [checkJwt], PatientController.getOneById);
+router.get("/:id", PatientController.getOneById);
 
 //Create a new data
 router.post("/", PatientController.create);
 
 //Edit one data
-router.patch("/:id", [checkJwt], PatientController.edit);
+router.patch("/:id", PatientController.edit);
 
 //Delete one data
-router.delete("/:id", [checkJwt], PatientController.delete);
+router.delete("/:id", PatientController.delete);
 
 export default router;

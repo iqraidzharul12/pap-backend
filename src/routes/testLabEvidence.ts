@@ -5,18 +5,18 @@ import { checkJwt } from "../middlewares/checkJwt";
 const router = Router();
 
 //Get all data
-router.get("/", [checkJwt], TestLabEvidenceController.listAll);
+router.get("/", TestLabEvidenceController.listAll);
 
 // Get one data
-router.get("/:id", [checkJwt], TestLabEvidenceController.getOneById);
+router.get("/:id", TestLabEvidenceController.getOneById);
 
 //Create a new data
 router.post("/", TestLabEvidenceController.create);
 
 //Edit one data
-router.patch("/:id", [checkJwt], TestLabEvidenceController.edit);
+router.patch("/:id", TestLabEvidenceController.edit);
 
 //Delete one data
-router.delete("/:id", [checkJwt], TestLabEvidenceController.delete);
+router.delete("/:id", TestLabEvidenceController.delete);
 
 export default router;

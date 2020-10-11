@@ -47,7 +47,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;
@@ -75,7 +75,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Patient not found"],
+        errorList: ["Patient tidak ditemukan"],
         data: null,
       });
       return;
@@ -88,7 +88,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Doctor not found"],
+        errorList: ["Doctor tidak ditemukan"],
         data: null,
       });
       return;
@@ -101,7 +101,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Test Lab Type data not found"],
+        errorList: ["Test Lab Type data tidak ditemukan"],
         data: null,
       });
       return;
@@ -114,7 +114,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Laboratorium not found"],
+        errorList: ["Laboratorium tidak ditemukan"],
         data: null,
       });
       return;
@@ -127,7 +127,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Voucher not found"],
+        errorList: ["Voucher tidak ditemukan"],
         data: null,
       });
       return;
@@ -194,7 +194,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Parameter data not found"],
+        errorList: ["Parameter data tidak ditemukan"],
         data: null,
       });
       return;
@@ -271,7 +271,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Parameter data not found"],
+        errorList: ["Parameter data tidak ditemukan"],
         data: null,
       });
       return;
@@ -285,10 +285,10 @@ class TestLabController {
         where: { id: id, status: 1 },
       });
     } catch (error) {
-      //If not found, send a 404 response
+      //If tidak ditemukan, send a 404 response
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;
@@ -345,7 +345,7 @@ class TestLabController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;

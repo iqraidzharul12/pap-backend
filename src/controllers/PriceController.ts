@@ -29,7 +29,7 @@ class PriceController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;
@@ -49,7 +49,7 @@ class PriceController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["ProgramType not found"],
+        errorList: ["ProgramType tidak ditemukan"],
         data: null,
       });
       return;
@@ -112,7 +112,7 @@ class PriceController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["ProgramType not found"],
+        errorList: ["ProgramType tidak ditemukan"],
         data: null,
       });
       return;
@@ -126,10 +126,10 @@ class PriceController {
         where: { id: id, status: 1 },
       });
     } catch (error) {
-      //If not found, send a 404 response
+      //If tidak ditemukan, send a 404 response
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;
@@ -185,7 +185,7 @@ class PriceController {
     } catch (error) {
       res.status(404).send({
         error: false,
-        errorList: ["Data not found"],
+        errorList: ["Data tidak ditemukan"],
         data: null,
       });
       return;
