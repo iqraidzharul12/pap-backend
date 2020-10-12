@@ -26,14 +26,14 @@ const storageSelfiePicture = multer.diskStorage({
     callback(
       null,
       "SELFIE-" +
-        new Date().valueOf() +
-        "." +
-        file.originalname.split(".").pop()
+      new Date().valueOf() +
+      "." +
+      file.originalname.split(".").pop()
     );
   },
 });
 
-const storagePrescription = (id: string) =>{
+const storagePrescription = (id: string) => {
   return multer.diskStorage({
     destination: (request, file, callback) => {
       let path = `${process.cwd()}/uploads/`;
@@ -44,15 +44,15 @@ const storagePrescription = (id: string) =>{
       callback(
         null,
         "PRESCRIPTION-" +
-          new Date().valueOf() +
-          "." +
-          file.originalname.split(".").pop()
+        new Date().valueOf() +
+        "." +
+        file.originalname.split(".").pop()
       );
     },
   });
-} 
+}
 
-const storageLabResult = (id: string) =>{
+const storageLabResult = (id: string) => {
   return multer.diskStorage({
     destination: (request, file, callback) => {
       let path = `${process.cwd()}/uploads/`;
@@ -63,19 +63,19 @@ const storageLabResult = (id: string) =>{
       callback(
         null,
         "LAB-RESULT-" +
-          new Date().valueOf() +
-          "." +
-          file.originalname.split(".").pop()
+        new Date().valueOf() +
+        "." +
+        file.originalname.split(".").pop()
       );
     },
   });
-} 
+}
 
 const fileFilter = (request: any, file: any, callback: any) => {
   if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
     callback(null, true);
   } else {
-    return callback(new Error("Extension File Must Be JPG or PNG"), false);
+    return callback(new Error("Extension File Must Be JPG or PNG, current format: " + file.mimetype), false);
   }
 };
 
@@ -93,21 +93,21 @@ let uploadSelfiePicture = multer({
   limits,
 }).single("upload");
 
-let uploadPrescriptionPicture = (id: string)=>{
+let uploadPrescriptionPicture = (id: string) => {
   return multer({
     storage: storagePrescription(id),
     fileFilter: fileFilter,
     limits,
   }).single("upload");
-} 
+}
 
-let uploadLabResultPicture = (id: string)=>{
+let uploadLabResultPicture = (id: string) => {
   return multer({
     storage: storageLabResult(id),
     fileFilter: fileFilter,
     limits,
   }).single("upload");
-} 
+}
 
 const uploadId = (req: Request, res: Response, next: NextFunction) => {
   uploadIdPicture(req, res, function (error: any) {
@@ -152,7 +152,7 @@ const uploadSelfie = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const uploadPrescription = (req: Request, res: Response, next: NextFunction) => {
-  let {userId} = res.locals.jwtPayload
+  let { userId } = res.locals.jwtPayload
   uploadPrescriptionPicture(userId)(req, res, function (error: any) {
     if (error instanceof multer.MulterError) {
       res.status(400).send({
@@ -174,7 +174,7 @@ const uploadPrescription = (req: Request, res: Response, next: NextFunction) => 
 };
 
 const uploadLabResult = (req: Request, res: Response, next: NextFunction) => {
-  let {userId} = res.locals.jwtPayload
+  let { userId } = res.locals.jwtPayload
   uploadLabResultPicture(userId)(req, res, function (error: any) {
     if (error instanceof multer.MulterError) {
       res.status(400).send({

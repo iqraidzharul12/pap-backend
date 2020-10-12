@@ -68,7 +68,7 @@ class ProgramEvidenceController {
         try {
           await repository.save(programEvidence);
         } catch (e) {
-          errorList.push("failed to save program evidence " + item);
+          errorList.push("Resep gagal di upload: " + item);
         }
       })
       if (errorList.length) {
@@ -83,11 +83,11 @@ class ProgramEvidenceController {
       programEvidence.url = url;
       programEvidence.program = program;
       programEvidence.status = 1;
-
       try {
         await repository.save(programEvidence);
       } catch (e) {
-        errorList.push("failed to save program evidence");
+        console.log("Resep gagal di upload", e);
+        errorList.push("Resep gagal di upload");
         res.status(409).send({
           error: true,
           errorList: errorList,
@@ -97,8 +97,22 @@ class ProgramEvidenceController {
       }
     }
 
+    try {
+      program.checkPoint = 4;
+      await programRepository.save(program);
+    } catch (e) {
+      console.log("Gagal mengupdate status program", e);
+      errorList.push("Gagal mengupdate status program");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
     //If all ok, send 201 response
-    res.status(201).send({ data: "Program evidence saved" });
+    res.status(201).send({ data: "Resep berhasil diupload" });
   };
 
   static edit = async (req: Request, res: Response) => {
