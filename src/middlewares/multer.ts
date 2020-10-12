@@ -72,7 +72,7 @@ const storageLabResult = (id: string) => {
 }
 
 const fileFilter = (request: any, file: any, callback: any) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" || file.mimetype === "image/*") {
     callback(null, true);
   } else {
     return callback(new Error("Extension File Must Be JPG or PNG, current format: " + file.mimetype), false);
