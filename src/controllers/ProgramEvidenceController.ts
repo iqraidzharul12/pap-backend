@@ -44,7 +44,7 @@ class ProgramEvidenceController {
     let program: Program;
     try {
       program = await programRepository.findOneOrFail({
-        where: { id: programId, status: 1 },
+        where: { id: programId, status: 1, checkPoint: 3 },
       });
     } catch (error) {
       res.status(404).send({

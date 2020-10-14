@@ -164,16 +164,105 @@ class ProgramController {
     const repository = getRepository(Program);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1, checkPoint: 2 },
       });
-      if (result) result.checkPoint = 3;
-      repository.save(result)
-      //Send the users object
-      res.status(200).send(result);
+      if (result) {
+        result.checkPoint = 3;
+        repository.save(result)
+        //Send the users object
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
     } catch (error) {
       res.status(404).send({
         error: false,
         errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static approve = async (req: Request, res: Response) => {
+    let { id, pharmacyId } = req.body;
+
+    const pharmacyRepository = getRepository(Pharmacy);
+    let pharmacy: Pharmacy;
+    try {
+      pharmacy = await pharmacyRepository.findOneOrFail({
+        where: { id: pharmacyId, status: 1 },
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data apotek tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
+    //Get data from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 4 },
+      });
+      if (result) {
+        result.checkPoint = 5;
+        result.pharmacy = pharmacy
+        repository.save(result)
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data program tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static reject = async (req: Request, res: Response) => {
+    let { id, message } = req.body;
+
+    //Get the user from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 4 },
+      });
+      if (result) {
+        result.checkPoint = 5;
+        result.message = message
+        repository.save(result)
+        //Send the users object
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data program tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
         data: null,
       });
       return;

@@ -13,6 +13,8 @@ router.get("/:id", ProgramController.getOneById);
 //Create a new data
 router.post("/", ProgramController.create);
 router.post("/confirm", ProgramController.checkDoctorConfirmation);
+router.post("/approve", ProgramController.approve);
+router.post("/reject", ProgramController.reject);
 
 //Edit one data
 router.patch("/:id", ProgramController.edit);

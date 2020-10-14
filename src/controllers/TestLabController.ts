@@ -125,12 +125,7 @@ class TestLabController {
         where: { code: voucherCode, status: 1 },
       });
     } catch (error) {
-      res.status(404).send({
-        error: false,
-        errorList: ["Voucher tidak ditemukan"],
-        data: null,
-      });
-      return;
+      console.log("Voucher tidak ditemukan");
     }
 
     let testLab = new TestLab();

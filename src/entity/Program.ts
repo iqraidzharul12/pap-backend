@@ -39,6 +39,9 @@ export class Program {
   @Column({ nullable: true })
   checkPoint: number;
 
+  @Column({ nullable: true })
+  message: String;
+
   @Column()
   @CreateDateColumn()
   createdAt: Date;
