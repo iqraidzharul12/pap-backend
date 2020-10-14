@@ -4,10 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany, ManyToOne
+  OneToMany, ManyToOne, OneToOne, JoinColumn
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { Doctor, Patient, Pharmacy, ProgramEvidence, ProgramType } from ".";
+import { Doctor, Patient, Pharmacy, ProgramEvidence, ProgramType, TestLab } from ".";
 
 @Entity()
 export class Program {
@@ -41,6 +41,10 @@ export class Program {
 
   @Column({ nullable: true })
   message: String;
+
+  @OneToOne(() => TestLab)
+  @JoinColumn()
+  testLab: TestLab;
 
   @Column()
   @CreateDateColumn()

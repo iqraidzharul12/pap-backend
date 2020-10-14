@@ -5,16 +5,29 @@ import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType }
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
+    const { checkPoint } = req.query
+    let conditions = {}
+    if (checkPoint) {
+      conditions = {
+        status: 1,
+        checkPoint: checkPoint,
+      }
+    } else {
+      conditions = {
+        status: 1
+      }
+    }
     //Get users from database
     const repository = getRepository(Program);
     const results = await repository.find({
-      where: { status: 1 },
+      where: conditions,
       relations: [
         "patient",
         "doctor",
         "programType",
         "pharmacy",
         "programEvidences",
+        "testLab",
       ],
     });
 
@@ -38,8 +51,17 @@ class ProgramController {
           "programType",
           "pharmacy",
           "programEvidences",
+          "testLab",
         ],
       });
+      const testLab = await getRepository(TestLab).findOneOrFail({
+        where: { id: result.testLab.id, status: 1 },
+        relations: [
+          "testLabEvidences",
+          "testLabType",
+        ],
+      });
+      result.testLab = testLab
       //Send the users object
       res.status(200).send(result);
     } catch (error) {
