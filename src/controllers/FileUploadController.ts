@@ -8,8 +8,8 @@ class FileUploadController {
       res.status(200).send({ data: path });
     } else {
       res.status(400).send({
-        error: false,
-        errorList: [],
+        error: true,
+        errorList: ["file gagal diupload"],
         data: null,
       });
       return;
