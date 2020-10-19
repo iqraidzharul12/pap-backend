@@ -7,7 +7,7 @@ class ProgramEvidenceController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(ProgramEvidence);
-    const results = await repository.find({ where: { status: 1 } });
+    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -22,7 +22,9 @@ class ProgramEvidenceController {
     const repository = getRepository(ProgramEvidence);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(result);
@@ -126,7 +128,9 @@ class ProgramEvidenceController {
     let program: Program;
     try {
       program = await programRepository.findOneOrFail({
-        where: { id: programId, status: 1 },
+        where: { id: programId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -142,7 +146,9 @@ class ProgramEvidenceController {
     let programEvidence: ProgramEvidence;
     try {
       programEvidence = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -198,7 +204,9 @@ class ProgramEvidenceController {
     let programEvidence: ProgramEvidence;
     try {
       programEvidence = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

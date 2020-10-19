@@ -7,7 +7,7 @@ class PharmacyController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Pharmacy);
-    const pharmacys = await repository.find({ where: { status: 1 } });
+    const pharmacys = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(pharmacys,
@@ -22,7 +22,9 @@ class PharmacyController {
     const repository = getRepository(Pharmacy);
     try {
       const pharmacy = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(pharmacy);
@@ -91,7 +93,7 @@ class PharmacyController {
     const repository = getRepository(Pharmacy);
     let pharmacy: Pharmacy;
     try {
-      pharmacy = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      pharmacy = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -145,7 +147,7 @@ class PharmacyController {
     const repository = getRepository(Pharmacy);
     let pharmacy: Pharmacy;
     try {
-      pharmacy = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      pharmacy = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,

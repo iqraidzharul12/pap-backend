@@ -44,7 +44,9 @@ class ProgramController {
     const repository = getRepository(Program);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        },
         relations: [
           "patient",
           "doctor",
@@ -55,7 +57,9 @@ class ProgramController {
         ],
       });
       const testLab = await getRepository(TestLab).findOneOrFail({
-        where: { id: result.testLab.id, status: 1 },
+        where: { id: result.testLab.id, status: 1 }, order: {
+          createdAt: "ASC"
+        },
         relations: [
           "testLabEvidences",
           "testLabType",
@@ -86,7 +90,9 @@ class ProgramController {
     let programType: ProgramType;
     try {
       patient = await patientRepository.findOneOrFail({
-        where: { id: patientId, status: 1 },
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -98,7 +104,9 @@ class ProgramController {
     }
     try {
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 },
+        where: { id: doctorId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -110,7 +118,9 @@ class ProgramController {
     }
     try {
       programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 },
+        where: { id: programTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -131,10 +141,14 @@ class ProgramController {
     let testLab: TestLab;
     try {
       testLab = await testLabRepository.findOneOrFail({
-        where: { patient, status: 1 }, relations: ['testLabType']
+        where: { patient, status: 1 }, order: {
+          createdAt: "ASC"
+        }, relations: ['testLabType']
       });
       const testLabType = await getRepository(TestLabType).findOneOrFail({
-        where: { id: testLab.testLabType.id, status: 1 }, relations: ['programType']
+        where: { id: testLab.testLabType.id, status: 1 }, order: {
+          createdAt: "ASC"
+        }, relations: ['programType']
       });
 
       if (testLabType.programType.id === programType.id) {
@@ -218,7 +232,9 @@ class ProgramController {
     let pharmacy: Pharmacy;
     try {
       pharmacy = await pharmacyRepository.findOneOrFail({
-        where: { id: pharmacyId, status: 1 },
+        where: { id: pharmacyId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -308,16 +324,24 @@ class ProgramController {
     let pharmacy: Pharmacy;
     try {
       patient = await patientRepository.findOneOrFail({
-        where: { id: patientId, status: 1 },
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 },
+        where: { id: doctorId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 },
+        where: { id: programTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       pharmacy = await pharmacyRepository.findOneOrFail({
-        where: { id: pharmacyId, status: 1 },
+        where: { id: pharmacyId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -333,7 +357,9 @@ class ProgramController {
     let program: Program;
     try {
       program = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -391,7 +417,9 @@ class ProgramController {
     let program: Program;
     try {
       program = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

@@ -7,7 +7,7 @@ class VoucherController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Voucher);
-    const vouchers = await repository.find({ where: { status: 1 } });
+    const vouchers = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(vouchers,
@@ -22,7 +22,9 @@ class VoucherController {
     const repository = getRepository(Voucher);
     try {
       const voucher = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(voucher);
@@ -90,7 +92,7 @@ class VoucherController {
     const repository = getRepository(Voucher);
     let voucher: Voucher;
     try {
-      voucher = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      voucher = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -143,7 +145,7 @@ class VoucherController {
     const repository = getRepository(Voucher);
     let voucher: Voucher;
     try {
-      voucher = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      voucher = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,

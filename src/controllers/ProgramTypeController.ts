@@ -7,7 +7,7 @@ class ProgramTypeController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(ProgramType);
-    const results = await repository.find({ where: { status: 1 } });
+    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -22,7 +22,9 @@ class ProgramTypeController {
     const repository = getRepository(ProgramType);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(result);
@@ -91,7 +93,9 @@ class ProgramTypeController {
     let programType: ProgramType;
     try {
       programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -147,7 +151,9 @@ class ProgramTypeController {
     let programType: ProgramType;
     try {
       programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

@@ -7,7 +7,7 @@ class TestLabEvidenceController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(TestLabEvidence);
-    const results = await repository.find({ where: { status: 1 } });
+    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -22,7 +22,9 @@ class TestLabEvidenceController {
     const repository = getRepository(TestLabEvidence);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(result);
@@ -44,7 +46,9 @@ class TestLabEvidenceController {
     let testLab: TestLab;
     try {
       testLab = await testLabRepository.findOneOrFail({
-        where: { id: testLabId, status: 1 },
+        where: { id: testLabId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -111,7 +115,9 @@ class TestLabEvidenceController {
     let testLab: TestLab;
     try {
       testLab = await testLabRepository.findOneOrFail({
-        where: { id: testLabId, status: 1 },
+        where: { id: testLabId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -127,7 +133,9 @@ class TestLabEvidenceController {
     let testLabEvidence: TestLabEvidence;
     try {
       testLabEvidence = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -183,7 +191,9 @@ class TestLabEvidenceController {
     let testLabEvidence: TestLabEvidence;
     try {
       testLabEvidence = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

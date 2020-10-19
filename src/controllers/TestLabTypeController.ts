@@ -7,7 +7,7 @@ class TestLabTypeController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(TestLabType);
-    const results = await repository.find({ where: { status: 1 } });
+    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -22,7 +22,9 @@ class TestLabTypeController {
     const repository = getRepository(TestLabType);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(result);
@@ -44,7 +46,9 @@ class TestLabTypeController {
     let programType: ProgramType;
     try {
       programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 },
+        where: { id: programTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -108,7 +112,9 @@ class TestLabTypeController {
     let programType: ProgramType;
     try {
       programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 },
+        where: { id: programTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -124,7 +130,9 @@ class TestLabTypeController {
     let testLabType: TestLabType;
     try {
       testLabType = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -182,7 +190,9 @@ class TestLabTypeController {
     let testLabType: TestLabType;
     try {
       testLabType = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

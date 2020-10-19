@@ -8,7 +8,7 @@ class DoctorController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Doctor);
-    const doctors = await repository.find({ where: { status: 1 } });
+    const doctors = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(doctors);
@@ -22,7 +22,9 @@ class DoctorController {
     const repository = getRepository(Doctor);
     try {
       const doctor = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(doctor);
@@ -113,7 +115,7 @@ class DoctorController {
     const repository = getRepository(Doctor);
     let doctor: Doctor;
     try {
-      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -172,7 +174,7 @@ class DoctorController {
     const repository = getRepository(Doctor);
     let doctor: Doctor;
     try {
-      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 } });
+      doctor = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,

@@ -7,7 +7,7 @@ class PatientController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Patient);
-    const doctors = await repository.find({ where: { status: 1 } });
+    const doctors = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
     doctors.forEach((element) => {
       delete element.password;
     });
@@ -25,7 +25,9 @@ class PatientController {
     const repository = getRepository(Patient);
     try {
       const doctor = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       //Send the users object
       res.status(200).send(doctor);
@@ -130,7 +132,9 @@ class PatientController {
     let patient: Patient;
     try {
       patient = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -194,7 +198,9 @@ class PatientController {
     let patient: Patient;
     try {
       patient = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({

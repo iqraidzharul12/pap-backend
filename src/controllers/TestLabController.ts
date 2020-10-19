@@ -8,7 +8,9 @@ class TestLabController {
     //Get users from database
     const repository = getRepository(TestLab);
     const results = await repository.find({
-      where: { status: 1 },
+      where: { status: 1 }, order: {
+        createdAt: "ASC"
+      },
       relations: [
         "patient",
         "doctor",
@@ -32,7 +34,9 @@ class TestLabController {
     const repository = getRepository(TestLab);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        },
         relations: [
           "patient",
           "doctor",
@@ -70,7 +74,9 @@ class TestLabController {
     let voucher: Voucher;
     try {
       patient = await patientRepository.findOneOrFail({
-        where: { id: patientId, status: 1 },
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        },
       });
     } catch (error) {
       res.status(404).send({
@@ -83,7 +89,9 @@ class TestLabController {
 
     try {
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 },
+        where: { id: doctorId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -96,7 +104,9 @@ class TestLabController {
 
     try {
       testLabType = await testLabTypeRepository.findOneOrFail({
-        where: { id: testLabTypeId, status: 1 },
+        where: { id: testLabTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -109,7 +119,9 @@ class TestLabController {
 
     try {
       laboratorium = await laboratoriumRepository.findOneOrFail({
-        where: { id: laboratoriumId, status: 1 },
+        where: { id: laboratoriumId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -122,7 +134,9 @@ class TestLabController {
 
     try {
       voucher = await voucherRepository.findOneOrFail({
-        where: { code: voucherCode, status: 1 },
+        where: { code: voucherCode, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       console.log("Voucher tidak ditemukan");
@@ -181,10 +195,14 @@ class TestLabController {
     let testLabType: TestLabType;
     try {
       patient = await patientRepository.findOneOrFail({
-        where: { id: patientId, status: 1 },
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       testLabType = await testLabTypeRepository.findOneOrFail({
-        where: { id: testLabTypeId, status: 1 },
+        where: { id: testLabTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -252,16 +270,24 @@ class TestLabController {
     let laboratorium: Laboratorium;
     try {
       patient = await patientRepository.findOneOrFail({
-        where: { id: patientId, status: 1 },
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 },
+        where: { id: doctorId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       testLabType = await testLabTypeRepository.findOneOrFail({
-        where: { id: testLabTypeId, status: 1 },
+        where: { id: testLabTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
       laboratorium = await laboratoriumRepository.findOneOrFail({
-        where: { id: laboratoriumId, status: 1 },
+        where: { id: laboratoriumId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
@@ -277,7 +303,9 @@ class TestLabController {
     let testLab: TestLab;
     try {
       testLab = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
@@ -335,7 +363,9 @@ class TestLabController {
     let testLab: TestLab;
     try {
       testLab = await repository.findOneOrFail({
-        where: { id: id, status: 1 },
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
       });
     } catch (error) {
       res.status(404).send({
