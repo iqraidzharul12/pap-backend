@@ -56,16 +56,20 @@ class ProgramController {
           "testLab",
         ],
       });
-      const testLab = await getRepository(TestLab).findOne({
-        where: { id: result.testLab.id, status: 1 }, order: {
-          createdAt: "ASC"
-        },
-        relations: [
-          "testLabEvidences",
-          "testLabType",
-        ],
-      });
-      result.testLab = testLab
+      try {
+        const testLab = await getRepository(TestLab).findOneOrFail({
+          where: { id: result.testLab.id, status: 1 }, order: {
+            createdAt: "ASC"
+          },
+          relations: [
+            "testLabEvidences",
+            "testLabType",
+          ],
+        });
+        result.testLab = testLab
+      } catch {
+        result.testLab = null
+      }
       //Send the users object
       res.status(200).send(result);
     } catch (error) {
