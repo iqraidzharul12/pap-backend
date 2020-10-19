@@ -56,7 +56,7 @@ class ProgramController {
           "testLab",
         ],
       });
-      const testLab = await getRepository(TestLab).findOneOrFail({
+      const testLab = await getRepository(TestLab).findOne({
         where: { id: result.testLab.id, status: 1 }, order: {
           createdAt: "ASC"
         },
