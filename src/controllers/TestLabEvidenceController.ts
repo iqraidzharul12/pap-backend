@@ -40,7 +40,7 @@ class TestLabEvidenceController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { url, testLabId } = req.body;
+    let { url, urls, testLabId } = req.body;
 
     const testLabRepository = getRepository(TestLab);
     let testLab: TestLab;
@@ -62,8 +62,8 @@ class TestLabEvidenceController {
     const errorList = [];
     const repository = getRepository(TestLabEvidence);
 
-    if (Array.isArray(url)) {
-      url.forEach(async (item) => {
+    if (urls) {
+      urls.forEach(async (item) => {
         let testLabEvidence = new TestLabEvidence();
         testLabEvidence.url = item;
         testLabEvidence.testLab = testLab;

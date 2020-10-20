@@ -276,7 +276,7 @@ class TestLabController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Test Lab created" });
+    res.status(201).send(testLab);
   };
 
   static edit = async (req: Request, res: Response) => {

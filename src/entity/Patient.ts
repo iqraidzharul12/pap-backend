@@ -19,8 +19,11 @@ export class Patient {
   @IsNotEmpty()
   fullname: string;
 
-  @Column()
+  @Column({ nullable: true })
   city: string;
+
+  @Column({ nullable: true })
+  code: string;
 
   @Column()
   @IsNotEmpty()

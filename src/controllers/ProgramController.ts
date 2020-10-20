@@ -141,9 +141,9 @@ class ProgramController {
       prevProgram = await repository.findOneOrFail({
         where: { patient: patient, status: 1 }, order: {
           createdAt: "ASC"
-        }
+        }, relations: ["testLab"]
       });
-      if (prevProgram) {
+      if (prevProgram.checkPoint >= 4) {
         res.status(404).send({
           error: false,
           errorList: ["Anda telah memiliki program pap yang sedang aktif"],
@@ -151,7 +151,10 @@ class ProgramController {
         });
         return;
       }
+      prevProgram.status = 0
+      prevProgram.testLab = null
     } catch (error) {
+      prevProgram = null
     }
 
     let program = new Program();
@@ -165,7 +168,7 @@ class ProgramController {
     try {
       testLab = await testLabRepository.findOneOrFail({
         where: { patient, status: 1 }, order: {
-          createdAt: "ASC"
+          createdAt: "DESC"
         }, relations: ['testLabType']
       });
       const testLabType = await getRepository(TestLabType).findOneOrFail({
@@ -176,7 +179,7 @@ class ProgramController {
 
       if (testLabType.programType.id === programType.id) {
         program.checkPoint = 2;
-
+        program.testLab = testLab
       }
     } catch (error) {
       program.checkPoint = 1;
@@ -200,6 +203,9 @@ class ProgramController {
 
 
     try {
+      if (prevProgram) {
+        await repository.save(prevProgram);
+      }
       await repository.save(program);
     } catch (e) {
       errorList.push("Gagal mendaftar program");
