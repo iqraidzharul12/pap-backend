@@ -20,6 +20,9 @@ export class Patient {
   fullname: string;
 
   @Column()
+  city: string;
+
+  @Column()
   @IsNotEmpty()
   dateOfBirth: Date;
 

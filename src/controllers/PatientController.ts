@@ -55,6 +55,7 @@ class PatientController {
       representativeName,
       representativePhone,
       representativeRelationship,
+      city,
     } = req.body;
     let patient = new Patient();
     patient.fullname = fullname;
@@ -65,6 +66,7 @@ class PatientController {
     patient.gender = gender;
     patient.email = email;
     patient.password = password;
+    patient.city = city;
     patient.representativeName = representativeName;
     patient.representativePhone = representativePhone;
     patient.representativeRelationship = representativeRelationship;

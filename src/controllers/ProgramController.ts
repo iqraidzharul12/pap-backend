@@ -135,6 +135,25 @@ class ProgramController {
       return;
     }
 
+    const repository = getRepository(Program);
+    let prevProgram: Program
+    try {
+      prevProgram = await repository.findOneOrFail({
+        where: { patient: patient, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+      if (prevProgram) {
+        res.status(404).send({
+          error: false,
+          errorList: ["Anda telah memiliki program pap yang sedang aktif"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+    }
+
     let program = new Program();
     program.patient = patient;
     program.doctor = doctor;
@@ -179,7 +198,7 @@ class ProgramController {
       return;
     }
 
-    const repository = getRepository(Program);
+
     try {
       await repository.save(program);
     } catch (e) {

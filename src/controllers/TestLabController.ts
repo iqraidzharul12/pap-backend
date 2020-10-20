@@ -142,6 +142,19 @@ class TestLabController {
       console.log("Voucher tidak ditemukan");
     }
 
+    const repository = getRepository(TestLab);
+    let prevTestLab: TestLab
+    try {
+      prevTestLab = await repository.findOneOrFail({
+        where: { patient: patient, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+      prevTestLab.status = 0
+    } catch (error) {
+      prevTestLab = null
+    }
+
     let testLab = new TestLab();
     testLab.patient = patient;
     testLab.doctor = doctor;
@@ -168,9 +181,9 @@ class TestLabController {
       return;
     }
 
-    const repository = getRepository(TestLab);
     try {
       await repository.save(testLab);
+      if (prevTestLab) await repository.save(prevTestLab)
     } catch (e) {
       errorList.push("failed to save testLab type");
       res.status(409).send({
@@ -213,6 +226,19 @@ class TestLabController {
       return;
     }
 
+    const repository = getRepository(TestLab);
+    let prevTestLab: TestLab
+    try {
+      prevTestLab = await repository.findOneOrFail({
+        where: { patient: patient, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+      prevTestLab.status = 0
+    } catch (error) {
+      prevTestLab = null
+    }
+
     let testLab = new TestLab();
     testLab.patient = patient;
     testLab.testLabType = testLabType;
@@ -236,9 +262,9 @@ class TestLabController {
       return;
     }
 
-    const repository = getRepository(TestLab);
     try {
       await repository.save(testLab);
+      if (prevTestLab) await repository.save(prevTestLab)
     } catch (e) {
       errorList.push("failed to save testLab type");
       res.status(409).send({
