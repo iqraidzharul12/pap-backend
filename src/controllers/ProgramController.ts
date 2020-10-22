@@ -359,7 +359,7 @@ class ProgramController {
       } else {
         res.status(404).send({
           error: false,
-          errorList: ["Data program tidak ditemukan"],
+          errorList: ["Status program gagal diubah"],
           data: null,
         });
         return;
