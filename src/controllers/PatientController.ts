@@ -99,7 +99,7 @@ class PatientController {
 
     let year = (new Date()).getFullYear().toString();
     let cityCode = "JKT";
-    switch (patient.city.toLowerCase()) {
+    switch (patient.city.toString().toLowerCase()) {
       case 'depok':
         cityCode = "DPK";
         break;
