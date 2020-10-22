@@ -429,7 +429,7 @@ class ProgramController {
         newProgram.prevProgram = result
 
         repository.save(newProgram)
-        res.status(200).send(result);
+        res.status(200).send(newProgram);
       } else {
         res.status(404).send({
           error: false,
