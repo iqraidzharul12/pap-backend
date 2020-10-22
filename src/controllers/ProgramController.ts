@@ -388,7 +388,7 @@ class ProgramController {
       if (result) {
         result.checkPoint = 6;
         result.isTerminated = true;
-        result.terminateReasone = message;
+        result.terminateMessage = message;
         repository.save(result)
         res.status(200).send(result);
       } else {
