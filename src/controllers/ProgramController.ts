@@ -344,7 +344,7 @@ class ProgramController {
   }
 
   static updateDrugsTaken = async (req: Request, res: Response) => {
-    const id = req.params.id
+    const { id } = req.body
     //Get data from database
     const repository = getRepository(Program);
     console.log(id);
