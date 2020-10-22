@@ -45,7 +45,7 @@ class ProgramController {
     const repository = getRepository(Program);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
+        where: { id: id }, order: {
           createdAt: "ASC"
         },
         relations: [
