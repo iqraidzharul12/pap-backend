@@ -347,10 +347,13 @@ class ProgramController {
     const id = req.params.id
     //Get data from database
     const repository = getRepository(Program);
+    console.log(id);
+
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 5, isApproved: true },
       });
+      console.log(result);
       if (result) {
         result.isDrugsTaken = true;
         result.drugsTakenDate = new Date();
