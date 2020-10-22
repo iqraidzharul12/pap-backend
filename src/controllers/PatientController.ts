@@ -138,7 +138,7 @@ class PatientController {
 
     try {
       const patientLists = await userRepository.find({ code: Like(`%${patient.code}%`) });
-      const lastIndex = patientLists.length
+      const lastIndex = patientLists.length + 1
       patient.code += formatNumberDigit(3, lastIndex)
     } catch (e) {
       errorList.push("tidak bisa membuat id pasien");
