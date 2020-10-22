@@ -99,37 +99,39 @@ class PatientController {
 
     let year = (new Date()).getFullYear().toString();
     let cityCode = "JKT";
-    switch (patient.city.toString().toLowerCase()) {
-      case 'depok':
-        cityCode = "DPK";
-        break;
-      case 'bekasi':
-        cityCode = "BKS";
-        break;
-      case 'dki jakarta':
-        cityCode = "JKT";
-        break;
-      case 'tangerang':
-        cityCode = "TGR";
-        break;
-      case 'bogor':
-        cityCode = "BGR";
-        break;
-      case 'bandung':
-        cityCode = "BDG";
-        break;
-      case 'cirebon':
-        cityCode = "CRB";
-        break;
-      case 'surabaya':
-        cityCode = "SBY";
-        break;
-      case 'semarang':
-        cityCode = "SMR";
-        break;
-      default:
-        cityCode = "JKT";
-        break;
+    if (patient.city) {
+      switch (patient.city.toLowerCase()) {
+        case 'depok':
+          cityCode = "DPK";
+          break;
+        case 'bekasi':
+          cityCode = "BKS";
+          break;
+        case 'dki jakarta':
+          cityCode = "JKT";
+          break;
+        case 'tangerang':
+          cityCode = "TGR";
+          break;
+        case 'bogor':
+          cityCode = "BGR";
+          break;
+        case 'bandung':
+          cityCode = "BDG";
+          break;
+        case 'cirebon':
+          cityCode = "CRB";
+          break;
+        case 'surabaya':
+          cityCode = "SBY";
+          break;
+        case 'semarang':
+          cityCode = "SMR";
+          break;
+        default:
+          cityCode = "JKT";
+          break;
+      }
     }
 
     patient.code = year + cityCode
