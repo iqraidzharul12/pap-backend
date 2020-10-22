@@ -9,14 +9,15 @@ class ProgramController {
     let conditions = {}
     if (checkPoint) {
       conditions = {
-        status: 1,
+        // status: 1,
         checkPoint: checkPoint,
       }
-    } else {
-      conditions = {
-        status: 1
-      }
     }
+    // else {
+    //   conditions = {
+    //     status: 1
+    //   }
+    // }
     //Get users from database
     const repository = getRepository(Program);
     const results = await repository.find({
