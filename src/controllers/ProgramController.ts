@@ -37,6 +37,25 @@ class ProgramController {
     );
   };
 
+  static listApprovedProgram = async (req: Request, res: Response) => {
+    //Get users from database
+    const repository = getRepository(Program);
+    const results = await repository.find({
+      where: { isApproved: true },
+      relations: [
+        "patient",
+        "doctor",
+        "programType",
+        "pharmacy",
+        "programEvidences",
+        "testLab",
+      ],
+    });
+
+    //Send the users object
+    res.status(200).send(results);
+  };
+
   static getOneById = async (req: Request, res: Response) => {
     //Get the ID from the url
     const id = req.params.id;
@@ -388,7 +407,8 @@ class ProgramController {
       if (result) {
         result.checkPoint = 6;
         result.isTerminated = true;
-        result.terminateMessage = message;
+        result.terminatedMessage = message;
+        result.terminatedDate = new Date();
         repository.save(result)
         res.status(200).send(result);
       } else {

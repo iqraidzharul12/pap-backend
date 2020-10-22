@@ -6,6 +6,7 @@ const router = Router();
 
 //Get all data
 router.get("/", ProgramController.listAll);
+router.get("/approved", ProgramController.listApprovedProgram);
 
 // Get one data
 router.get("/:id", ProgramController.getOneById);

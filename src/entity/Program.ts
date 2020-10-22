@@ -30,7 +30,10 @@ export class Program {
   drugsTakenDate: Date
 
   @Column({ nullable: true })
-  terminateMessage: String
+  terminatedMessage: String
+
+  @Column({ nullable: true })
+  terminatedDate: Date
 
   @ManyToOne(() => Patient, (patient) => patient.programs)
   patient: Patient;
