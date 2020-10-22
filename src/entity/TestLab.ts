@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { Doctor, Laboratorium, Patient, TestLabEvidence, TestLabType, Voucher } from ".";
+import { Doctor, Laboratorium, Patient, Program, TestLabEvidence, TestLabType, Voucher } from ".";
 
 @Entity()
 export class TestLab {
@@ -35,6 +35,12 @@ export class TestLab {
     (testLabEvidence) => testLabEvidence.testLab
   )
   testLabEvidences: TestLabEvidence[];
+
+  @OneToMany(
+    () => Program,
+    (program) => program.testLab
+  )
+  programs: Program[];
 
   @Column()
   @IsNotEmpty()

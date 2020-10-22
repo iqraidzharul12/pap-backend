@@ -58,7 +58,8 @@ class DoctorController {
     doctor.gender = gender;
     doctor.email = email;
     doctor.status = 1;
-    doctor.code = randomString(5)
+    doctor.code = randomString(5);
+    doctor.verificationCode = randomString(6);
 
     //Validade if the parameters are ok
     const errors = await validate(doctor);

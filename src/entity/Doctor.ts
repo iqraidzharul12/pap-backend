@@ -43,8 +43,10 @@ export class Doctor {
   email: string;
 
   @Column({ nullable: true })
-  @IsNotEmpty()
   code: string;
+
+  @Column({ nullable: true })
+  verificationCode: string;
 
   @Column()
   @IsNotEmpty()

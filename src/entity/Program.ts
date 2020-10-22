@@ -14,6 +14,24 @@ export class Program {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
+  @Column({ nullable: true })
+  isApproved: boolean
+
+  @Column({ nullable: true })
+  isDrugsTaken: boolean
+
+  @Column({ nullable: true })
+  isTerminated: boolean
+
+  @Column({ nullable: true })
+  enrollDate: Date
+
+  @Column({ nullable: true })
+  drugsTakenDate: Date
+
+  @Column({ nullable: true })
+  terminateReasone: String
+
   @ManyToOne(() => Patient, (patient) => patient.programs)
   patient: Patient;
 
@@ -42,9 +60,18 @@ export class Program {
   @Column({ nullable: true })
   message: String;
 
-  @OneToOne(() => TestLab)
-  @JoinColumn()
+  @ManyToOne(() => TestLab, (testLab) => testLab.programs)
   testLab: TestLab;
+
+  @ManyToOne((type) => Program, (program) => program.nextPrograms)
+  prevProgram: Program;
+
+  @OneToMany((type) => Program, (program) => program.prevProgram)
+  nextPrograms: Program[];
+
+  // @OneToOne(() => TestLab)
+  // @JoinColumn()
+  // testLab: TestLab;
 
   @Column()
   @CreateDateColumn()

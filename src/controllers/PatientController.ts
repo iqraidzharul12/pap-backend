@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { getRepository, Like } from "typeorm";
 import { validate } from "class-validator";
 import { Patient } from "../entity";
+import { formatNumberDigit } from "../utils/String";
 
 class PatientController {
   static listAll = async (req: Request, res: Response) => {
@@ -95,10 +96,62 @@ class PatientController {
 
     //Try to save
     const userRepository = getRepository(Patient);
+
+    let year = (new Date()).getFullYear().toString();
+    let cityCode = "JKT";
+    switch (patient.city.toLowerCase()) {
+      case 'depok':
+        cityCode = "DPK";
+        break;
+      case 'bekasi':
+        cityCode = "BKS";
+        break;
+      case 'dki jakarta':
+        cityCode = "JKT";
+        break;
+      case 'tangerang':
+        cityCode = "TGR";
+        break;
+      case 'bogor':
+        cityCode = "BGR";
+        break;
+      case 'bandung':
+        cityCode = "BDG";
+        break;
+      case 'cirebon':
+        cityCode = "CRB";
+        break;
+      case 'surabaya':
+        cityCode = "SBY";
+        break;
+      case 'semarang':
+        cityCode = "SMR";
+        break;
+      default:
+        cityCode = "JKT";
+        break;
+    }
+
+    patient.code = year + cityCode
+
+    try {
+      const patientLists = await userRepository.find({ code: Like(`%${patient.code}%`) });
+      const lastIndex = patientLists.length
+      patient.code += formatNumberDigit(3, lastIndex)
+    } catch (e) {
+      errorList.push("tidak bisa membuat id pasien");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
     try {
       await userRepository.save(patient);
     } catch (e) {
-      errorList.push("email already in use");
+      errorList.push("email telah terdaftar");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -108,7 +161,7 @@ class PatientController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Patient created" });
+    res.status(201).send({ data: "Pasien berhasil dibuat" });
   };
 
   static edit = async (req: Request, res: Response) => {

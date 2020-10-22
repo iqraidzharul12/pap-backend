@@ -230,8 +230,9 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 2 },
+        relations: ['doctor']
       });
-      if (result) {
+      if (result && result.doctor.verificationCode === confirmationCode) {
         result.checkPoint = 3;
         repository.save(result)
         //Send the users object
@@ -239,7 +240,7 @@ class ProgramController {
       } else {
         res.status(404).send({
           error: false,
-          errorList: ["Data tidak ditemukan"],
+          errorList: ["Kode verifikasi salah"],
           data: null,
         });
         return;
@@ -282,7 +283,9 @@ class ProgramController {
       });
       if (result) {
         result.checkPoint = 5;
-        result.pharmacy = pharmacy
+        result.pharmacy = pharmacy;
+        result.isApproved = true;
+        result.enrollDate = new Date();
         repository.save(result)
         res.status(200).send(result);
       } else {
@@ -314,9 +317,115 @@ class ProgramController {
       });
       if (result) {
         result.checkPoint = 5;
-        result.message = message
+        result.message = message;
+        result.isApproved = false;
         repository.save(result)
         //Send the users object
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data program tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static updateDrugsTaken = async (req: Request, res: Response) => {
+    const id = req.params.id
+    //Get data from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 5, isApproved: true },
+      });
+      if (result) {
+        result.isDrugsTaken = true;
+        result.drugsTakenDate = new Date();
+        repository.save(result)
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data program tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static terminate = async (req: Request, res: Response) => {
+    let { id, message } = req.body;
+    //Get data from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 5, isApproved: true, isDrugsTaken: true },
+      });
+      if (result) {
+        result.checkPoint = 6;
+        result.isTerminated = true;
+        result.terminateReasone = message;
+        repository.save(result)
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data program tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static continueProgram = async (req: Request, res: Response) => {
+    let { id } = req.body;
+    //Get data from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 5, isApproved: true, isDrugsTaken: true },
+      });
+      if (result) {
+        result.checkPoint = 6;
+        result.isTerminated = false;
+        repository.save(result)
+
+        let newProgram = new Program()
+        newProgram.patient = result.patient
+        newProgram.doctor = result.doctor
+        newProgram.testLab = result.testLab
+        newProgram.programType = result.programType
+        newProgram.checkPoint = 3
+        newProgram.status = 1
+        newProgram.prevProgram = result
+
+        repository.save(newProgram)
         res.status(200).send(result);
       } else {
         res.status(404).send({
