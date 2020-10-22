@@ -15,6 +15,9 @@ router.post("/", ProgramController.create);
 router.post("/confirm", ProgramController.checkDoctorConfirmation);
 router.post("/approve", ProgramController.approve);
 router.post("/reject", ProgramController.reject);
+router.post("/terminate", ProgramController.terminate);
+router.post("/continue", ProgramController.continueProgram);
+router.post("/updateDrugsTaken", ProgramController.updateDrugsTaken);
 
 //Edit one data
 router.patch("/:id", ProgramController.edit);
