@@ -143,7 +143,10 @@ class ProgramController {
           createdAt: "ASC"
         }, relations: ["testLab"]
       });
-      if (prevProgram.checkPoint >= 4) {
+      if (!prevProgram.isApproved || prevProgram.checkPoint < 4) {
+        prevProgram.status = 0
+      }
+      else {
         res.status(404).send({
           error: false,
           errorList: ["Anda telah memiliki program pap yang sedang aktif"],
@@ -151,8 +154,7 @@ class ProgramController {
         });
         return;
       }
-      prevProgram.status = 0
-      prevProgram.testLab = null
+
     } catch (error) {
       prevProgram = null
     }
