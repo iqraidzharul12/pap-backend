@@ -6,10 +6,22 @@ import { randomString } from "../utils/String";
 
 class DoctorController {
   static listAll = async (req: Request, res: Response) => {
-    //Get users from database
+    const { status } = req.query
+    let doctors: Doctor[]
     const repository = getRepository(Doctor);
-    const doctors = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
-
+    if (status) {
+      if (status.toString().toLowerCase() === 'pending') {
+        doctors = await repository.find({ where: { status: 1, isApproved: null }, order: { createdAt: "ASC" } });
+      } else if (status.toString().toLowerCase() === 'approved') {
+        doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+      } else if (status.toString().toLowerCase() === 'rejected') {
+        doctors = await repository.find({ where: { status: 1, isApproved: false }, order: { createdAt: "ASC" } });
+      } else if (status.toString().toLowerCase() === 'all') {
+        doctors = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { createdAt: "ASC" } });
+      }
+    } else {
+      doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+    }
     //Send the users object
     res.status(200).send(doctors);
   };
@@ -42,24 +54,26 @@ class DoctorController {
     //Get parameters from the body
     let {
       fullname,
-      dateOfBirth,
+      // dateOfBirth,
       idNumber,
-      idPicture,
-      selfiePicture,
-      gender,
+      // idPicture,
+      // selfiePicture,
+      // gender,
       email,
+      city,
     } = req.body;
     let doctor = new Doctor();
     doctor.fullname = fullname;
-    doctor.dateOfBirth = dateOfBirth;
+    // doctor.dateOfBirth = dateOfBirth;
     doctor.idNumber = idNumber;
-    doctor.idPicture = idPicture;
-    doctor.selfiePicture = selfiePicture;
-    doctor.gender = gender;
+    // doctor.idPicture = idPicture;
+    // doctor.selfiePicture = selfiePicture;
+    // doctor.gender = gender;
     doctor.email = email;
     doctor.status = 1;
     doctor.code = randomString(5);
     doctor.verificationCode = randomString(6);
+    doctor.city = city;
 
     //Validade if the parameters are ok
     const errors = await validate(doctor);
@@ -84,7 +98,7 @@ class DoctorController {
     try {
       await repository.save(doctor);
     } catch (e) {
-      errorList.push("email already in use");
+      errorList.push("email telah digunakan");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -104,11 +118,11 @@ class DoctorController {
     //Get values from the body
     let {
       fullname,
-      dateOfBirth,
+      // dateOfBirth,
       idNumber,
-      idPicture,
-      selfiePicture,
-      gender,
+      // idPicture,
+      // selfiePicture,
+      // gender,
       email,
     } = req.body;
 
@@ -129,11 +143,11 @@ class DoctorController {
 
     //Validate the new values on model
     doctor.fullname = fullname;
-    doctor.dateOfBirth = dateOfBirth;
+    // doctor.dateOfBirth = dateOfBirth;
     doctor.idNumber = idNumber;
-    doctor.idPicture = idPicture;
-    doctor.selfiePicture = selfiePicture;
-    doctor.gender = gender;
+    // doctor.idPicture = idPicture;
+    // doctor.selfiePicture = selfiePicture;
+    // doctor.gender = gender;
     doctor.email = email;
 
     const errors = await validate(doctor);
@@ -190,6 +204,70 @@ class DoctorController {
 
     res.status(200).send({ data: "success" });
   };
+
+  static approve = async (req: Request, res: Response) => {
+    let { id } = req.body;
+
+    //Get data from database
+    const repository = getRepository(Doctor);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
+      if (result) {
+        result.isApproved = true;
+        repository.save(result)
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data dokter tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data dokter tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static reject = async (req: Request, res: Response) => {
+    let { id, message } = req.body;
+
+    //Get the user from database
+    const repository = getRepository(Doctor);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
+      if (result) {
+        result.message = message;
+        result.isApproved = false;
+        repository.save(result)
+        //Send the users object
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data dokter tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data dokter tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
 }
 
 export default DoctorController;

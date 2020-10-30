@@ -18,25 +18,25 @@ export class Doctor {
   @IsNotEmpty()
   fullname: string;
 
-  @Column()
-  @IsNotEmpty()
-  dateOfBirth: Date;
+  // @Column()
+  // @IsNotEmpty()
+  // dateOfBirth: Date;
 
   @Column()
   @Length(16)
   idNumber: string;
 
-  @Column()
-  @IsNotEmpty()
-  idPicture: string;
+  // @Column()
+  // @IsNotEmpty()
+  // idPicture: string;
 
-  @Column()
-  @IsNotEmpty()
-  selfiePicture: string;
+  // @Column()
+  // @IsNotEmpty()
+  // selfiePicture: string;
 
-  @Column()
-  @IsNotEmpty()
-  gender: string;
+  // @Column()
+  // @IsNotEmpty()
+  // gender: string;
 
   @Column({ unique: true })
   @IsEmail()
@@ -47,6 +47,15 @@ export class Doctor {
 
   @Column({ nullable: true })
   verificationCode: string;
+
+  @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  isApproved: boolean;
+
+  @Column({ nullable: true })
+  message: String;
 
   @Column()
   @IsNotEmpty()

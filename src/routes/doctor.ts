@@ -12,6 +12,8 @@ router.get("/:id", DoctorController.getOneById);
 
 //Create a new data
 router.post("/", DoctorController.create);
+router.post("/approve", DoctorController.approve);
+router.post("/reject", DoctorController.reject);
 
 //Edit one data
 router.patch("/:id", DoctorController.edit);

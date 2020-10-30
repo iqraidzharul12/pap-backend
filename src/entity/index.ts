@@ -11,6 +11,7 @@ import { Voucher } from "./Voucher";
 import { Doctor } from "./Doctor";
 import { Price } from "./Price";
 import { DefaultSchedule } from "./DefaultSchedule";
+import { Verificator } from "./Verificator";
 
 export {
   Patient,
@@ -26,5 +27,6 @@ export {
   ProgramEvidence,
   Price,
   DefaultSchedule,
+  Verificator,
 };
 

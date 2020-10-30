@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 
-import { Patient } from "../entity";
+import { Patient, Verificator } from "../entity";
 import config from "../config/config";
 
 class AuthController {
@@ -46,9 +46,9 @@ class AuthController {
 
       //Sign JWT, valid for 1 hour
       const token = jwt.sign(
-        { userId: patient.id, email: patient.email },
+        { userId: patient.id, email: patient.email, role: 'patient' },
         config.jwtSecret,
-        { expiresIn: "3h" }
+        { expiresIn: "30d" }
       );
 
       delete patient.password;
@@ -56,6 +56,43 @@ class AuthController {
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
       res.status(200).send(patient);
+    } if (role && role.toLowerCase() === "verificator") {
+      //Get user from database
+      const verificatorRepository = getRepository(Verificator);
+      let verificator: Verificator;
+      try {
+        verificator = await verificatorRepository.findOneOrFail({ where: { email } });
+      } catch (error) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid email"],
+          data: null,
+        });
+        return;
+      }
+
+      //Check if encrypted password match
+      if (!verificator.checkIfUnencryptedPasswordIsValid(password)) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid password"],
+          data: null,
+        });
+        return;
+      }
+
+      //Sign JWT, valid for 1 hour
+      const token = jwt.sign(
+        { userId: verificator.id, email: verificator.email, role: 'verificator' },
+        config.jwtSecret,
+        { expiresIn: "30d" }
+      );
+
+      delete verificator.password;
+
+      //Send the jwt in the response
+      res.setHeader("Authorization", `Bearer ${token}`);
+      res.status(200).send(verificator);
     } else {
       res.status(401).send({
         error: true,
