@@ -33,8 +33,7 @@ class ProgramController {
     });
 
     //Send the users objectz
-    res.status(200).send(results,
-    );
+    res.status(200).send(results);
   };
 
   static listApprovedProgram = async (req: Request, res: Response) => {

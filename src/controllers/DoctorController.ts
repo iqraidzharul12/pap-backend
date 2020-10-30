@@ -11,13 +11,13 @@ class DoctorController {
     const repository = getRepository(Doctor);
     if (status) {
       if (status.toString().toLowerCase() === 'pending') {
-        doctors = await repository.find({ where: { status: 1, isApproved: null }, order: { createdAt: "ASC" } });
+        doctors = await repository.find({ where: { status: 1, isApproved: null }, order: { updatedAt: "DESC" } });
       } else if (status.toString().toLowerCase() === 'approved') {
-        doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+        doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { updatedAt: "DESC" } });
       } else if (status.toString().toLowerCase() === 'rejected') {
-        doctors = await repository.find({ where: { status: 1, isApproved: false }, order: { createdAt: "ASC" } });
+        doctors = await repository.find({ where: { status: 1, isApproved: false }, order: { updatedAt: "DESC" } });
       } else if (status.toString().toLowerCase() === 'all') {
-        doctors = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { createdAt: "ASC" } });
+        doctors = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { updatedAt: "DESC" } });
       }
     } else {
       doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
