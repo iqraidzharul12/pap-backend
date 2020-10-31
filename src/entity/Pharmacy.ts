@@ -6,8 +6,9 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
-import { IsNotEmpty } from "class-validator";
+import { IsEmail, IsNotEmpty, Length } from "class-validator";
 import { Program } from ".";
+import * as bcrypt from "bcryptjs";
 
 @Entity()
 export class Pharmacy {
@@ -21,6 +22,12 @@ export class Pharmacy {
   @Column()
   @IsNotEmpty()
   address: string;
+
+  @Column({ nullable: true })
+  isApproved: boolean;
+
+  @Column({ nullable: true })
+  message: String;
 
   @Column()
   @IsNotEmpty()

@@ -5,13 +5,31 @@ import { Pharmacy } from "../entity";
 
 class PharmacyController {
   static listAll = async (req: Request, res: Response) => {
-    //Get users from database
+    const { status } = req.query
+    let results: Pharmacy[]
     const repository = getRepository(Pharmacy);
-    const pharmacys = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
-
+    if (status) {
+      if (status.toString().toLowerCase() === 'pending') {
+        results = await repository.find({ where: { status: 1, isApproved: null }, order: { updatedAt: "DESC" } });
+      } else if (status.toString().toLowerCase() === 'approved') {
+        results = await repository.find({ where: { status: 1, isApproved: true }, order: { updatedAt: "DESC" } });
+      } else if (status.toString().toLowerCase() === 'rejected') {
+        results = await repository.find({ where: { status: 1, isApproved: false }, order: { updatedAt: "DESC" } });
+      } else if (status.toString().toLowerCase() === 'all') {
+        results = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { updatedAt: "DESC" } });
+      }
+    } else {
+      results = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+    }
     //Send the users object
-    res.status(200).send(pharmacys,
-    );
+    res.status(200).send(results);
+    // // Get users from database
+    // const repository = getRepository(Pharmacy);
+    // const pharmacys = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+
+    // //Send the users object
+    // res.status(200).send(pharmacys,
+    // );
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -162,6 +180,70 @@ class PharmacyController {
 
     res.status(200).send({ data: "success" });
   };
+
+  static approve = async (req: Request, res: Response) => {
+    let { id } = req.body;
+
+    //Get data from database
+    const repository = getRepository(Pharmacy);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
+      if (result) {
+        result.isApproved = true;
+        repository.save(result)
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data farmasi tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data farmasi tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
+  static reject = async (req: Request, res: Response) => {
+    let { id, message } = req.body;
+
+    //Get the user from database
+    const repository = getRepository(Pharmacy);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1 },
+      });
+      if (result) {
+        result.message = message;
+        result.isApproved = false;
+        repository.save(result)
+        //Send the users object
+        res.status(200).send(result);
+      } else {
+        res.status(404).send({
+          error: false,
+          errorList: ["Data farmasi tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data farmasi tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
 }
 
 export default PharmacyController;

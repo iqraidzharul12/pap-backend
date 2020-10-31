@@ -12,6 +12,8 @@ router.get("/:id", PharmacyController.getOneById);
 
 //Create a new data
 router.post("/", PharmacyController.create);
+router.post("/approve", PharmacyController.approve);
+router.post("/reject", PharmacyController.reject);
 
 //Edit one data
 router.patch("/:id", PharmacyController.edit);
