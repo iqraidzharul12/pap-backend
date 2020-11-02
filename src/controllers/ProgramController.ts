@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType } from "../entity";
+import NotificationController from "./NotificationController";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
@@ -301,6 +302,7 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 4 },
+        relations: ['patient']
       });
       if (result) {
         result.checkPoint = 5;
@@ -308,6 +310,12 @@ class ProgramController {
         result.isApproved = true;
         result.enrollDate = new Date();
         repository.save(result)
+
+        const notificationMessage = "Pendaftaran program Anda telah diterima, silakan scan QR di apotek yang telah ditentukan untuk mendapatkan obat Anda."
+        const notification = await NotificationController.create(notificationMessage, result.patient)
+        if (notification.error) {
+          console.log(`failed to save approval notification for patient: ${result.patient}`);
+        }
         res.status(200).send(result);
       } else {
         res.status(404).send({
@@ -335,12 +343,19 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 4 },
+        relations: ['patient']
       });
       if (result) {
         result.checkPoint = 5;
         result.message = message;
         result.isApproved = false;
         repository.save(result)
+
+        const notificationMessage = `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`
+        const notification = await NotificationController.create(notificationMessage, result.patient)
+        if (notification.error) {
+          console.log(`failed to save reject notification for patient: ${result.patient}`);
+        }
         //Send the users object
         res.status(200).send(result);
       } else {
@@ -402,6 +417,7 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 5, isApproved: true, isDrugsTaken: true },
+        relations: ['patient']
       });
       if (result) {
         result.checkPoint = 6;
@@ -409,6 +425,13 @@ class ProgramController {
         result.terminatedMessage = message;
         result.terminatedDate = new Date();
         repository.save(result)
+
+        const notificationMessage = `Program Anda telah diberhentikan dengan alasan: ${message}.`
+        const notification = await NotificationController.create(notificationMessage, result.patient)
+        if (notification.error) {
+          console.log(`failed to save terminate notification for patient: ${result.patient}`);
+        }
+
         res.status(200).send(result);
       } else {
         res.status(404).send({
@@ -452,6 +475,13 @@ class ProgramController {
         newProgram.prevProgram = result
 
         await repository.save(newProgram)
+
+        const notificationMessage = "Program Anda telah berhasil diperpanjang."
+        const notification = await NotificationController.create(notificationMessage, result.patient)
+        if (notification.error) {
+          console.log(`failed to save terminate notification for patient: ${result.patient}`);
+        }
+
         res.status(200).send(newProgram);
       } else {
         res.status(404).send({

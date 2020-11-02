@@ -13,6 +13,8 @@ import price from "./price";
 import program from "./program";
 import programEvidence from "./programEvidence";
 import voucher from "./voucher";
+import article from "./article";
+import notification from "./notification";
 
 const routes = Router();
 
@@ -30,5 +32,7 @@ routes.use("/price", price);
 routes.use("/program", program);
 routes.use("/programEvidence", programEvidence);
 routes.use("/voucher", voucher);
+routes.use("/article", article);
+routes.use("/notification", notification);
 
 export default routes;

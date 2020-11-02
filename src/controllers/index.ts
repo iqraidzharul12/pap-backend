@@ -12,6 +12,8 @@ import ProgramTypeController from "./ProgramTypeController";
 import FileUploadController from "./FileUploadController";
 import VoucherController from "./VoucherController";
 import PriceController from "./PriceController";
+import NotificationController from "./NotificationController";
+import ArticleController from "./ArticleController";
 
 export {
   AuthController,
@@ -28,4 +30,6 @@ export {
   FileUploadController,
   VoucherController,
   PriceController,
+  NotificationController,
+  ArticleController,
 };

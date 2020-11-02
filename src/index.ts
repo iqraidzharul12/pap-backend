@@ -5,6 +5,12 @@ import * as bodyParser from "body-parser";
 import * as helmet from "helmet";
 import * as cors from "cors";
 import routes from "./routes";
+import * as rateLimit from 'express-rate-limit';
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 50
+});
 
 //Connects to the Database -> then starts the express
 createConnection()
@@ -16,6 +22,7 @@ createConnection()
     app.use(cors());
     app.use(helmet());
     app.use(bodyParser.json());
+    app.use(limiter);
 
     //Set all routes from routes folder
     app.use("/", routes);

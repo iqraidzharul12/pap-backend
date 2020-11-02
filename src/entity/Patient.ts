@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { Length, IsNotEmpty, IsEmail } from "class-validator";
 import * as bcrypt from "bcryptjs";
-import { Program, TestLab } from ".";
+import { Notification, Program, TestLab } from ".";
 
 @Entity()
 export class Patient {
@@ -75,6 +75,10 @@ export class Patient {
 
   @OneToMany(() => Program, (program) => program.patient)
   programs: Program[];
+
+  @OneToMany(() => Notification, (notification) => notification.patient)
+  notifications: Notification[];
+
 
   @Column()
   @CreateDateColumn()
