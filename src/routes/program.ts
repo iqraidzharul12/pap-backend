@@ -19,6 +19,7 @@ router.post("/reject", ProgramController.reject);
 router.post("/terminate", ProgramController.terminate);
 router.post("/continue", ProgramController.continueProgram);
 router.post("/updateDrugsTaken", ProgramController.updateDrugsTaken);
+router.post("/updateTestLab", ProgramController.updateTestLab);
 
 //Edit one data
 router.patch("/:id", ProgramController.edit);

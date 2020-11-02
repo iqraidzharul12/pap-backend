@@ -243,6 +243,35 @@ class ProgramController {
     res.status(201).send(program);
   };
 
+  static updateTestLab = async (req: Request, res: Response) => {
+    let { id, testLabId } = req.body;
+
+    //Get the user from database
+    const repository = getRepository(Program);
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: id, status: 1, checkPoint: 2 },
+        relations: ['doctor']
+      });
+      const testLab = await getRepository(TestLab).findOneOrFail({
+        where: { id: testLabId, status: 1 }
+      })
+      result.testLab = testLab
+      result.checkPoint = 2;
+      repository.save(result)
+      //Send the users object
+      res.status(200).send(result);
+    } catch (error) {
+      console.log(error)
+      res.status(404).send({
+        error: true,
+        errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  }
+
   static checkDoctorConfirmation = async (req: Request, res: Response) => {
     let { id, confirmationCode } = req.body;
     console.log(confirmationCode);
@@ -261,15 +290,16 @@ class ProgramController {
         res.status(200).send(result);
       } else {
         res.status(404).send({
-          error: false,
+          error: true,
           errorList: ["Kode verifikasi salah"],
           data: null,
         });
         return;
       }
     } catch (error) {
+      console.log(error)
       res.status(404).send({
-        error: false,
+        error: true,
         errorList: ["Data tidak ditemukan"],
         data: null,
       });
@@ -463,6 +493,7 @@ class ProgramController {
       if (result) {
         result.checkPoint = 6;
         result.isTerminated = false;
+        result.status = 0;
         repository.save(result)
 
         let newProgram = new Program()
