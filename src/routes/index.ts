@@ -15,6 +15,7 @@ import programEvidence from "./programEvidence";
 import voucher from "./voucher";
 import article from "./article";
 import notification from "./notification";
+import report from "./report";
 
 const routes = Router();
 
@@ -34,5 +35,6 @@ routes.use("/programEvidence", programEvidence);
 routes.use("/voucher", voucher);
 routes.use("/article", article);
 routes.use("/notification", notification);
+routes.use("/report", report);
 
 export default routes;

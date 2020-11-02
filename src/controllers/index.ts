@@ -14,6 +14,7 @@ import VoucherController from "./VoucherController";
 import PriceController from "./PriceController";
 import NotificationController from "./NotificationController";
 import ArticleController from "./ArticleController";
+import ReportController from "./ReportController";
 
 export {
   AuthController,
@@ -32,4 +33,5 @@ export {
   PriceController,
   NotificationController,
   ArticleController,
+  ReportController,
 };

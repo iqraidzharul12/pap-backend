@@ -163,7 +163,7 @@ class ProgramController {
           createdAt: "ASC"
         }, relations: ["testLab"]
       });
-      if (!prevProgram.isApproved || prevProgram.checkPoint < 4) {
+      if (!prevProgram.isApproved || prevProgram.checkPoint < 4 || prevProgram.isTerminated) {
         prevProgram.status = 0
       }
       else {
