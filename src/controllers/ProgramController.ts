@@ -250,7 +250,7 @@ class ProgramController {
     const repository = getRepository(Program);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1, checkPoint: 2 },
+        where: { id: id, status: 1, checkPoint: 1 },
         relations: ['doctor']
       });
       const testLab = await getRepository(TestLab).findOneOrFail({
