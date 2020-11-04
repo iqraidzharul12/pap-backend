@@ -29,11 +29,11 @@ export class Pharmacy {
   @Column({ nullable: true })
   message: String;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true })
   @IsEmail()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   @IsNotEmpty()
   @Length(8)
   password: string;
