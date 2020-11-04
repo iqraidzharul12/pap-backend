@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 
-import { Patient, Verificator } from "../entity";
+import { Patient, Pharmacy, Verificator } from "../entity";
 import config from "../config/config";
 
 class AuthController {
@@ -56,7 +56,7 @@ class AuthController {
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
       res.status(200).send(patient);
-    } if (role && role.toLowerCase() === "verificator") {
+    } else if (role && role.toLowerCase() === "verificator") {
       //Get user from database
       const verificatorRepository = getRepository(Verificator);
       let verificator: Verificator;
@@ -93,6 +93,43 @@ class AuthController {
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
       res.status(200).send(verificator);
+    } else if (role && role.toLowerCase() === "pharmacy") {
+      //Get user from database
+      const pharmacyRepository = getRepository(Pharmacy);
+      let pharmacy: Pharmacy;
+      try {
+        pharmacy = await pharmacyRepository.findOneOrFail({ where: { email } });
+      } catch (error) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid email"],
+          data: null,
+        });
+        return;
+      }
+
+      //Check if encrypted password match
+      if (!pharmacy.checkIfUnencryptedPasswordIsValid(password)) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid password"],
+          data: null,
+        });
+        return;
+      }
+
+      //Sign JWT, valid for 1 hour
+      const token = jwt.sign(
+        { userId: pharmacy.id, email: pharmacy.email, role: 'pharmacy' },
+        config.jwtSecret,
+        { expiresIn: "30d" }
+      );
+
+      delete pharmacy.password;
+
+      //Send the jwt in the response
+      res.setHeader("Authorization", `Bearer ${token}`);
+      res.status(200).send(pharmacy);
     } else {
       res.status(401).send({
         error: true,

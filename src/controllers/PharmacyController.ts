@@ -58,10 +58,12 @@ class PharmacyController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, address } = req.body;
+    let { name, address, email, password, } = req.body;
     let pharmacy = new Pharmacy();
     pharmacy.name = name;
     pharmacy.address = address;
+    pharmacy.email = email;
+    pharmacy.password = password;
     pharmacy.status = 1;
 
     //Validade if the parameters are ok
@@ -81,6 +83,8 @@ class PharmacyController {
       });
       return;
     }
+
+    pharmacy.hashPassword();
 
     //Try to save
     const repository = getRepository(Pharmacy);

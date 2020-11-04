@@ -29,6 +29,15 @@ export class Pharmacy {
   @Column({ nullable: true })
   message: String;
 
+  @Column({ unique: true, nullable: true })
+  @IsEmail()
+  email: string;
+
+  @Column({ nullable: true })
+  @IsNotEmpty()
+  @Length(8)
+  password: string;
+
   @Column()
   @IsNotEmpty()
   status: number;
@@ -43,4 +52,12 @@ export class Pharmacy {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 8);
+  }
+
+  checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
+    return bcrypt.compareSync(unencryptedPassword, this.password);
+  }
 }
