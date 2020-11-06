@@ -144,7 +144,8 @@ class ProgramController {
       programType = await programTypeRepository.findOneOrFail({
         where: { id: programTypeId, status: 1 }, order: {
           createdAt: "ASC"
-        }
+        },
+        relations: ["defaultSchedules"]
       });
     } catch (error) {
       res.status(404).send({
