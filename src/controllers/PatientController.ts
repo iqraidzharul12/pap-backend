@@ -3,6 +3,7 @@ import { getRepository, Like } from "typeorm";
 import { validate } from "class-validator";
 import { Patient } from "../entity";
 import { formatNumberDigit } from "../utils/String";
+import { RegisterMail, sendMail } from "../utils/mailer";
 
 class PatientController {
   static listAll = async (req: Request, res: Response) => {
@@ -160,6 +161,12 @@ class PatientController {
         data: null,
       });
       return;
+    }
+
+    try {
+      await sendMail(patient.email, RegisterMail.subject, RegisterMail.body)
+    } catch (e) {
+      console.log(e);
     }
 
     //If all ok, send 201 response

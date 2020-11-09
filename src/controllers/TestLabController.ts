@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Doctor, Laboratorium, Patient, TestLab, TestLabType, Voucher } from "../entity";
+import { ConfirmTestLabEmail, sendMail } from "../utils/mailer";
+import { NotificationController } from ".";
 
 class TestLabController {
   static listAll = async (req: Request, res: Response) => {
@@ -192,6 +194,18 @@ class TestLabController {
         data: null,
       });
       return;
+    }
+
+    try {
+      await sendMail(patient.email, ConfirmTestLabEmail(testLab).subject, ConfirmTestLabEmail(testLab).body)
+    } catch (e) {
+      console.log(e);
+    }
+
+    const notificationMessage = `Pengajuan tes laboratorium diterima.`
+    const notification = await NotificationController.create(notificationMessage, testLab.patient)
+    if (notification.error) {
+      console.log(`failed to save notification for patient: ${testLab.patient}`);
     }
 
     //If all ok, send 201 response

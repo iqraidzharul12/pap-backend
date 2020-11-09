@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType } from "../entity";
 import NotificationController from "./NotificationController";
+import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
@@ -240,6 +241,18 @@ class ProgramController {
       return;
     }
 
+    try {
+      await sendMail(program.patient.email, SignedDocumentEmail.subject, SignedDocumentEmail.body)
+    } catch (e) {
+      console.log(e);
+    }
+
+    const notificationMessage = `Dokumen Persetujuan Anda telah berhasil ditanda tangani.`
+    const notification = await NotificationController.create(notificationMessage, program.patient)
+    if (notification.error) {
+      console.log(`failed to save notification for patient: ${program.patient}`);
+    }
+
     //If all ok, send 201 response
     res.status(201).send(program);
   };
@@ -416,12 +429,26 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 5, isApproved: true },
+        relations: ["patient", "pharmacy"]
       });
       console.log(result);
       if (result) {
         result.isDrugsTaken = true;
         result.drugsTakenDate = new Date();
         repository.save(result)
+
+        try {
+          await sendMail(result.patient.email, ConfirmDrugsEmail(result.pharmacy).subject, ConfirmDrugsEmail(result.pharmacy).body)
+        } catch (e) {
+          console.log(e);
+        }
+
+        const notificationMessage = `Anda telah melakukan pengambilan obat di ${result.pharmacy.name}, ${result.pharmacy.address}.`
+        const notification = await NotificationController.create(notificationMessage, result.patient)
+        if (notification.error) {
+          console.log(`failed to save notification for patient: ${result.patient}`);
+        }
+
         res.status(200).send(result);
       } else {
         res.status(404).send({
@@ -460,7 +487,13 @@ class ProgramController {
         const notificationMessage = `Program Anda telah diberhentikan dengan alasan: ${message}.`
         const notification = await NotificationController.create(notificationMessage, result.patient)
         if (notification.error) {
-          console.log(`failed to save terminate notification for patient: ${result.patient}`);
+          console.log(`failed to save notification for patient: ${result.patient}`);
+        }
+
+        try {
+          await sendMail(result.patient.email, TerminateProgramEmail.subject, TerminateProgramEmail.body)
+        } catch (e) {
+          console.log(e);
         }
 
         res.status(200).send(result);
@@ -511,7 +544,13 @@ class ProgramController {
         const notificationMessage = "Program Anda telah berhasil diperpanjang."
         const notification = await NotificationController.create(notificationMessage, result.patient)
         if (notification.error) {
-          console.log(`failed to save terminate notification for patient: ${result.patient}`);
+          console.log(`failed to save notification for patient: ${result.patient}`);
+        }
+
+        try {
+          await sendMail(newProgram.patient.email, ContinueProgramEmail.subject, ContinueProgramEmail.body)
+        } catch (e) {
+          console.log(e);
         }
 
         res.status(200).send(newProgram);

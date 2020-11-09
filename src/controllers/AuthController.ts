@@ -5,6 +5,7 @@ import { validate } from "class-validator";
 
 import { Patient, Pharmacy, Verificator } from "../entity";
 import config from "../config/config";
+import { sendMail, ChangePasswordEmail } from "../utils/mailer";
 
 class AuthController {
   static login = async (req: Request, res: Response) => {
@@ -203,6 +204,12 @@ class AuthController {
       //Hash the new password and save
       user.hashPassword();
       userRepository.save(user);
+
+      try {
+        await sendMail(user.email, ChangePasswordEmail.subject, ChangePasswordEmail.body)
+      } catch (e) {
+        console.log(e);
+      }
 
       res.status(202).send({
         error: false,

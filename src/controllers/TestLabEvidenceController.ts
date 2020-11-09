@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { ProgramType, TestLab, TestLabEvidence } from "../entity";
+import { ConfirmTestEvidenceEmail, sendMail } from "../utils/mailer";
+import { NotificationController } from ".";
 
 class TestLabEvidenceController {
   static listAll = async (req: Request, res: Response) => {
@@ -48,7 +50,8 @@ class TestLabEvidenceController {
       testLab = await testLabRepository.findOneOrFail({
         where: { id: testLabId, status: 1 }, order: {
           createdAt: "ASC"
-        }
+        },
+        relations: ['patient']
       });
     } catch (error) {
       res.status(404).send({
@@ -100,6 +103,18 @@ class TestLabEvidenceController {
         return;
       }
     }
+    try {
+      await sendMail(testLab.patient.email, ConfirmTestEvidenceEmail.subject, ConfirmTestEvidenceEmail.body)
+    } catch (e) {
+      console.log(e);
+    }
+
+    const notificationMessage = `Hasil tes laboratorium berhasil diunggah.`
+    const notification = await NotificationController.create(notificationMessage, testLab.patient)
+    if (notification.error) {
+      console.log(`failed to save notification for patient: ${testLab.patient}`);
+    }
+
     //If all ok, send 201 response
     res.status(201).send({ data: "Test Lab Evidence saved" });
   };

@@ -16,6 +16,7 @@ import voucher from "./voucher";
 import article from "./article";
 import notification from "./notification";
 import report from "./report";
+import mail from "./mail";
 
 const routes = Router();
 
@@ -36,5 +37,6 @@ routes.use("/voucher", voucher);
 routes.use("/article", article);
 routes.use("/notification", notification);
 routes.use("/report", report);
+routes.use("/mail", mail);
 
 export default routes;
