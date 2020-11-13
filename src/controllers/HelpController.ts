@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { ProgramType, Price } from "../entity";
+import { Help } from "../entity";
 
-class PriceController {
+class HelpController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(Price);
-    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+    const repository = getRepository(Help);
+    const helps = await repository.find({ where: { status: 1 }, order: { createdAt: "DESC" } });
 
     //Send the users object
-    res.status(200).send(results,
-    );
+    res.status(200).send(helps);
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -19,15 +18,15 @@ class PriceController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(Price);
+    const repository = getRepository(Help);
     try {
-      const result = await repository.findOneOrFail({
+      const help = await repository.findOneOrFail({
         where: { id: id, status: 1 }, order: {
-          createdAt: "ASC"
+          createdAt: "DESC"
         }
       });
       //Send the users object
-      res.status(200).send(result);
+      res.status(200).send(help);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -40,34 +39,16 @@ class PriceController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, count, price, programTypeId } = req.body;
-
-    const programTypeRepository = getRepository(ProgramType);
-    let programType: ProgramType;
-    try {
-      programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
-    } catch (error) {
-      res.status(404).send({
-        error: false,
-        errorList: ["ProgramType tidak ditemukan"],
-        data: null,
-      });
-      return;
-    }
-
-    let priceData = new Price();
-    priceData.name = name;
-    priceData.count = count;
-    priceData.price = price;
-    priceData.programType = programType;
-    priceData.status = 1;
+    let { title, body, subcategory, category } = req.body;
+    let help = new Help();
+    help.title = title;
+    help.body = body;
+    help.subcategory = subcategory;
+    help.category = category;
+    help.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(priceData);
+    const errors = await validate(help);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -84,11 +65,12 @@ class PriceController {
       return;
     }
 
-    const repository = getRepository(Price);
+    //Try to save
+    const repository = getRepository(Help);
     try {
-      await repository.save(priceData);
+      await repository.save(help);
     } catch (e) {
-      errorList.push("failed to save");
+      errorList.push("Gagal menyimpan bantuan");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -98,42 +80,20 @@ class PriceController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Price created" });
+    res.status(201).send({ data: "Help created" });
   };
 
   static edit = async (req: Request, res: Response) => {
     //Get the ID from the url
     const id = req.params.id;
-
-    //Get values from the body
-    let { count, price, programTypeId } = req.body;
-
-    const programTypeRepository = getRepository(ProgramType);
-    let programType: ProgramType;
-    try {
-      programType = await programTypeRepository.findOneOrFail({
-        where: { id: programTypeId, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
-    } catch (error) {
-      res.status(404).send({
-        error: false,
-        errorList: ["ProgramType tidak ditemukan"],
-        data: null,
-      });
-      return;
-    }
+    //Get the ID from the url
+    let { title, body, subcategory, category } = req.body;
 
     //Try to find data on database
-    const repository = getRepository(Price);
-    let priceData: Price;
+    const repository = getRepository(Help);
+    let help: Help;
     try {
-      price = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
+      help = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -145,11 +105,12 @@ class PriceController {
     }
 
     //Validate the new values on model
-    priceData.count = count;
-    priceData.price = price;
-    price.programType = programType;
+    help.title = title;
+    help.body = body;
+    help.subcategory = subcategory;
+    help.category = category;
 
-    const errors = await validate(priceData);
+    const errors = await validate(help);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -167,7 +128,7 @@ class PriceController {
     }
 
     try {
-      await repository.save(priceData);
+      await repository.save(help);
     } catch (e) {
       errorList.push("failed to edit data");
       res.status(409).send({
@@ -185,14 +146,10 @@ class PriceController {
     //Get the ID from the url
     const id = req.params.id;
 
-    const repository = getRepository(Price);
-    let price: Price;
+    const repository = getRepository(Help);
+    let help: Help;
     try {
-      price = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
+      help = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -201,12 +158,12 @@ class PriceController {
       });
       return;
     }
-    price.status = 0;
-    repository.save(price);
+    help.status = 0;
+    repository.save(help);
 
 
     res.status(200).send({ data: "success" });
   };
 }
 
-export default PriceController;
+export default HelpController;

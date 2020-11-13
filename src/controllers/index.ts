@@ -16,6 +16,7 @@ import NotificationController from "./NotificationController";
 import ArticleController from "./ArticleController";
 import ReportController from "./ReportController";
 import MailController from "./MailController";
+import HelpController from "./HelpController";
 
 export {
   AuthController,
@@ -36,4 +37,5 @@ export {
   ArticleController,
   ReportController,
   MailController,
+  HelpController,
 };

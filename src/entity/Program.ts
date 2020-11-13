@@ -7,7 +7,7 @@ import {
   OneToMany, ManyToOne, OneToOne, JoinColumn
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { Doctor, Patient, Pharmacy, ProgramEvidence, ProgramType, TestLab } from ".";
+import { Doctor, Patient, Pharmacy, Price, ProgramEvidence, ProgramType, TestLab } from ".";
 
 @Entity()
 export class Program {
@@ -65,6 +65,9 @@ export class Program {
 
   @ManyToOne(() => TestLab, (testLab) => testLab.programs)
   testLab: TestLab;
+
+  @ManyToOne(() => Price, (price) => price.programs)
+  price: Price;
 
   @ManyToOne((type) => Program, (program) => program.nextPrograms)
   prevProgram: Program;

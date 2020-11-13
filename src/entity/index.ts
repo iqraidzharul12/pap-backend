@@ -14,6 +14,7 @@ import { DefaultSchedule } from "./DefaultSchedule";
 import { Verificator } from "./Verificator";
 import { Notification } from "./Notification";
 import { Article } from "./Article";
+import { Help } from "./Help";
 
 export {
   Patient,
@@ -32,5 +33,6 @@ export {
   Verificator,
   Notification,
   Article,
+  Help,
 };
 

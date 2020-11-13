@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType } from "../entity";
+import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType, Price } from "../entity";
 import NotificationController from "./NotificationController";
 import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
 
@@ -322,10 +322,12 @@ class ProgramController {
   }
 
   static approve = async (req: Request, res: Response) => {
-    let { id, pharmacyId } = req.body;
+    let { id, pharmacyId, priceId } = req.body;
 
     const pharmacyRepository = getRepository(Pharmacy);
     let pharmacy: Pharmacy;
+    const priceRepository = getRepository(Price);
+    let price: Price;
     try {
       pharmacy = await pharmacyRepository.findOneOrFail({
         where: { id: pharmacyId, status: 1 }, order: {
@@ -341,6 +343,21 @@ class ProgramController {
       return;
     }
 
+    try {
+      price = await priceRepository.findOneOrFail({
+        where: { id: priceId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data harga tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
     //Get data from database
     const repository = getRepository(Program);
     try {
@@ -351,6 +368,7 @@ class ProgramController {
       if (result) {
         result.checkPoint = 5;
         result.pharmacy = pharmacy;
+        result.price = price;
         result.isApproved = true;
         result.enrollDate = new Date();
         repository.save(result)
