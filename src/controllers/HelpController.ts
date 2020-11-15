@@ -7,10 +7,47 @@ class HelpController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Help);
-    const helps = await repository.find({ where: { status: 1 }, order: { createdAt: "DESC" } });
+    const helps = await repository.find({ where: { status: 1 }, order: { category: "ASC", subcategory: "ASC", title: "ASC" } });
 
+    let response = []
+    let lastElement: Help = new Help()
+
+    helps.forEach(element => {
+      if (lastElement.category !== element.category) {
+        response.push({
+          name: element.category,
+          subcategory: [
+            {
+              name: element.subcategory,
+              help: [
+                {
+                  title: element.title,
+                  body: element.body
+                }
+              ]
+            }
+          ]
+        })
+      } else if (lastElement.subcategory !== element.subcategory) {
+        response[response.length - 1].subcategory.push({
+          name: element.subcategory,
+          help: [
+            {
+              title: element.title,
+              body: element.body
+            }
+          ]
+        })
+      } else {
+        response[response.length - 1].subcategory[response[response.length - 1].subcategory.length - 1].help.push({
+          title: element.title,
+          body: element.body
+        })
+      }
+      lastElement = element
+    });
     //Send the users object
-    res.status(200).send(helps);
+    res.status(200).send(response);
   };
 
   static getOneById = async (req: Request, res: Response) => {
