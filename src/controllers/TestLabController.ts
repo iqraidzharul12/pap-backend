@@ -134,14 +134,22 @@ class TestLabController {
       return;
     }
 
-    try {
-      voucher = await voucherRepository.findOneOrFail({
-        where: { code: voucherCode, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
-    } catch (error) {
-      console.log("Voucher tidak ditemukan");
+    if (voucherCode) {
+      try {
+        voucher = await voucherRepository.findOneOrFail({
+          where: { code: voucherCode, status: 1 }, order: {
+            createdAt: "ASC"
+          }
+        });
+      } catch (error) {
+        console.log("Voucher tidak ditemukan");
+        res.status(404).send({
+          error: false,
+          errorList: ["Voucher salah atau sudah digunakan, silakan coba voucher lain"],
+          data: null,
+        });
+        return;
+      }
     }
 
     const repository = getRepository(TestLab);
