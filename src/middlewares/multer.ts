@@ -33,6 +33,23 @@ const storageSelfiePicture = multer.diskStorage({
   },
 });
 
+const storageConsent = multer.diskStorage({
+  destination: (request, file, callback) => {
+    let path = `${process.cwd()}/uploads/`;
+    fs.mkdirpSync(`${path}/consent`);
+    callback(null, `${path}/consent`);
+  },
+  filename: (request, file, callback) => {
+    callback(
+      null,
+      "CONSENT-" +
+      new Date().valueOf() +
+      "." +
+      file.originalname.split(".").pop()
+    );
+  },
+});
+
 const storagePrescription = (id: string) => {
   return multer.diskStorage({
     destination: (request, file, callback) => {
@@ -79,6 +96,10 @@ const fileFilter = (request: any, file: any, callback: any) => {
   }
 };
 
+const pdfFileFilter = (request: any, file: any, callback: any) => {
+  callback(null, true);
+};
+
 const limits = { fileSize: 1024 * 1024 * 5 };
 
 let uploadIdPicture = multer({
@@ -92,6 +113,13 @@ let uploadSelfiePicture = multer({
   fileFilter: fileFilter,
   limits,
 }).single("upload");
+
+let uploadConsent = multer({
+  storage: storageConsent,
+  fileFilter: pdfFileFilter,
+  limits,
+}).single("upload");
+
 
 let uploadPrescriptionPicture = (id: string) => {
   return multer({
@@ -200,4 +228,5 @@ export {
   uploadSelfie,
   uploadPrescription,
   uploadLabResult,
+  uploadConsent,
 }
