@@ -31,6 +31,7 @@ class ProgramController {
         "pharmacy",
         "programEvidences",
         "testLab",
+        "price",
       ],
     });
 
@@ -50,6 +51,7 @@ class ProgramController {
         "pharmacy",
         "programEvidences",
         "testLab",
+        "price",
       ],
     });
 
@@ -75,6 +77,7 @@ class ProgramController {
           "pharmacy",
           "programEvidences",
           "testLab",
+          "price",
         ],
       });
       try {
