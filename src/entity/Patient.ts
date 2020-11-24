@@ -69,6 +69,9 @@ export class Patient {
   @Column({ nullable: true })
   clientToken: String;
 
+  @Column({ nullable: true })
+  consent: String;
+
   @Column()
   @IsNotEmpty()
   status: number;

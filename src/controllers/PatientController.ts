@@ -314,6 +314,40 @@ class PatientController {
 
     res.status(200).send({ data: "success" });
   };
+
+  static updateConsent = async (req: Request, res: Response) => {
+    //Get the ID from the url
+    const id = req.params.id;
+
+    //Get values from the body
+    let {
+      consent
+    } = req.body;
+
+    //Try to find data on database
+    const repository = getRepository(Patient);
+    let patient: Patient;
+    try {
+      patient = await repository.findOneOrFail({
+        where: { id: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+    } catch (error) {
+      console.log("failed to save client token");
+    }
+
+    //Validate the new values on model
+    patient.consent = consent;
+
+    try {
+      await repository.save(patient);
+    } catch (e) {
+      console.log("failed to save consent");
+    }
+
+    res.status(200).send({ data: "success" });
+  };
 }
 
 export default PatientController;

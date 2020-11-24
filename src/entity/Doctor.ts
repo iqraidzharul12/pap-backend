@@ -61,6 +61,9 @@ export class Doctor {
   @IsNotEmpty()
   status: number;
 
+  @Column({ nullable: true })
+  consent: String;
+
   @OneToMany(() => TestLab, (testLab) => testLab.doctor)
   testLabs: TestLab[];
 

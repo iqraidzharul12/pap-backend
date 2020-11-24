@@ -109,7 +109,7 @@ class ProgramController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { patientId, doctorId, programTypeId } = req.body;
+    let { patientId, doctorId, programTypeId, consent } = req.body;
 
     const patientRepository = getRepository(Patient);
     const doctorRepository = getRepository(Doctor);
@@ -243,6 +243,16 @@ class ProgramController {
         data: null,
       });
       return;
+    }
+
+    //save patient consent
+    if (consent) {
+      try {
+        patient.consent = consent
+        await patientRepository.save(patient);
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     try {
@@ -406,9 +416,6 @@ class ProgramController {
 
   static reject = async (req: Request, res: Response) => {
     let { id, message } = req.body;
-
-    console.log(id);
-    console.log(message);
 
     //Get the user from database
     const repository = getRepository(Program);
