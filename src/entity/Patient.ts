@@ -66,6 +66,9 @@ export class Patient {
   @IsNotEmpty()
   representativeRelationship: string;
 
+  @Column({ nullable: true })
+  clientToken: String;
+
   @Column()
   @IsNotEmpty()
   status: number;

@@ -15,6 +15,8 @@ router.post("/", PatientController.create);
 
 //Edit one data
 router.patch("/:id", PatientController.edit);
+router.patch("/clientToken/:id", PatientController.updateClientToken);
+
 
 //Delete one data
 router.delete("/:id", PatientController.delete);

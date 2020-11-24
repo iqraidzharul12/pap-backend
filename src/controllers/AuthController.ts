@@ -10,7 +10,7 @@ import { sendMail, ChangePasswordEmail } from "../utils/mailer";
 class AuthController {
   static login = async (req: Request, res: Response) => {
     //Check if username and password are set
-    let { email, password, role } = req.body;
+    let { email, password, role, clientToken } = req.body;
 
     if (!(email && password)) {
       res.status(400).send({
@@ -43,6 +43,13 @@ class AuthController {
           data: null,
         });
         return;
+      }
+
+      patient.clientToken = clientToken
+      try {
+        await userRepository.save(patient);
+      } catch (error) {
+        console.log("failed to save client token");
       }
 
       //Sign JWT, valid for 1 hour
