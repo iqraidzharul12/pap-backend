@@ -20,7 +20,11 @@ export const sendPushNotification = async (registrationToken: any, title: any, b
     }
   };
 
-  let result = await admin.messaging().sendToDevice(registrationToken, message, options)
+  let result: any = ""
+
+  if (registrationToken) {
+    result = await admin.messaging().sendToDevice(registrationToken, message, options)
+  }
 
   return result
 }

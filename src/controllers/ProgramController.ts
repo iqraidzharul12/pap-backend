@@ -414,29 +414,20 @@ class ProgramController {
         where: { id: id, status: 1, checkPoint: 4 },
         relations: ['patient']
       });
-      if (result) {
-        result.checkPoint = 5;
-        result.message = message;
-        result.isApproved = false;
-        repository.save(result)
+      result.checkPoint = 5;
+      result.message = message;
+      result.isApproved = false;
+      repository.save(result)
 
-        const notificationMessage = `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`
-        const notification = await NotificationController.create(notificationMessage, result.patient)
-        if (notification.error) {
-          console.log(`failed to save reject notification for patient: ${result.patient}`);
-        }
-        sendPushNotification(result.patient.clientToken, "Pengajuan program ditolak", `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`)
-
-        //Send the users object
-        res.status(200).send(result);
-      } else {
-        res.status(404).send({
-          error: false,
-          errorList: ["Data program tidak ditemukan"],
-          data: null,
-        });
-        return;
+      const notificationMessage = `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`
+      const notification = await NotificationController.create(notificationMessage, result.patient)
+      if (notification.error) {
+        console.log(`failed to save reject notification for patient: ${result.patient}`);
       }
+      sendPushNotification(result.patient.clientToken, "Pengajuan program ditolak", `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`)
+
+      //Send the users object
+      res.status(200).send(result);
     } catch (error) {
       res.status(404).send({
         error: false,
