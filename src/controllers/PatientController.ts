@@ -242,7 +242,7 @@ class PatientController {
     try {
       await repository.save(patient);
     } catch (e) {
-      errorList.push("failed to edit data");
+      errorList.push("Gagal menyimpan data, email sudah terdaftar");
       res.status(409).send({
         error: true,
         errorList: errorList,
