@@ -8,12 +8,20 @@ import { sendPushNotification } from "../utils/notification";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
-    const { checkPoint } = req.query
+    const { checkPoint, status } = req.query
     let conditions = {}
-    if (checkPoint) {
+    if (status && checkPoint) {
       conditions = {
-        // status: 1,
+        status: status,
         checkPoint: checkPoint,
+      }
+    } else if (checkPoint) {
+      conditions = {
+        checkPoint: checkPoint,
+      }
+    } else if (status) {
+      conditions = {
+        status: status,
       }
     }
     // else {
