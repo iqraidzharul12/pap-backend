@@ -12,6 +12,7 @@ router.get("/:id", NotificationController.listAll);
 
 // //Create a new data
 // router.post("/", LaboratoriumController.create);
+router.post("/push", NotificationController.manualPushNotification);
 
 // //Edit one data
 // router.patch("/:id", LaboratoriumController.edit);

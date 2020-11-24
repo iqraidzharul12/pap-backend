@@ -4,6 +4,7 @@ import { validate } from "class-validator";
 import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType, Price } from "../entity";
 import NotificationController from "./NotificationController";
 import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
+import { sendPushNotification } from "../utils/notification";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
@@ -381,6 +382,9 @@ class ProgramController {
         if (notification.error) {
           console.log(`failed to save approval notification for patient: ${result.patient}`);
         }
+
+        sendPushNotification(result.patient.clientToken, "Pengajuan program diterima", "Pendaftaran program Anda telah diterima, silakan scan QR di apotek yang telah ditentukan untuk mendapatkan obat Anda.")
+
         res.status(200).send(result);
       } else {
         res.status(404).send({
@@ -421,6 +425,8 @@ class ProgramController {
         if (notification.error) {
           console.log(`failed to save reject notification for patient: ${result.patient}`);
         }
+        sendPushNotification(result.patient.clientToken, "Pengajuan program ditolak", `Pendaftaran program Anda telah ditolak dengan alasan: ${message}.`)
+
         //Send the users object
         res.status(200).send(result);
       } else {
@@ -470,6 +476,8 @@ class ProgramController {
           console.log(`failed to save notification for patient: ${result.patient}`);
         }
 
+        sendPushNotification(result.patient.clientToken, "Pengambilan Obat", `Anda telah melakukan pengambilan obat di ${result.pharmacy.name}, ${result.pharmacy.address}.`)
+
         res.status(200).send(result);
       } else {
         res.status(404).send({
@@ -505,11 +513,13 @@ class ProgramController {
         result.terminatedDate = new Date();
         repository.save(result)
 
-        const notificationMessage = `Program Anda telah diberhentikan dengan alasan: ${message}.`
+        const notificationMessage = `Anda telah berhenti dari program PAP dengan alasan: ${message}.`
         const notification = await NotificationController.create(notificationMessage, result.patient)
         if (notification.error) {
           console.log(`failed to save notification for patient: ${result.patient}`);
         }
+
+        sendPushNotification(result.patient.clientToken, "Pemberhentian Program", `Anda telah berhenti dari program PAP dengan alasan: ${message}.`)
 
         try {
           await sendMail(result.patient.email, TerminateProgramEmail.subject, TerminateProgramEmail.body)
@@ -562,11 +572,13 @@ class ProgramController {
 
         await repository.save(newProgram)
 
-        const notificationMessage = "Program Anda telah berhasil diperpanjang."
+        const notificationMessage = "Program Anda telah berhasil diperpanjang, silakan upload resep terbaru melalui aplikasi"
         const notification = await NotificationController.create(notificationMessage, result.patient)
         if (notification.error) {
           console.log(`failed to save notification for patient: ${result.patient}`);
         }
+
+        sendPushNotification(result.patient.clientToken, "Perpanjangan Program", "Program Anda telah berhasil diperpanjang, silakan upload resep terbaru melalui aplikasi")
 
         try {
           await sendMail(newProgram.patient.email, ContinueProgramEmail.subject, ContinueProgramEmail.body)

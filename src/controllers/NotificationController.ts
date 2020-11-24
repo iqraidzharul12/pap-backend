@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Notification, Patient } from "../entity";
+import { sendPushNotification } from "../utils/notification";
 
 class NotificationController {
   static listAll = async (req: Request, res: Response) => {
@@ -124,6 +125,14 @@ class NotificationController {
       error: false,
       errorList: [],
     }
+  };
+
+  static manualPushNotification = async (req: Request, res: Response) => {
+    const { registrationToken, title, body } = req.body
+
+    const result = await sendPushNotification(registrationToken, title, body)
+
+    res.status(200).send(result);
   };
 }
 
