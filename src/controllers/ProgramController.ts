@@ -407,6 +407,9 @@ class ProgramController {
   static reject = async (req: Request, res: Response) => {
     let { id, message } = req.body;
 
+    console.log(id);
+    console.log(message);
+
     //Get the user from database
     const repository = getRepository(Program);
     try {
@@ -414,6 +417,7 @@ class ProgramController {
         where: { id: id, status: 1, checkPoint: 4 },
         relations: ['patient']
       });
+      console.log(result);
       result.checkPoint = 5;
       result.message = message;
       result.isApproved = false;
@@ -429,6 +433,7 @@ class ProgramController {
       //Send the users object
       res.status(200).send(result);
     } catch (error) {
+      console.log(error);
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
