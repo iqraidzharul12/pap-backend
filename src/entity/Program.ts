@@ -35,6 +35,9 @@ export class Program {
   @Column({ nullable: true })
   terminatedDate: Date
 
+  @Column({ nullable: true })
+  carryOverDate: Date
+
   @ManyToOne(() => Patient, (patient) => patient.programs)
   patient: Patient;
 

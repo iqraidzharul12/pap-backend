@@ -6,5 +6,6 @@ const router = Router();
 
 //Get all data
 router.get("/program", ReportController.programMonthly);
+router.get("/program/mobile", ReportController.programMonthlyMobile);
 
 export default router;

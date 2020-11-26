@@ -570,6 +570,7 @@ class ProgramController {
         result.checkPoint = 6;
         result.isTerminated = false;
         result.status = 0;
+        result.carryOverDate = new Date();
         repository.save(result)
 
         let newProgram = new Program()
