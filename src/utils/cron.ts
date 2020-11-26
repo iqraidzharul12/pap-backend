@@ -1,18 +1,21 @@
+import { subDays } from 'date-fns';
 import { Between, getRepository, LessThan } from 'typeorm';
 import { Program } from '../entity'
 import { sendPushNotification } from './notification';
 
 export const sendReminder = async () => {
   const programRepository = getRepository(Program);
-  const days20 = new Date(new Date().setDate(new Date().getDate() - 20))
-  const days30 = new Date(new Date().setDate(new Date().getDate() - 30))
+
+  const lastMonth = new Date(new Date().setDate(new Date().getDate() - 30))
+
+  const BetweenDates = (date: Date) => Between(subDays(date, 30), subDays(date, 20));
 
   const programs = await programRepository.find({
     where: {
       status: 1,
       checkPoint: 5,
       isApproved: true,
-      drugsTakenDate: Between(days20, days30)
+      drugsTakenDate: BetweenDates(new Date())
     },
     order: { createdAt: "ASC" },
     relations: ['patient']
@@ -27,7 +30,7 @@ export const sendReminder = async () => {
       status: 1,
       checkPoint: 5,
       isApproved: true,
-      drugsTakenDate: LessThan(days30)
+      drugsTakenDate: LessThan(lastMonth)
     },
     order: { createdAt: "ASC" },
     relations: ['patient']

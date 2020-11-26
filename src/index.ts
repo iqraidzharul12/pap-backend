@@ -23,7 +23,6 @@ createConnection()
     //cron
     const task = cron.schedule('* * * * *', function () {
       sendReminder()
-      console.log("cron running")
     })
 
     task.start()
