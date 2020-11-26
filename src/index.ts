@@ -21,7 +21,7 @@ createConnection()
     const app = express();
 
     //cron
-    const task = cron.schedule('59 23 * * *', function () {
+    const task = cron.schedule('* * * * *', function () {
       sendReminder()
     })
 
