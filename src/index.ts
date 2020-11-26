@@ -6,6 +6,8 @@ import * as helmet from "helmet";
 import * as cors from "cors";
 import routes from "./routes";
 import * as rateLimit from 'express-rate-limit';
+import * as cron from 'node-cron';
+import { sendReminder } from "./utils/cron";
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -17,6 +19,13 @@ createConnection()
   .then(async (connection) => {
     // Create a new express application instance
     const app = express();
+
+    //cron
+    const task = cron.schedule('59 23 * * *', function () {
+      sendReminder()
+    })
+
+    task.start()
 
     // Call midlewares
     app.use(cors());

@@ -9,14 +9,13 @@ class PatientController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Patient);
-    const doctors = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
-    doctors.forEach((element) => {
+    const patients = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+    patients.forEach((element) => {
       delete element.password;
     });
 
     //Send the users object
-    res.status(200).send(doctors,
-    );
+    res.status(200).send(patients);
   };
 
   static getOneById = async (req: Request, res: Response) => {
