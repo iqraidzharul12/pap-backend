@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 
-import { Patient, Pharmacy, Verificator } from "../entity";
+import { Patient, Pharmacy, Program, ProgramType, TestLab, Verificator } from "../entity";
 import config from "../config/config";
 import { sendMail, ChangePasswordEmail } from "../utils/mailer";
 
@@ -61,6 +61,27 @@ class AuthController {
 
       delete patient.password;
 
+      const testLabRepository = getRepository(TestLab);
+      const programRepository = getRepository(Program);
+      const programTypeRepository = getRepository(ProgramType);
+
+      try {
+        let testLabs = await testLabRepository.find({ where: { patient: patient, status: 1 }, relations: ['doctor', 'testLabType', 'laboratorium', 'voucher'] });
+        patient.testLabs = testLabs
+      } catch (error) {
+        console.log("error when getting testLab data")
+      }
+
+      try {
+        let programs = await programRepository.find({ where: { patient: patient, status: 1 }, relations: ['programType', 'pharmacy', 'doctor'] });
+        programs.forEach(async element => {
+          let programType = await programTypeRepository.findOne({ where: { id: element.programType.id, status: 1 }, relations: ['defaultSchedules'] });
+          element.programType = programType
+        });
+        patient.programs = programs
+      } catch (error) {
+        console.log("error when getting program data")
+      }
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
       res.status(200).send(patient);
