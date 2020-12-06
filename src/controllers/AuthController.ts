@@ -25,7 +25,7 @@ class AuthController {
       const userRepository = getRepository(Patient);
       let patient: Patient;
       try {
-        patient = await userRepository.findOneOrFail({ where: { email } });
+        patient = await userRepository.findOneOrFail({ where: { email }, relations: ['testLabs', 'programs'] });
       } catch (error) {
         res.status(401).send({
           error: true,
