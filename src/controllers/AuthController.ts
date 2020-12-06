@@ -74,13 +74,20 @@ class AuthController {
 
       try {
         let programs = await programRepository.find({ where: { patient: patient, status: 1 }, relations: ['programType', 'pharmacy', 'doctor'] });
-        programs.forEach(async element => {
-          let programType = await programTypeRepository.findOne({ where: { id: element.programType.id, status: 1 }, relations: ['defaultSchedules'] });
-          element.programType = programType
-        });
+        // programs.forEach(async element => {
+        //   let programType = await programTypeRepository.findOne({ where: { id: element.programType.id, status: 1 }, relations: ['defaultSchedules'] });
+        //   element.programType = programType
+        // });
+        console.log(JSON.stringify(programs))
+        for (let index = 0; index < programs.length; index++) {
+          if (programs[index].programType) {
+            let programType = await programTypeRepository.findOne({ where: { id: programs[index].programType.id, status: 1 }, relations: ['defaultSchedules'] });
+            programs[index].programType = programType
+          }
+        }
         patient.programs = programs
       } catch (error) {
-        console.log("error when getting program data")
+        console.log("error when getting program data" + error)
       }
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
