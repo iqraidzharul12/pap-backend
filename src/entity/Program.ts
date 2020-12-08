@@ -30,6 +30,9 @@ export class Program {
   drugsTakenDate: Date
 
   @Column({ nullable: true })
+  reminderDate: Date
+
+  @Column({ nullable: true })
   terminatedMessage: String
 
   @Column({ nullable: true })

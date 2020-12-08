@@ -5,6 +5,7 @@ import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType, 
 import NotificationController from "./NotificationController";
 import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
 import { sendPushNotification } from "../utils/notification";
+import { addDays } from "date-fns";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
@@ -473,6 +474,7 @@ class ProgramController {
       if (result) {
         result.isDrugsTaken = true;
         result.drugsTakenDate = new Date();
+        result.reminderDate = addDays(new Date(), 25);
         repository.save(result)
 
         try {
