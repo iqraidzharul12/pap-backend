@@ -18,25 +18,9 @@ export class Doctor {
   @IsNotEmpty()
   fullname: string;
 
-  // @Column()
-  // @IsNotEmpty()
-  // dateOfBirth: Date;
-
   @Column()
   @Length(16)
   idNumber: string;
-
-  // @Column()
-  // @IsNotEmpty()
-  // idPicture: string;
-
-  // @Column()
-  // @IsNotEmpty()
-  // selfiePicture: string;
-
-  // @Column()
-  // @IsNotEmpty()
-  // gender: string;
 
   @Column({ unique: true })
   @IsEmail()
@@ -63,6 +47,9 @@ export class Doctor {
 
   @Column({ nullable: true })
   consent: String;
+
+  @Column({ nullable: true })
+  hospital: String;
 
   @OneToMany(() => TestLab, (testLab) => testLab.doctor)
   testLabs: TestLab[];

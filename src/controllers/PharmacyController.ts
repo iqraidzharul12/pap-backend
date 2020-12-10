@@ -58,14 +58,16 @@ class PharmacyController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, address, email, password, } = req.body;
+    let { name, address, email, password, city, certificate } = req.body;
     let pharmacy = new Pharmacy();
     pharmacy.name = name;
     pharmacy.address = address;
+    pharmacy.city = city;
+    pharmacy.certificate = certificate;
     pharmacy.email = email;
     pharmacy.password = password;
     pharmacy.status = 1;
-
+    0
     //Validade if the parameters are ok
     const errors = await validate(pharmacy);
     const errorList = [];

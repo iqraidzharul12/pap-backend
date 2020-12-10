@@ -24,6 +24,12 @@ export class Pharmacy {
   address: string;
 
   @Column({ nullable: true })
+  city: String;
+
+  @Column({ nullable: true })
+  certificate: String;
+
+  @Column({ nullable: true })
   isApproved: boolean;
 
   @Column({ nullable: true })

@@ -59,8 +59,10 @@ class DoctorController {
       // idPicture,
       // selfiePicture,
       // gender,
+      hospital,
       email,
       city,
+      consent,
     } = req.body;
     let doctor = new Doctor();
     doctor.fullname = fullname;
@@ -69,11 +71,13 @@ class DoctorController {
     // doctor.idPicture = idPicture;
     // doctor.selfiePicture = selfiePicture;
     // doctor.gender = gender;
+    doctor.hospital = hospital;
     doctor.email = email;
     doctor.status = 1;
     doctor.code = randomString(5);
     doctor.verificationCode = randomString(6);
     doctor.city = city;
+    doctor.consent = consent;
 
     //Validade if the parameters are ok
     const errors = await validate(doctor);
