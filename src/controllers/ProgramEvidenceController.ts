@@ -47,6 +47,7 @@ class ProgramEvidenceController {
     try {
       program = await programRepository.findOneOrFail({
         where: { id: programId, status: 1, checkPoint: 3 },
+        relations: ['prevProgram']
       });
     } catch (error) {
       res.status(404).send({
@@ -101,6 +102,9 @@ class ProgramEvidenceController {
 
     try {
       program.checkPoint = 4;
+      if (program.prevProgram) {
+        program.checkPoint = 5;
+      }
       await programRepository.save(program);
     } catch (e) {
       console.log("Gagal mengupdate status program", e);

@@ -584,6 +584,11 @@ class ProgramController {
         newProgram.status = 1
         newProgram.prevProgram = result
 
+        newProgram.enrollDate = result.enrollDate
+        newProgram.isApproved = result.isApproved
+        newProgram.pharmacy = result.pharmacy
+        newProgram.price = result.price
+
         await repository.save(newProgram)
 
         const notificationMessage = "Program Anda telah berhasil diperpanjang, silakan upload resep terbaru melalui aplikasi"

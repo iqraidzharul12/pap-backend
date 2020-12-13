@@ -13,7 +13,7 @@ import FileUploadController from "./FileUploadController";
 import VoucherController from "./VoucherController";
 import PriceController from "./PriceController";
 import NotificationController from "./NotificationController";
-import ArticleController from "./ArticleController";
+import NewsController from "./NewsController";
 import ReportController from "./ReportController";
 import MailController from "./MailController";
 import HelpController from "./HelpController";
@@ -34,7 +34,7 @@ export {
   VoucherController,
   PriceController,
   NotificationController,
-  ArticleController,
+  NewsController,
   ReportController,
   MailController,
   HelpController,

@@ -13,8 +13,10 @@ import { Price } from "./Price";
 import { DefaultSchedule } from "./DefaultSchedule";
 import { Verificator } from "./Verificator";
 import { Notification } from "./Notification";
-import { Article } from "./Article";
+import { News } from "./News";
 import { Help } from "./Help";
+import { City } from "./City";
+import { TerminateReason } from "./TerminateReason";
 
 export {
   Patient,
@@ -32,7 +34,9 @@ export {
   DefaultSchedule,
   Verificator,
   Notification,
-  Article,
+  News,
   Help,
+  City,
+  TerminateReason,
 };
 

@@ -8,7 +8,7 @@ import {
 import { IsNotEmpty } from "class-validator";
 
 @Entity()
-export class Article {
+export class News {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 

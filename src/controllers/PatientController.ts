@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository, Like } from "typeorm";
 import { validate } from "class-validator";
-import { Patient } from "../entity";
+import { City, Patient } from "../entity";
 import { formatNumberDigit } from "../utils/String";
 import { RegisterMail, sendMail } from "../utils/mailer";
 
@@ -99,40 +99,54 @@ class PatientController {
 
     let year = (new Date()).getFullYear().toString();
     let cityCode = "JKT";
-    if (patient.city) {
-      switch (patient.city.toLowerCase()) {
-        case 'depok':
-          cityCode = "DPK";
-          break;
-        case 'bekasi':
-          cityCode = "BKS";
-          break;
-        case 'dki jakarta':
-          cityCode = "JKT";
-          break;
-        case 'tangerang':
-          cityCode = "TGR";
-          break;
-        case 'bogor':
-          cityCode = "BGR";
-          break;
-        case 'bandung':
-          cityCode = "BDG";
-          break;
-        case 'cirebon':
-          cityCode = "CRB";
-          break;
-        case 'surabaya':
-          cityCode = "SBY";
-          break;
-        case 'semarang':
-          cityCode = "SMR";
-          break;
-        default:
-          cityCode = "JKT";
-          break;
-      }
+
+    const cityRepository = getRepository(City);
+    try {
+      const city = await cityRepository.findOneOrFail({
+        where: {
+          name: patient.city
+        }
+      })
+      cityCode = city.code
     }
+    catch (e) {
+      cityCode = "JKT";
+    }
+
+    // if (patient.city) {
+    //   switch (patient.city.toLowerCase()) {
+    //     case 'depok':
+    //       cityCode = "DPK";
+    //       break;
+    //     case 'bekasi':
+    //       cityCode = "BKS";
+    //       break;
+    //     case 'dki jakarta':
+    //       cityCode = "JKT";
+    //       break;
+    //     case 'tangerang':
+    //       cityCode = "TGR";
+    //       break;
+    //     case 'bogor':
+    //       cityCode = "BGR";
+    //       break;
+    //     case 'bandung':
+    //       cityCode = "BDG";
+    //       break;
+    //     case 'cirebon':
+    //       cityCode = "CRB";
+    //       break;
+    //     case 'surabaya':
+    //       cityCode = "SBY";
+    //       break;
+    //     case 'semarang':
+    //       cityCode = "SMR";
+    //       break;
+    //     default:
+    //       cityCode = "JKT";
+    //       break;
+    //   }
+    // }
 
     patient.code = year + cityCode
 
@@ -141,7 +155,7 @@ class PatientController {
       const lastIndex = patientLists.length + 1
       patient.code += formatNumberDigit(3, lastIndex)
     } catch (e) {
-      errorList.push("tidak bisa membuat id pasien");
+      errorList.push("gagal membuat id pasien");
       res.status(409).send({
         error: true,
         errorList: errorList,

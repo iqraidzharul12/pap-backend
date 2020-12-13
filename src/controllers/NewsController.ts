@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Article } from "../entity";
+import { News } from "../entity";
 
-class ArticleController {
+class NewsController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(Article);
-    const articles = await repository.find({ where: { status: 1 }, order: { createdAt: "DESC" } });
+    const repository = getRepository(News);
+    const newss = await repository.find({ where: { status: 1 }, order: { createdAt: "DESC" } });
 
     //Send the users object
-    res.status(200).send(articles);
+    res.status(200).send(newss);
   };
 
   static getOneById = async (req: Request, res: Response) => {
@@ -18,15 +18,15 @@ class ArticleController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(Article);
+    const repository = getRepository(News);
     try {
-      const article = await repository.findOneOrFail({
+      const news = await repository.findOneOrFail({
         where: { id: id, status: 1 }, order: {
           createdAt: "DESC"
         }
       });
       //Send the users object
-      res.status(200).send(article);
+      res.status(200).send(news);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -40,14 +40,14 @@ class ArticleController {
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
     let { title, body, image } = req.body;
-    let article = new Article();
-    article.title = title;
-    article.body = body;
-    article.image = image;
-    article.status = 1;
+    let news = new News();
+    news.title = title;
+    news.body = body;
+    news.image = image;
+    news.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(article);
+    const errors = await validate(news);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -65,11 +65,11 @@ class ArticleController {
     }
 
     //Try to save
-    const repository = getRepository(Article);
+    const repository = getRepository(News);
     try {
-      await repository.save(article);
+      await repository.save(news);
     } catch (e) {
-      errorList.push("Failed to save article");
+      errorList.push("Failed to save news");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -79,7 +79,7 @@ class ArticleController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Article created" });
+    res.status(201).send({ data: "News created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -89,10 +89,10 @@ class ArticleController {
     let { title, body, image } = req.body;
 
     //Try to find data on database
-    const repository = getRepository(Article);
-    let article: Article;
+    const repository = getRepository(News);
+    let news: News;
     try {
-      article = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
+      news = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -104,11 +104,11 @@ class ArticleController {
     }
 
     //Validate the new values on model
-    article.title = title;
-    article.body = body;
-    article.image = image;
+    news.title = title;
+    news.body = body;
+    news.image = image;
 
-    const errors = await validate(article);
+    const errors = await validate(news);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -126,7 +126,7 @@ class ArticleController {
     }
 
     try {
-      await repository.save(article);
+      await repository.save(news);
     } catch (e) {
       errorList.push("failed to edit data");
       res.status(409).send({
@@ -144,10 +144,10 @@ class ArticleController {
     //Get the ID from the url
     const id = req.params.id;
 
-    const repository = getRepository(Article);
-    let article: Article;
+    const repository = getRepository(News);
+    let news: News;
     try {
-      article = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
+      news = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -156,12 +156,12 @@ class ArticleController {
       });
       return;
     }
-    article.status = 0;
-    repository.save(article);
+    news.status = 0;
+    repository.save(news);
 
 
     res.status(200).send({ data: "success" });
   };
 }
 
-export default ArticleController;
+export default NewsController;
