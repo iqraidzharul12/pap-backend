@@ -81,7 +81,7 @@ class ProgramController {
     //Get users from database
     const repository = getRepository(Program);
     const results = await repository.find({
-      where: { isApproved: true, pharmacy: pharmacy },
+      where: conditions,
       relations: [
         "patient",
         "doctor",
