@@ -479,7 +479,7 @@ class ProgramController {
 
     while (index < terminateReasonList.length) {
       let conditions: {}
-      if (status = 'all') {
+      if (status == 'all') {
         conditions = {
           isApproved: true,
           isTerminated: true,
