@@ -540,7 +540,8 @@ class ProgramController {
         where: {
           city: cityList[index].name,
           status: 1,
-          isApproved: true
+          isApproved: true,
+          createdAt: Between(currentMonthStart, addMonths(currentMonthStart, 1))
         }
       });
 
