@@ -6,6 +6,8 @@ import NotificationController from "./NotificationController";
 import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
 import { sendPushNotification } from "../utils/notification";
 import { addDays } from "date-fns";
+import * as jwt from "jsonwebtoken";
+import config from "../config/config";
 
 class ProgramController {
   static listAll = async (req: Request, res: Response) => {
@@ -50,10 +52,36 @@ class ProgramController {
   };
 
   static listApprovedProgram = async (req: Request, res: Response) => {
+
+    const bearerToken = <string>req.headers.authorization;
+    let token = ""
+    if (bearerToken) token = bearerToken.split(" ")[1];
+
+    let conditions = {}
+    let pharmacy: Pharmacy
+
+    //Try to validate the token and get data
+    try {
+      let jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+
+      const { userId, email, role } = jwtPayload;
+
+      if (role == "pharmacy") {
+        pharmacy = await getRepository(Pharmacy).findOneOrFail({
+          where: {
+            id: userId
+          }
+        })
+        conditions = { isApproved: true, pharmacy: pharmacy }
+      }
+    } catch (error) {
+      conditions = { isApproved: true }
+    }
+
     //Get users from database
     const repository = getRepository(Program);
     const results = await repository.find({
-      where: { isApproved: true },
+      where: { isApproved: true, pharmacy: pharmacy },
       relations: [
         "patient",
         "doctor",
