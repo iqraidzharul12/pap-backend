@@ -18,6 +18,7 @@ import notification from "./notification";
 import report from "./report";
 import mail from "./mail";
 import help from "./help";
+import city from "./city";
 
 const routes = Router();
 
@@ -40,5 +41,6 @@ routes.use("/notification", notification);
 routes.use("/report", report);
 routes.use("/mail", mail);
 routes.use("/help", help);
+routes.use("/city", city);
 
 export default routes;
