@@ -20,7 +20,7 @@ class DoctorController {
         doctors = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { updatedAt: "DESC" } });
       }
     } else {
-      doctors = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+      doctors = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
     }
     //Send the users object
     res.status(200).send(doctors);
