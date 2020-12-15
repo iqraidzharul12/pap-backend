@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { NewsController } from "../controllers";
+import { CityController } from "../controllers";
 
 const router = Router();
 
 //Get all data
-router.get("/", NewsController.listAll);
+router.get("/", CityController.listAll);
 
 export default router;

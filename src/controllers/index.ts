@@ -17,6 +17,7 @@ import NewsController from "./NewsController";
 import ReportController from "./ReportController";
 import MailController from "./MailController";
 import HelpController from "./HelpController";
+import CityController from "./CityController";
 
 export {
   AuthController,
@@ -38,4 +39,5 @@ export {
   ReportController,
   MailController,
   HelpController,
+  CityController,
 };
