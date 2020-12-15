@@ -119,6 +119,7 @@ class DoctorController {
       email,
       city,
       consent,
+      verificationCode,
     } = req.body;
 
     //Try to find data on database
@@ -143,6 +144,7 @@ class DoctorController {
     doctor.city = city;
     doctor.consent = consent;
     doctor.email = email;
+    doctor.verificationCode = verificationCode;
 
     const errors = await validate(doctor);
     const errorList = [];
