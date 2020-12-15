@@ -54,11 +54,7 @@ class DoctorController {
     //Get parameters from the body
     let {
       fullname,
-      // dateOfBirth,
       idNumber,
-      // idPicture,
-      // selfiePicture,
-      // gender,
       hospital,
       email,
       city,
@@ -66,11 +62,7 @@ class DoctorController {
     } = req.body;
     let doctor = new Doctor();
     doctor.fullname = fullname;
-    // doctor.dateOfBirth = dateOfBirth;
     doctor.idNumber = idNumber;
-    // doctor.idPicture = idPicture;
-    // doctor.selfiePicture = selfiePicture;
-    // doctor.gender = gender;
     doctor.hospital = hospital;
     doctor.email = email;
     doctor.status = 1;
@@ -122,12 +114,11 @@ class DoctorController {
     //Get values from the body
     let {
       fullname,
-      // dateOfBirth,
       idNumber,
-      // idPicture,
-      // selfiePicture,
-      // gender,
+      hospital,
       email,
+      city,
+      consent,
     } = req.body;
 
     //Try to find data on database
@@ -147,11 +138,10 @@ class DoctorController {
 
     //Validate the new values on model
     doctor.fullname = fullname;
-    // doctor.dateOfBirth = dateOfBirth;
     doctor.idNumber = idNumber;
-    // doctor.idPicture = idPicture;
-    // doctor.selfiePicture = selfiePicture;
-    // doctor.gender = gender;
+    doctor.hospital = hospital;
+    doctor.city = city;
+    doctor.consent = consent;
     doctor.email = email;
 
     const errors = await validate(doctor);

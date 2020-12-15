@@ -22,7 +22,7 @@ export class Doctor {
   @Length(16)
   idNumber: string;
 
-  @Column({ unique: true })
+  @Column()
   @IsEmail()
   email: string;
 
