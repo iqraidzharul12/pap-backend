@@ -39,11 +39,13 @@ class NewsController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { title, body, image } = req.body;
+    let { title, body, image, tag, writer } = req.body;
     let news = new News();
     news.title = title;
     news.body = body;
     news.image = image;
+    news.writer = writer;
+    news.tag = tag;
     news.status = 1;
 
     //Validade if the parameters are ok
@@ -86,7 +88,7 @@ class NewsController {
     //Get the ID from the url
     const id = req.params.id;
     //Get the ID from the url
-    let { title, body, image } = req.body;
+    let { title, body, image, tag, writer } = req.body;
 
     //Try to find data on database
     const repository = getRepository(News);
@@ -107,6 +109,8 @@ class NewsController {
     news.title = title;
     news.body = body;
     news.image = image;
+    news.writer = writer;
+    news.tag = tag;
 
     const errors = await validate(news);
     const errorList = [];

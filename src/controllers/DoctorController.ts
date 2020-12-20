@@ -67,7 +67,7 @@ class DoctorController {
     doctor.email = email;
     doctor.status = 1;
     doctor.code = randomString(5);
-    doctor.verificationCode = randomString(6);
+    doctor.verificationCode = randomString(3);
     doctor.city = city;
     doctor.consent = consent;
 

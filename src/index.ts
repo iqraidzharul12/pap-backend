@@ -11,7 +11,8 @@ import { sendReminder } from "./utils/cron";
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 50
+  max: 100,
+  message: "Silakan coba kembali dalam beberapa menit"
 });
 
 //Connects to the Database -> then starts the express

@@ -168,6 +168,7 @@ class PatientController {
       await userRepository.save(patient);
     } catch (e) {
       errorList.push("email telah terdaftar");
+      console.log(e);
       res.status(409).send({
         error: true,
         errorList: errorList,

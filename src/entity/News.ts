@@ -18,8 +18,15 @@ export class News {
   @Column()
   body: String;
 
-  @Column()
+  @Column({ nullable: true })
   image: String;
+
+  @Column({ nullable: true })
+  writer: String;
+
+
+  @Column({ nullable: true })
+  tag: String;
 
   @Column()
   @IsNotEmpty()
