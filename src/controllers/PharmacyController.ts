@@ -19,7 +19,7 @@ class PharmacyController {
         results = await repository.find({ where: [{ status: 1, isApproved: true }, { status: 1, isApproved: false }], order: { updatedAt: "DESC" } });
       }
     } else {
-      results = await repository.find({ where: { status: 1, isApproved: true }, order: { createdAt: "ASC" } });
+      results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
     }
     //Send the users object
     res.status(200).send(results);
