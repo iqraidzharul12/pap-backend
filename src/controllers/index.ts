@@ -19,6 +19,7 @@ import MailController from "./MailController";
 import HelpController from "./HelpController";
 import CityController from "./CityController";
 import DashboardController from "./DashboardController";
+import VertificatorController from "./VertificatorController";
 
 export {
   AuthController,
@@ -42,4 +43,5 @@ export {
   HelpController,
   CityController,
   DashboardController,
+  VertificatorController,
 };

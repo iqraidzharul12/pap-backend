@@ -20,6 +20,7 @@ import mail from "./mail";
 import help from "./help";
 import city from "./city";
 import dashboard from "./dashboard";
+import verificator from "./verificator";
 
 const routes = Router();
 
@@ -44,5 +45,6 @@ routes.use("/mail", mail);
 routes.use("/help", help);
 routes.use("/city", city);
 routes.use("/dashboard", dashboard);
+routes.use("/verificator", verificator);
 
 export default routes;
