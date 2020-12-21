@@ -23,7 +23,7 @@ class VoucherController {
     const repository = getRepository(Voucher);
     try {
       const voucher = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
+        where: { id: id }, order: {
           createdAt: "ASC"
         }
       });
