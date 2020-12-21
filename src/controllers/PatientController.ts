@@ -59,14 +59,14 @@ class PatientController {
       });
 
       try {
-        let testLabs = await testLabRepository.find({ where: { patient: patient, status: 1 }, relations: ['doctor', 'testLabType', 'laboratorium', 'voucher'] });
+        let testLabs = await testLabRepository.find({ where: { patient: patient, status: 1 }, relations: ['doctor', 'testLabType', 'laboratorium', 'voucher', 'testLabEvidences'] });
         patient.testLabs = testLabs
       } catch (error) {
         console.log("error when getting testLab data")
       }
 
       try {
-        let programs = await programRepository.find({ where: { patient: patient, status: 1 }, relations: ['programType', 'pharmacy', 'doctor'] });
+        let programs = await programRepository.find({ where: { patient: patient, status: 1 }, relations: ['programType', 'pharmacy', 'doctor', 'programEvidences'] });
 
         console.log(JSON.stringify(programs))
         for (let index = 0; index < programs.length; index++) {
