@@ -7,7 +7,7 @@ class ProgramTypeController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(ProgramType);
-    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+    const results = await repository.find({ order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -87,7 +87,7 @@ class ProgramTypeController {
     const id = req.params.id;
 
     //Get values from the body
-    let { name, description, image } = req.body;
+    let { name, description, image, status } = req.body;
 
     //Try to find data on database
     const repository = getRepository(ProgramType);
@@ -112,6 +112,7 @@ class ProgramTypeController {
     programType.name = name;
     programType.description = description;
     programType.image = image;
+    programType.status = status;
 
     const errors = await validate(programType);
     const errorList = [];
