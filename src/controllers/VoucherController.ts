@@ -25,7 +25,7 @@ class VoucherController {
       const voucher = await repository.findOneOrFail({
         where: { id: id }, order: {
           createdAt: "ASC"
-        }
+        }, relations: ["testLabType"],
       });
       //Send the users object
       res.status(200).send(voucher);
