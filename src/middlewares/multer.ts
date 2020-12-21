@@ -73,7 +73,21 @@ const storageCertificate = multer.diskStorage({
   filename: (request, file, callback) => {
     callback(
       null,
-      "NEWS-" + new Date().valueOf() + "." + file.originalname.split(".").pop()
+      "CERT-" + new Date().valueOf() + "." + file.originalname.split(".").pop()
+    );
+  },
+});
+
+const storageDrugs = multer.diskStorage({
+  destination: (request, file, callback) => {
+    let path = `${process.cwd()}/uploads/`;
+    fs.mkdirpSync(`${path}/certificate`);
+    callback(null, `${path}/certificate`);
+  },
+  filename: (request, file, callback) => {
+    callback(
+      null,
+      "DRUG-" + new Date().valueOf() + "." + file.originalname.split(".").pop()
     );
   },
 });
@@ -156,6 +170,12 @@ let uploadNews = multer({
 
 let uploadCertificate = multer({
   storage: storageCertificate,
+  fileFilter: fileFilter,
+  limits,
+}).single("upload");
+
+let uploadDrugs = multer({
+  storage: storageDrugs,
   fileFilter: fileFilter,
   limits,
 }).single("upload");
@@ -271,4 +291,5 @@ export {
   uploadConsent,
   uploadNews,
   uploadCertificate,
+  uploadDrugs,
 }
