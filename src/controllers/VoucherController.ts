@@ -176,11 +176,12 @@ class VoucherController {
     const id = req.params.id;
 
     //Get values from the body
-    let { code } = req.body;
+    let { code, status, testLabTypeId } = req.body;
 
     //Try to find data on database
     const repository = getRepository(Voucher);
     let voucher: Voucher;
+
     try {
       voucher = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
@@ -195,6 +196,30 @@ class VoucherController {
 
     //Validate the new values on model
     voucher.code = code;
+    voucher.status = status;
+
+    if (testLabTypeId) {
+      try {
+        const testLabTypeRepository = getRepository(TestLabType);
+        let testLabType: TestLabType;
+
+        testLabType = await testLabTypeRepository.findOneOrFail({
+          where: { id: testLabTypeId, status: 1 }, order: {
+            createdAt: "ASC"
+          }
+        });
+
+        voucher.testLabType = testLabType
+      } catch (error) {
+        //If tidak ditemukan, send a 404 response
+        res.status(404).send({
+          error: false,
+          errorList: ["Data test laboratorium tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    }
 
     const errors = await validate(voucher);
     const errorList = [];
