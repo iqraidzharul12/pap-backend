@@ -137,10 +137,11 @@ class TestLabController {
     if (voucherCode) {
       try {
         voucher = await voucherRepository.findOneOrFail({
-          where: { code: voucherCode, status: 1 }, order: {
+          where: { code: voucherCode, testLabType: testLabType, status: 1 }, order: {
             createdAt: "ASC"
           }
         });
+        voucher.status = 0;
       } catch (error) {
         console.log("Voucher tidak ditemukan");
         res.status(404).send({
@@ -202,6 +203,13 @@ class TestLabController {
         data: null,
       });
       return;
+    }
+    try {
+      if (voucher.code) {
+        await voucherRepository.save(voucher);
+      }
+    } catch {
+      console.log('voucher gagal diupdate')
     }
 
     try {
