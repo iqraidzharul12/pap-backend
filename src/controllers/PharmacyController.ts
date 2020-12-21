@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Pharmacy } from "../entity";
+import { randomAlphabetOnly } from "../utils/String";
 
 class PharmacyController {
   static listAll = async (req: Request, res: Response) => {
@@ -58,14 +59,14 @@ class PharmacyController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, address, email, password, city, certificate } = req.body;
+    let { name, address, email, city, certificate } = req.body;
     let pharmacy = new Pharmacy();
     pharmacy.name = name;
     pharmacy.address = address;
     pharmacy.city = city;
     pharmacy.certificate = certificate;
     pharmacy.email = email;
-    pharmacy.password = password;
+    pharmacy.password = randomAlphabetOnly(8);
     pharmacy.status = 1;
     0
     //Validade if the parameters are ok
