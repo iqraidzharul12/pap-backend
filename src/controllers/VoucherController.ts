@@ -183,7 +183,7 @@ class VoucherController {
     let voucher: Voucher;
 
     try {
-      voucher = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
+      voucher = await repository.findOneOrFail({ where: { id: id }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({

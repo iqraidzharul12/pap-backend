@@ -22,7 +22,7 @@ class ProgramTypeController {
     const repository = getRepository(ProgramType);
     try {
       const result = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
+        where: { id: id }, order: {
           createdAt: "ASC"
         }
       });
@@ -40,12 +40,12 @@ class ProgramTypeController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, description, image } = req.body;
+    let { name, description, image, status } = req.body;
     let programType = new ProgramType();
     programType.name = name;
     programType.description = description;
     programType.image = image;
-    programType.status = 1;
+    programType.status = status ? status : 1;
 
     //Validade if the parameters are ok
     const errors = await validate(programType);
@@ -94,7 +94,7 @@ class ProgramTypeController {
     let programType: ProgramType;
     try {
       programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
+        where: { id: id }, order: {
           createdAt: "ASC"
         }
       });
