@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Verificator } from "../entity";
+import { randomAlphabetOnly } from "../utils/String";
 
 class VerificatorController {
   static listAll = async (req: Request, res: Response) => {
@@ -45,7 +46,7 @@ class VerificatorController {
     verificator.fullname = fullname;
     verificator.dateOfBirth = dateOfBirth;
     verificator.email = email;
-    verificator.password = password;
+    verificator.password = randomAlphabetOnly(8);
     verificator.status = 1;
 
     //Validade if the parameters are ok
@@ -91,7 +92,7 @@ class VerificatorController {
     const id = req.params.id;
 
     //Get values from the body
-    let { fullname, dateOfBirth, email, password } = req.body;
+    let { fullname, dateOfBirth, email } = req.body;
 
     //Try to find data on database
     const repository = getRepository(Verificator);
@@ -112,7 +113,6 @@ class VerificatorController {
     verificator.fullname = fullname;
     verificator.dateOfBirth = dateOfBirth;
     verificator.email = email;
-    verificator.password = password;
     verificator.status = 1;
 
     const errors = await validate(verificator);
