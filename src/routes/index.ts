@@ -19,6 +19,7 @@ import report from "./report";
 import mail from "./mail";
 import help from "./help";
 import city from "./city";
+import dashboard from "./dashboard";
 
 const routes = Router();
 
@@ -42,5 +43,6 @@ routes.use("/report", report);
 routes.use("/mail", mail);
 routes.use("/help", help);
 routes.use("/city", city);
+routes.use("/dashboard", dashboard);
 
 export default routes;

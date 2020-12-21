@@ -11,7 +11,8 @@ router.get("/", VoucherController.listAll);
 router.get("/:id", VoucherController.getOneById);
 
 //Create a new data
-router.post("/", VoucherController.create);
+// router.post("/", VoucherController.create);
+router.post("/", VoucherController.createBulk);
 
 //Edit one data
 router.patch("/:id", VoucherController.edit);

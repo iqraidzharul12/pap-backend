@@ -17,6 +17,9 @@ export class Verificator {
   @IsNotEmpty()
   fullname: string;
 
+  @Column({ nullable: true })
+  dateOfBirth: Date;
+
   @Column({ unique: true })
   @IsEmail()
   email: string;

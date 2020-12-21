@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Voucher } from "../entity";
+import { TestLabType, Voucher } from "../entity";
+import { randomAlphabetOnly } from "../utils/String";
 
 class VoucherController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(Voucher);
-    const vouchers = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+    const vouchers = await repository.find({ relations: ["testLabType"], order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(vouchers,
@@ -40,10 +41,35 @@ class VoucherController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { code } = req.body;
+    let { code, testLabTypeId } = req.body;
     let voucher = new Voucher();
     voucher.code = code;
     voucher.status = 1;
+
+
+
+    if (testLabTypeId) {
+      try {
+        const testLabTypeRepository = getRepository(TestLabType);
+        let testLabType: TestLabType;
+
+        testLabType = await testLabTypeRepository.findOneOrFail({
+          where: { id: testLabTypeId, status: 1 }, order: {
+            createdAt: "ASC"
+          }
+        });
+
+        voucher.testLabType = testLabType
+      } catch (error) {
+        //If tidak ditemukan, send a 404 response
+        res.status(404).send({
+          error: false,
+          errorList: ["Data test laboratorium tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    }
 
     //Validade if the parameters are ok
     const errors = await validate(voucher);
@@ -79,6 +105,70 @@ class VoucherController {
 
     //If all ok, send 201 response
     res.status(201).send({ data: "Voucher created" });
+  };
+
+  static createBulk = async (req: Request, res: Response) => {
+    //Get parameters from the body
+    let { testLabTypeId, count } = req.body;
+
+    const testLabTypeRepository = getRepository(TestLabType);
+    const repository = getRepository(Voucher);
+    let testLabType: TestLabType;
+
+    if (testLabTypeId) {
+      try {
+        testLabType = await testLabTypeRepository.findOneOrFail({
+          where: { id: testLabTypeId, status: 1 }, order: {
+            createdAt: "ASC"
+          }
+        });
+      } catch (error) {
+        //If tidak ditemukan, send a 404 response
+        res.status(404).send({
+          error: false,
+          errorList: ["Data test laboratorium tidak ditemukan"],
+          data: null,
+        });
+        return;
+      }
+    }
+
+    let failSaveCount = 0;
+
+    for (let i = 0; i < count; i++) {
+      let voucher = new Voucher();
+      voucher.code = randomAlphabetOnly(10);
+      voucher.status = 1;
+      voucher.testLabType = testLabType
+
+      try {
+        const existVoucher = await repository.findOneOrFail({
+          where: { code: voucher.code }, order: {
+            createdAt: "ASC"
+          }
+        });
+        i--;
+      } catch (error) {
+        //Try to save
+        try {
+          await repository.save(voucher);
+        } catch (e) {
+          failSaveCount++
+        }
+      }
+    }
+
+    if (failSaveCount > 0) {
+      res.status(400).send({
+        error: true,
+        errorList: [`Gagal membuat ${failSaveCount} voucher`],
+        data: null,
+      });
+      return;
+    }
+
+    //If all ok, send 201 response
+    res.status(201).send({ data: "Vouchers created" });
   };
 
   static edit = async (req: Request, res: Response) => {

@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { ProgramType } from "../entity";
+import { Verificator } from "../entity";
 
-class ProgramTypeController {
+class VerificatorController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
-    const repository = getRepository(ProgramType);
-    const results = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
+    const repository = getRepository(Verificator);
+    const verificators = await repository.find({ where: { status: 1 }, order: { createdAt: "ASC" } });
 
     //Send the users object
-    res.status(200).send(results,
+    res.status(200).send(verificators,
     );
   };
 
@@ -19,15 +19,15 @@ class ProgramTypeController {
     const id = req.params.id;
 
     //Get the user from database
-    const repository = getRepository(ProgramType);
+    const repository = getRepository(Verificator);
     try {
-      const result = await repository.findOneOrFail({
+      const verificator = await repository.findOneOrFail({
         where: { id: id, status: 1 }, order: {
           createdAt: "ASC"
         }
       });
       //Send the users object
-      res.status(200).send(result);
+      res.status(200).send(verificator);
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -40,15 +40,16 @@ class ProgramTypeController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, description, image } = req.body;
-    let programType = new ProgramType();
-    programType.name = name;
-    programType.description = description;
-    programType.image = image;
-    programType.status = 1;
+    let { fullname, dateOfBirth, email, password } = req.body;
+    let verificator = new Verificator();
+    verificator.fullname = fullname;
+    verificator.dateOfBirth = dateOfBirth;
+    verificator.email = email;
+    verificator.password = password;
+    verificator.status = 1;
 
     //Validade if the parameters are ok
-    const errors = await validate(programType);
+    const errors = await validate(verificator);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -65,11 +66,14 @@ class ProgramTypeController {
       return;
     }
 
-    const repository = getRepository(ProgramType);
+    verificator.hashPassword()
+
+    //Try to save
+    const repository = getRepository(Verificator);
     try {
-      await repository.save(programType);
+      await repository.save(verificator);
     } catch (e) {
-      errorList.push("failed to save program type");
+      errorList.push("gagal menyimpan data verifikator");
       res.status(409).send({
         error: true,
         errorList: errorList,
@@ -79,7 +83,7 @@ class ProgramTypeController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Program Type created" });
+    res.status(201).send({ data: "Verificator created" });
   };
 
   static edit = async (req: Request, res: Response) => {
@@ -87,17 +91,13 @@ class ProgramTypeController {
     const id = req.params.id;
 
     //Get values from the body
-    let { name, description, image } = req.body;
+    let { fullname, dateOfBirth, email, password } = req.body;
 
     //Try to find data on database
-    const repository = getRepository(ProgramType);
-    let programType: ProgramType;
+    const repository = getRepository(Verificator);
+    let verificator: Verificator;
     try {
-      programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
+      verificator = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       //If tidak ditemukan, send a 404 response
       res.status(404).send({
@@ -109,11 +109,13 @@ class ProgramTypeController {
     }
 
     //Validate the new values on model
-    programType.name = name;
-    programType.description = description;
-    programType.image = image;
+    verificator.fullname = fullname;
+    verificator.dateOfBirth = dateOfBirth;
+    verificator.email = email;
+    verificator.password = password;
+    verificator.status = 1;
 
-    const errors = await validate(programType);
+    const errors = await validate(verificator);
     const errorList = [];
     if (errors.length > 0) {
       errors.forEach((item) => {
@@ -131,7 +133,7 @@ class ProgramTypeController {
     }
 
     try {
-      await repository.save(programType);
+      await repository.save(verificator);
     } catch (e) {
       errorList.push("failed to edit data");
       res.status(409).send({
@@ -149,14 +151,10 @@ class ProgramTypeController {
     //Get the ID from the url
     const id = req.params.id;
 
-    const repository = getRepository(ProgramType);
-    let programType: ProgramType;
+    const repository = getRepository(Verificator);
+    let verificator: Verificator;
     try {
-      programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
-          createdAt: "ASC"
-        }
-      });
+      verificator = await repository.findOneOrFail({ where: { id: id, status: 1 }, order: { createdAt: "ASC" } });
     } catch (error) {
       res.status(404).send({
         error: false,
@@ -165,12 +163,12 @@ class ProgramTypeController {
       });
       return;
     }
-    programType.status = 0;
-    repository.save(programType);
+    verificator.status = 0;
+    repository.save(verificator);
 
 
     res.status(200).send({ data: "success" });
   };
 }
 
-export default ProgramTypeController;
+export default VerificatorController;

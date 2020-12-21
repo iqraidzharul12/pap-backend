@@ -18,6 +18,9 @@ export class ProgramType {
   @IsNotEmpty()
   name: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @Column()
   @IsNotEmpty()
   status: number;

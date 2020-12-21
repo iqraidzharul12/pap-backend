@@ -18,6 +18,7 @@ import ReportController from "./ReportController";
 import MailController from "./MailController";
 import HelpController from "./HelpController";
 import CityController from "./CityController";
+import DashboardController from "./DashboardController";
 
 export {
   AuthController,
@@ -40,4 +41,5 @@ export {
   MailController,
   HelpController,
   CityController,
+  DashboardController,
 };

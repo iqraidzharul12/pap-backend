@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { ProgramType, TestLab } from ".";
+import { ProgramType, TestLab, Voucher } from ".";
 
 @Entity()
 export class TestLabType {
@@ -36,6 +36,9 @@ export class TestLabType {
 
   @OneToMany((type) => TestLab, (testLab) => testLab.testLabType)
   testLabs: TestLab[];
+
+  @OneToMany(() => Voucher, (voucher) => voucher.testLabType)
+  vouchers: Voucher[];
 
   @Column()
   @CreateDateColumn()

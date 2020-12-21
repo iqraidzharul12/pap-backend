@@ -5,9 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
-import { TestLab } from ".";
+import { TestLab, TestLabType } from ".";
 
 @Entity()
 export class Voucher {
@@ -24,6 +25,9 @@ export class Voucher {
 
   @OneToMany(() => TestLab, (testLab) => testLab.voucher)
   testLabs: TestLab[];
+
+  @ManyToOne(() => TestLabType, (testLabType) => testLabType.vouchers)
+  testLabType: TestLabType;
 
   @Column()
   @CreateDateColumn()
