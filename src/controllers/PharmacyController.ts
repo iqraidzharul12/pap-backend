@@ -111,7 +111,7 @@ class PharmacyController {
     const id = req.params.id;
 
     //Get values from the body
-    let { name, address } = req.body;
+    let { name, address, email, password, city, certificate } = req.body;
 
     //Try to find data on database
     const repository = getRepository(Pharmacy);
@@ -131,6 +131,9 @@ class PharmacyController {
     //Validate the new values on model
     pharmacy.name = name;
     pharmacy.address = address;
+    pharmacy.city = city;
+    pharmacy.certificate = certificate;
+    pharmacy.email = email;
 
     const errors = await validate(pharmacy);
     const errorList = [];
