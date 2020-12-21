@@ -9,6 +9,7 @@ router.get("/", PatientController.listAll);
 
 // Get one data
 router.get("/:id", PatientController.getOneById);
+router.get("/code/:id", PatientController.getOneByCode);
 
 //Create a new data
 router.post("/", PatientController.create);

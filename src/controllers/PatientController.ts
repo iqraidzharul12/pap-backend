@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository, Like } from "typeorm";
 import { validate } from "class-validator";
-import { City, Patient } from "../entity";
+import { City, Patient, Program, ProgramType, TestLab } from "../entity";
 import { formatNumberDigit } from "../utils/String";
 import { RegisterMail, sendMail } from "../utils/mailer";
 
@@ -32,6 +32,55 @@ class PatientController {
       });
       //Send the users object
       res.status(200).send(doctor);
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  };
+
+  static getOneByCode = async (req: Request, res: Response) => {
+    //Get the ID from the url
+    const id = req.params.id;
+
+    //Get the user from database
+    const repository = getRepository(Patient);
+    const testLabRepository = getRepository(TestLab);
+    const programRepository = getRepository(Program);
+    const programTypeRepository = getRepository(ProgramType);
+    try {
+      const patient = await repository.findOneOrFail({
+        where: { code: id, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+
+      try {
+        let testLabs = await testLabRepository.find({ where: { patient: patient, status: 1 }, relations: ['doctor', 'testLabType', 'laboratorium', 'voucher'] });
+        patient.testLabs = testLabs
+      } catch (error) {
+        console.log("error when getting testLab data")
+      }
+
+      try {
+        let programs = await programRepository.find({ where: { patient: patient, status: 1 }, relations: ['programType', 'pharmacy', 'doctor'] });
+
+        console.log(JSON.stringify(programs))
+        for (let index = 0; index < programs.length; index++) {
+          if (programs[index].programType) {
+            let programType = await programTypeRepository.findOne({ where: { id: programs[index].programType.id, status: 1 }, relations: ['defaultSchedules'] });
+            programs[index].programType = programType
+          }
+        }
+        patient.programs = programs
+      } catch (error) {
+        console.log("error when getting program data" + error)
+      }
+      //Send the users object
+      res.status(200).send(patient);
     } catch (error) {
       res.status(404).send({
         error: false,
