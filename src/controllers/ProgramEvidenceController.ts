@@ -104,6 +104,7 @@ class ProgramEvidenceController {
       program.checkPoint = 4;
       if (program.prevProgram) {
         program.checkPoint = 5;
+        program.isApproved = true
       }
       await programRepository.save(program);
     } catch (e) {

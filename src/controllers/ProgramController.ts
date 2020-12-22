@@ -613,7 +613,6 @@ class ProgramController {
         newProgram.prevProgram = result
 
         newProgram.enrollDate = result.enrollDate
-        newProgram.isApproved = result.isApproved
         newProgram.pharmacy = result.pharmacy
         newProgram.price = result.price
 
