@@ -13,6 +13,7 @@ router.get("/:id", TestLabController.getOneById);
 //Create a new data
 router.post("/", TestLabController.create);
 router.post("/self-test", TestLabController.createSelfTest);
+router.post("/dashboard", TestLabController.dashboardCreateEdit);
 
 //Edit one data
 router.patch("/:id", TestLabController.edit);

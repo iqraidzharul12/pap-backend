@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
-import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType, Price } from "../entity";
+import { Doctor, Pharmacy, Patient, Program, ProgramType, TestLab, TestLabType, Price, ProgramEvidence } from "../entity";
 import NotificationController from "./NotificationController";
 import { ConfirmDrugsEmail, ContinueProgramEmail, sendMail, SignedDocumentEmail, TerminateProgramEmail } from "../utils/mailer";
 import { sendPushNotification } from "../utils/notification";
@@ -778,6 +778,291 @@ class ProgramController {
 
 
     res.status(200).send({ data: "success" });
+  };
+
+  static dashboardCreateEdit = async (req: Request, res: Response) => {
+    //Get parameters from the body
+    let { programId, patientId, doctorId, programTypeId, consent } = req.body;
+
+    const patientRepository = getRepository(Patient);
+    const doctorRepository = getRepository(Doctor);
+    const programTypeRepository = getRepository(ProgramType);
+    let patient: Patient;
+    let doctor: Doctor;
+    let programType: ProgramType;
+    try {
+      patient = await patientRepository.findOneOrFail({
+        where: { id: patientId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data pasien tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+    try {
+      doctor = await doctorRepository.findOneOrFail({
+        where: { id: doctorId, status: 1 }, order: {
+          createdAt: "ASC"
+        }
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data dokter tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+    try {
+      programType = await programTypeRepository.findOneOrFail({
+        where: { id: programTypeId, status: 1 }, order: {
+          createdAt: "ASC"
+        },
+        relations: ["defaultSchedules"]
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
+    const repository = getRepository(Program);
+    let prevProgram: Program
+    let program: Program
+
+    if (programId) {
+      try {
+        program = await repository.findOneOrFail({
+          where: { id: programId, status: 1 }, order: {
+            createdAt: "ASC"
+          }, relations: ["testLab"]
+        });
+      } catch (error) {
+        console.log("new program " + error)
+      }
+    } else {
+      try {
+        prevProgram = await repository.findOneOrFail({
+          where: { patient: patient, status: 1 }, order: {
+            createdAt: "ASC"
+          }, relations: ["testLab"]
+        });
+        if (!prevProgram.isApproved || prevProgram.checkPoint < 4 || prevProgram.isTerminated) {
+          prevProgram.status = 0
+        }
+        else {
+          res.status(404).send({
+            error: false,
+            errorList: ["Anda telah memiliki program pap yang sedang aktif"],
+            data: null,
+          });
+          return;
+        }
+
+      } catch (error) {
+        prevProgram = null
+      }
+      program = new Program();
+    }
+
+    program.patient = patient;
+    program.doctor = doctor;
+    program.programType = programType;
+    program.status = 1;
+
+    const testLabRepository = getRepository(TestLab);
+    let testLab: TestLab;
+    try {
+      testLab = await testLabRepository.findOneOrFail({
+        where: { patient, status: 1 }, order: {
+          createdAt: "DESC"
+        }, relations: ['testLabType']
+      });
+      const testLabType = await getRepository(TestLabType).findOneOrFail({
+        where: { id: testLab.testLabType.id, status: 1 }, order: {
+          createdAt: "ASC"
+        }, relations: ['programType']
+      });
+
+      if (testLabType.programType.id === programType.id) {
+        program.checkPoint = 2;
+        program.testLab = testLab
+      }
+    } catch (error) {
+      program.checkPoint = 1;
+    }
+
+    //Validade if the parameters are ok
+    const errors = await validate(program);
+    const errorList = [];
+    if (errors.length > 0) {
+      errors.forEach((item) => {
+        if (item.constraints.isNotEmpty)
+          errorList.push(item.constraints.isNotEmpty);
+      });
+      res.status(400).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+
+    try {
+      if (prevProgram) {
+        await repository.save(prevProgram);
+      }
+      await repository.save(program);
+    } catch (e) {
+      errorList.push("Gagal mendaftar program");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    //save patient consent
+    if (consent) {
+      try {
+        patient.consent = consent
+        await patientRepository.save(patient);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    try {
+      await sendMail(program.patient.email, SignedDocumentEmail.subject, SignedDocumentEmail.body)
+    } catch (e) {
+      console.log(e);
+    }
+
+    const notificationMessage = `Dokumen Persetujuan Anda telah berhasil ditanda tangani.`
+    const notification = await NotificationController.create(notificationMessage, program.patient)
+    if (notification.error) {
+      console.log(`failed to save notification for patient: ${program.patient}`);
+    }
+
+    let { confirmationCode } = req.body;
+
+    try {
+      const result = await repository.findOneOrFail({
+        where: { id: programId, status: 1, checkPoint: 2 },
+        relations: ['doctor']
+      });
+      if (result && result.doctor.verificationCode === confirmationCode) {
+        result.checkPoint = 3;
+        repository.save(result)
+      } else {
+        res.status(404).send({
+          error: true,
+          errorList: ["Kode verifikasi salah"],
+          data: null,
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(404).send({
+        error: true,
+        errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
+    let { url } = req.body;
+
+    const programRepository = getRepository(Program);
+    try {
+      program = await programRepository.findOneOrFail({
+        where: { id: programId, status: 1, checkPoint: 3 },
+        relations: ['prevProgram']
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Program tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
+    const programEvidenceRepository = getRepository(ProgramEvidence);
+
+    if (Array.isArray(url)) {
+      url.forEach(async (item) => {
+        let programEvidence = new ProgramEvidence();
+        programEvidence.url = item;
+        programEvidence.program = program;
+        programEvidence.status = 1;
+
+        try {
+          await programEvidenceRepository.save(programEvidence);
+        } catch (e) {
+          errorList.push("Resep gagal di upload: " + item);
+        }
+      })
+      if (errorList.length) {
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+      }
+    } else {
+      let programEvidence = new ProgramEvidence();
+      programEvidence.url = url;
+      programEvidence.program = program;
+      programEvidence.status = 1;
+      try {
+        await programEvidenceRepository.save(programEvidence);
+      } catch (e) {
+        console.log("Resep gagal di upload", e);
+        errorList.push("Resep gagal di upload");
+        res.status(409).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+        return;
+      }
+    }
+
+    try {
+      program.checkPoint = 4;
+      if (program.prevProgram) {
+        program.checkPoint = 5;
+        program.isApproved = true
+      }
+      await programRepository.save(program);
+    } catch (e) {
+      console.log("Gagal mengupdate status program", e);
+      errorList.push("Gagal mengupdate status program");
+      res.status(409).send({
+        error: true,
+        errorList: errorList,
+        data: null,
+      });
+      return;
+    }
+
+    //If all ok, send 201 response
+    res.status(201).send({ data: "Berhasil menyimpan data program" });
+
+    // //If all ok, send 201 response
+    // res.status(201).send(program);
   };
 }
 

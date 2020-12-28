@@ -48,12 +48,12 @@ export const ChangePasswordEmail = {
   body: "Password akun Anda telah berhasil diubah. \nJika Anda merasa tidak mengubah password Anda, hubungi kami di help@papprogram.com."
 }
 
-export const ResetPasswordEmail = (url: string) => {
-  return {
-    subject: "Reset Password",
-    body: `Password akun Anda akan direset dengan menggunakan link berikut: ${url}. \nJika Anda merasa tidak melakukan permintaan ini, hubungi kami di help@papprogram.com.`
-  }
-}
+// export const ResetPasswordEmail = (url: string) => {
+//   return {
+//     subject: "Reset Password",
+//     body: `Password akun Anda akan direset dengan menggunakan link berikut: ${url}. \nJika Anda merasa tidak melakukan permintaan ini, hubungi kami di help@papprogram.com.`
+//   }
+// }
 
 export const SignedDocumentEmail = {
   subject: "Dokumen Persetujuan",
@@ -87,4 +87,11 @@ export const ContinueProgramEmail = {
 export const TerminateProgramEmail = {
   subject: "Pemberhentian Program",
   body: "Program PAP Anda telah diberhentikan."
+}
+
+export const ResetPasswordEmail = (password: String) => {
+  return {
+    subject: "Reset Password",
+    body: `Anda telah melakukan reset password \npassword baru Anda adalah ${password}.`
+  }
 }

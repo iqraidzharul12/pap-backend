@@ -20,6 +20,7 @@ router.post("/terminate", ProgramController.terminate);
 router.post("/continue", ProgramController.continueProgram);
 router.post("/updateDrugsTaken", ProgramController.updateDrugsTaken);
 router.post("/updateTestLab", ProgramController.updateTestLab);
+router.post("/dashboard", ProgramController.dashboardCreateEdit);
 
 //Edit one data
 router.patch("/:id", ProgramController.edit);

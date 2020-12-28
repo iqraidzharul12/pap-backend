@@ -5,7 +5,8 @@ import { validate } from "class-validator";
 
 import { Patient, Pharmacy, Program, ProgramType, TestLab, Verificator } from "../entity";
 import config from "../config/config";
-import { sendMail, ChangePasswordEmail } from "../utils/mailer";
+import { sendMail, ChangePasswordEmail, ResetPasswordEmail } from "../utils/mailer";
+import { randomString } from "../utils/String";
 
 class AuthController {
   static login = async (req: Request, res: Response) => {
@@ -186,7 +187,7 @@ class AuthController {
     if (!(oldPassword && newPassword)) {
       res.status(400).send({
         error: true,
-        errorList: ["email and password must not empty"],
+        errorList: ["password must not empty"],
         data: null,
       });
       return;
@@ -251,6 +252,124 @@ class AuthController {
         errorList: errorList,
         data: "Password changed",
       });
+    } else if (role && role.toLowerCase() === "verificator") {
+      //Get user from the database
+      const userRepository = getRepository(Verificator);
+      let user: Verificator;
+      try {
+        user = await userRepository.findOneOrFail(id);
+      } catch (id) {
+        res.status(401).send({
+          error: true,
+          errorList: ["no patient found"],
+          data: null,
+        });
+        return;
+      }
+
+      //Check if old password matchs
+      if (!user.checkIfUnencryptedPasswordIsValid(oldPassword)) {
+        res.status(401).send({
+          error: true,
+          errorList: ["wrong password"],
+          data: null,
+        });
+        return;
+      }
+
+      //Validate de model (password lenght)
+      user.password = newPassword;
+      const errors = await validate(user);
+      const errorList = [];
+      if (errors.length > 0) {
+        errors.forEach((item) => {
+          if (item.constraints.isNotEmpty)
+            errorList.push(item.constraints.isNotEmpty);
+          if (item.constraints.isEmail)
+            errorList.push(item.constraints.isEmail);
+          if (item.constraints.length) errorList.push(item.constraints.length);
+        });
+        res.status(400).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+        return;
+      }
+      //Hash the new password and save
+      user.hashPassword();
+      userRepository.save(user);
+
+      try {
+        await sendMail(user.email, ChangePasswordEmail.subject, ChangePasswordEmail.body)
+      } catch (e) {
+        console.log(e);
+      }
+
+      res.status(202).send({
+        error: false,
+        errorList: errorList,
+        data: "Password changed",
+      });
+    } else if (role && role.toLowerCase() === "pharmacy") {
+      //Get user from the database
+      const userRepository = getRepository(Pharmacy);
+      let user: Pharmacy;
+      try {
+        user = await userRepository.findOneOrFail(id);
+      } catch (id) {
+        res.status(401).send({
+          error: true,
+          errorList: ["no patient found"],
+          data: null,
+        });
+        return;
+      }
+
+      //Check if old password matchs
+      if (!user.checkIfUnencryptedPasswordIsValid(oldPassword)) {
+        res.status(401).send({
+          error: true,
+          errorList: ["wrong password"],
+          data: null,
+        });
+        return;
+      }
+
+      //Validate de model (password lenght)
+      user.password = newPassword;
+      const errors = await validate(user);
+      const errorList = [];
+      if (errors.length > 0) {
+        errors.forEach((item) => {
+          if (item.constraints.isNotEmpty)
+            errorList.push(item.constraints.isNotEmpty);
+          if (item.constraints.isEmail)
+            errorList.push(item.constraints.isEmail);
+          if (item.constraints.length) errorList.push(item.constraints.length);
+        });
+        res.status(400).send({
+          error: true,
+          errorList: errorList,
+          data: null,
+        });
+        return;
+      }
+      //Hash the new password and save
+      user.hashPassword();
+      userRepository.save(user);
+
+      try {
+        await sendMail(user.email, ChangePasswordEmail.subject, ChangePasswordEmail.body)
+      } catch (e) {
+        console.log(e);
+      }
+
+      res.status(202).send({
+        error: false,
+        errorList: errorList,
+        data: "Password changed",
+      });
     } else {
       res.status(401).send({
         error: true,
@@ -260,5 +379,107 @@ class AuthController {
       return;
     }
   };
+
+  static resetPassword = async (req: Request, res: Response) => {
+    const { id, role } = req.body;
+
+    if (role && role.toLowerCase() === "patient") {
+      //Get user from the database
+      const userRepository = getRepository(Patient);
+      let user: Patient;
+      try {
+        user = await userRepository.findOneOrFail(id);
+      } catch (id) {
+        res.status(401).send({
+          error: true,
+          errorList: ["no patient found"],
+          data: null,
+        });
+        return;
+      }
+
+      let password = randomString(5)
+
+      try {
+        await sendMail(user.email, ResetPasswordEmail(password).subject, ResetPasswordEmail(password).body)
+        user.password = password
+        user.hashPassword()
+        await userRepository.save(user)
+
+        res.status(201).send({ data: "Password berhasil direset, password baru telah dikirim ke email terdaftar" });
+      } catch (e) {
+        res.status(401).send({
+          error: true,
+          errorList: ["Gagal mereset password"],
+          data: null,
+        });
+        return;
+      }
+    } else if (role && role.toLowerCase() === "verificator") {
+      //Get user from the database
+      const userRepository = getRepository(Verificator);
+      let user: Verificator;
+      try {
+        user = await userRepository.findOneOrFail(id);
+      } catch (id) {
+        res.status(401).send({
+          error: true,
+          errorList: ["no patient found"],
+          data: null,
+        });
+        return;
+      }
+
+      let password = randomString(5)
+
+      try {
+        await sendMail(user.email, ResetPasswordEmail(password).subject, ResetPasswordEmail(password).body)
+        user.password = password
+        user.hashPassword()
+        await userRepository.save(user)
+
+        res.status(201).send({ data: "Password berhasil direset, password baru telah dikirim ke email terdaftar" });
+      } catch (e) {
+        res.status(401).send({
+          error: true,
+          errorList: ["Gagal mereset password"],
+          data: null,
+        });
+        return;
+      }
+    } else if (role && role.toLowerCase() === "pharmacy") {
+      //Get user from the database
+      const userRepository = getRepository(Pharmacy);
+      let user: Pharmacy;
+      try {
+        user = await userRepository.findOneOrFail(id);
+      } catch (id) {
+        res.status(401).send({
+          error: true,
+          errorList: ["no patient found"],
+          data: null,
+        });
+        return;
+      }
+
+      let password = randomString(5)
+
+      try {
+        await sendMail(user.email, ResetPasswordEmail(password).subject, ResetPasswordEmail(password).body)
+        user.password = password
+        user.hashPassword()
+        await userRepository.save(user)
+
+        res.status(201).send({ data: "Password berhasil direset, password baru telah dikirim ke email terdaftar" });
+      } catch (e) {
+        res.status(401).send({
+          error: true,
+          errorList: ["Gagal mereset password"],
+          data: null,
+        });
+        return;
+      }
+    }
+  }
 }
 export default AuthController;
