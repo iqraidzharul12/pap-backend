@@ -381,14 +381,14 @@ class AuthController {
   };
 
   static resetPassword = async (req: Request, res: Response) => {
-    const { id, role } = req.body;
+    const { email, role } = req.body;
 
     if (role && role.toLowerCase() === "patient") {
       //Get user from the database
       const userRepository = getRepository(Patient);
       let user: Patient;
       try {
-        user = await userRepository.findOneOrFail(id);
+        user = await userRepository.findOneOrFail({ where: { email: email } });
       } catch (id) {
         res.status(401).send({
           error: true,
@@ -411,7 +411,7 @@ class AuthController {
         res.status(401).send({
           error: true,
           errorList: ["Gagal mereset password"],
-          data: null,
+          data: e,
         });
         return;
       }
@@ -420,7 +420,7 @@ class AuthController {
       const userRepository = getRepository(Verificator);
       let user: Verificator;
       try {
-        user = await userRepository.findOneOrFail(id);
+        user = await userRepository.findOneOrFail({ where: { email: email } });
       } catch (id) {
         res.status(401).send({
           error: true,
@@ -452,7 +452,7 @@ class AuthController {
       const userRepository = getRepository(Pharmacy);
       let user: Pharmacy;
       try {
-        user = await userRepository.findOneOrFail(id);
+        user = await userRepository.findOneOrFail({ where: { email: email } });
       } catch (id) {
         res.status(401).send({
           error: true,

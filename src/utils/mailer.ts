@@ -8,7 +8,7 @@ export const sendMail = async (recipient: string, subject: string, body: string)
     secure: false, // true for 465, false for other ports
     auth: {
       user: "noreply.paprogram@gmail.com",
-      pass: "Password@123",
+      pass: "PapProgram@321",
     },
   });
 
