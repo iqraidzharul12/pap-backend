@@ -72,10 +72,10 @@ class ProgramController {
             id: userId
           }
         })
-        conditions = { isApproved: true, pharmacy: pharmacy }
+        conditions = { isApproved: true, pharmacy: pharmacy, status: 1 }
       }
     } catch (error) {
-      conditions = { isApproved: true }
+      conditions = { isApproved: true, status: 1 }
     }
 
     //Get users from database
