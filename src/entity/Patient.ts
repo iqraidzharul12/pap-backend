@@ -45,7 +45,7 @@ export class Patient {
   @IsNotEmpty()
   gender: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   @IsEmail()
   email: string;
 

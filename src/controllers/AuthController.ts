@@ -392,7 +392,7 @@ class AuthController {
       } catch (id) {
         res.status(401).send({
           error: true,
-          errorList: ["no patient found"],
+          errorList: ["pasien tidak ditemukan"],
           data: null,
         });
         return;
@@ -424,7 +424,7 @@ class AuthController {
       } catch (id) {
         res.status(401).send({
           error: true,
-          errorList: ["no patient found"],
+          errorList: ["farmasi tidak ditemukan"],
           data: null,
         });
         return;

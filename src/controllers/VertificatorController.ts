@@ -78,7 +78,7 @@ class VerificatorController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: e,
       });
       return;
     }
@@ -164,6 +164,7 @@ class VerificatorController {
       return;
     }
     verificator.status = 0;
+    verificator.email = null;
     repository.save(verificator);
 
 

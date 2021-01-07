@@ -35,7 +35,7 @@ export class Pharmacy {
   @Column({ nullable: true })
   message: String;
 
-  @Column({ unique: true })
+  @Column({ unique: true , nullable: true })
   @IsEmail()
   email: string;
 

@@ -10,7 +10,7 @@ class DashboardController {
     const laboratoriumRepository = getRepository(Laboratorium);
     const newsRepository = getRepository(News);
     const totalPatient = await programRepository.count({
-      where: { isApproved: true },
+      where: { isApproved: true, status: 1 },
     });
     const totalDoctor = await doctorRepository.count({
       where: { isApproved: true },

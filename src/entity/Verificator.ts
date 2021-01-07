@@ -20,7 +20,7 @@ export class Verificator {
   @Column({ nullable: true })
   dateOfBirth: Date;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   @IsEmail()
   email: string;
 

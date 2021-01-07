@@ -92,6 +92,6 @@ export const TerminateProgramEmail = {
 export const ResetPasswordEmail = (password: String) => {
   return {
     subject: "Reset Password",
-    body: `Anda telah melakukan reset password \npassword baru Anda adalah ${password}.`
+    body: `Anda telah melakukan reset password. \npassword baru Anda adalah ${password}.`
   }
 }
