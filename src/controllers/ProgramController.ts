@@ -782,7 +782,7 @@ class ProgramController {
 
   static dashboardCreateEdit = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { programId, patientId, doctorId, programTypeId, consent } = req.body;
+    let { programId, patientId, programDoctorId, programTypeId, consent } = req.body;
 
     const patientRepository = getRepository(Patient);
     const doctorRepository = getRepository(Doctor);
@@ -806,7 +806,7 @@ class ProgramController {
     }
     try {
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 }, order: {
+        where: { id: programDoctorId, status: 1 }, order: {
           createdAt: "ASC"
         }
       });

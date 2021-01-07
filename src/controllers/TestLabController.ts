@@ -440,7 +440,7 @@ class TestLabController {
 
   static dashboardCreateEdit = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { testLabId, patientId, doctorId, testLabTypeId, laboratoriumId, voucherCode, url, urls } = req.body;
+    let { testLabId, patientId, testlabDoctorId, testLabTypeId, laboratoriumId, voucherCode, url, urls } = req.body;
 
     const patientRepository = getRepository(Patient);
     const doctorRepository = getRepository(Doctor);
@@ -469,7 +469,7 @@ class TestLabController {
 
     try {
       doctor = await doctorRepository.findOneOrFail({
-        where: { id: doctorId, status: 1 }, order: {
+        where: { id: testlabDoctorId, status: 1 }, order: {
           createdAt: "ASC"
         }
       });
