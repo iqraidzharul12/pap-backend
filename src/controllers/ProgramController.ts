@@ -987,8 +987,7 @@ class ProgramController {
     const programRepository = getRepository(Program);
     try {
       program = await programRepository.findOneOrFail({
-        where: { id: programId, status: 1, checkPoint: 3 },
-        relations: ['prevProgram']
+        where: { id: programId, status: 1, checkPoint: 3 }
       });
     } catch (error) {
       res.status(404).send({
