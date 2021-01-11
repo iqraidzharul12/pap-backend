@@ -138,7 +138,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -164,7 +164,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data pasien tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -178,7 +178,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data dokter tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -193,7 +193,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -213,7 +213,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Anda telah memiliki program pap yang sedang aktif"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -261,7 +261,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -277,7 +277,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -331,7 +331,7 @@ class ProgramController {
       res.status(404).send({
         error: true,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -357,7 +357,7 @@ class ProgramController {
         res.status(404).send({
           error: true,
           errorList: ["Kode verifikasi salah"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -366,7 +366,7 @@ class ProgramController {
       res.status(404).send({
         error: true,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -389,7 +389,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data apotek tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -404,7 +404,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data harga tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -437,7 +437,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -445,7 +445,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -481,7 +481,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -524,7 +524,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Status program gagal diubah"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -532,7 +532,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -573,7 +573,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -581,7 +581,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -637,7 +637,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -645,7 +645,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -691,7 +691,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Parameter data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -710,7 +710,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -733,7 +733,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -745,7 +745,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -769,7 +769,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -800,7 +800,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data pasien tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -814,7 +814,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data dokter tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -829,7 +829,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Data program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -862,7 +862,7 @@ class ProgramController {
           res.status(404).send({
             error: false,
             errorList: ["Anda telah memiliki program pap yang sedang aktif"],
-            data: null,
+            data: error,
           });
           return;
         }
@@ -911,7 +911,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -927,7 +927,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
@@ -963,12 +963,12 @@ class ProgramController {
       });
       if (result && result.doctor.verificationCode === confirmationCode) {
         result.checkPoint = 3;
-        repository.save(result)
+        await repository.save(result)
       } else {
         res.status(404).send({
           error: true,
           errorList: ["Kode verifikasi salah"],
-          data: null,
+          data: error,
         });
         return;
       }
@@ -977,7 +977,7 @@ class ProgramController {
       res.status(404).send({
         error: true,
         errorList: ["Data tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -994,7 +994,7 @@ class ProgramController {
       res.status(404).send({
         error: false,
         errorList: ["Program tidak ditemukan"],
-        data: null,
+        data: error,
       });
       return;
     }
@@ -1018,7 +1018,7 @@ class ProgramController {
         res.status(409).send({
           error: true,
           errorList: errorList,
-          data: null,
+          data: error,
         });
       }
     } else {
@@ -1034,7 +1034,7 @@ class ProgramController {
         res.status(409).send({
           error: true,
           errorList: errorList,
-          data: null,
+          data: error,
         });
         return;
       }
@@ -1053,7 +1053,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: null,
+        data: error,
       });
       return;
     }
