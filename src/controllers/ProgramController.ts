@@ -213,7 +213,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Anda telah memiliki program pap yang sedang aktif"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -261,7 +261,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -277,7 +277,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -357,7 +357,7 @@ class ProgramController {
         res.status(404).send({
           error: true,
           errorList: ["Kode verifikasi salah"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -437,7 +437,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -524,7 +524,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Status program gagal diubah"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -573,7 +573,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -637,7 +637,7 @@ class ProgramController {
         res.status(404).send({
           error: false,
           errorList: ["Data program tidak ditemukan"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -733,7 +733,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -745,7 +745,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -862,7 +862,7 @@ class ProgramController {
           res.status(404).send({
             error: false,
             errorList: ["Anda telah memiliki program pap yang sedang aktif"],
-            data: error,
+            data: null,
           });
           return;
         }
@@ -911,7 +911,7 @@ class ProgramController {
       res.status(400).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -927,7 +927,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
@@ -968,7 +968,7 @@ class ProgramController {
         res.status(404).send({
           error: true,
           errorList: ["Kode verifikasi salah"],
-          data: error,
+          data: null,
         });
         return;
       }
@@ -1017,7 +1017,7 @@ class ProgramController {
         res.status(409).send({
           error: true,
           errorList: errorList,
-          data: error,
+          data: null,
         });
       }
     } else {
@@ -1033,7 +1033,7 @@ class ProgramController {
         res.status(409).send({
           error: true,
           errorList: errorList,
-          data: error,
+          data: null,
         });
         return;
       }
@@ -1052,7 +1052,7 @@ class ProgramController {
       res.status(409).send({
         error: true,
         errorList: errorList,
-        data: error,
+        data: null,
       });
       return;
     }
