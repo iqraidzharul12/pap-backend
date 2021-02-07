@@ -448,6 +448,7 @@ class AuthController {
         return;
       }
     } else if (role && role.toLowerCase() === "pharmacy") {
+      console.log("start reset")
       //Get user from the database
       const userRepository = getRepository(Pharmacy);
       let user: Pharmacy;
@@ -456,22 +457,26 @@ class AuthController {
       } catch (id) {
         res.status(401).send({
           error: true,
-          errorList: ["no patient found"],
+          errorList: ["Tidak ada data farmasi"],
           data: null,
         });
         return;
       }
-
+      console.log("pharmacy found")
       let password = randomString(5)
 
       try {
+        console.log("reset password email")
         await sendMail(user.email, ResetPasswordEmail(password).subject, ResetPasswordEmail(password).body)
         user.password = password
         user.hashPassword()
         await userRepository.save(user)
+        console.log("reset password success")
 
         res.status(201).send({ data: "Password berhasil direset, password baru telah dikirim ke email terdaftar" });
       } catch (e) {
+        console.log("reset password fail")
+        console.log(e)
         res.status(401).send({
           error: true,
           errorList: ["Gagal mereset password"],
@@ -479,6 +484,13 @@ class AuthController {
         });
         return;
       }
+    } else{
+      res.status(401).send({
+        error: true,
+        errorList: ["Gagal mereset password"],
+        data: null,
+      });
+      return;
     }
   }
 }

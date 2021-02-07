@@ -7,7 +7,7 @@ class ProgramTypeController {
   static listAll = async (req: Request, res: Response) => {
     //Get users from database
     const repository = getRepository(ProgramType);
-    const results = await repository.find({ order: { createdAt: "ASC" } });
+    const results = await repository.find({ where: [{ status: 0 }, { status: 1 }], order: { createdAt: "ASC" } });
 
     //Send the users object
     res.status(200).send(results,
@@ -154,7 +154,7 @@ class ProgramTypeController {
     let programType: ProgramType;
     try {
       programType = await repository.findOneOrFail({
-        where: { id: id, status: 1 }, order: {
+        where: { id: id }, order: {
           createdAt: "ASC"
         }
       });
@@ -166,7 +166,7 @@ class ProgramTypeController {
       });
       return;
     }
-    programType.status = 0;
+    programType.status = 2;
     repository.save(programType);
 
 

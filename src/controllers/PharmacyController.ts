@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Pharmacy } from "../entity";
 import { randomAlphabetOnly } from "../utils/String";
+import { NewPasswordEmail, sendMail } from "../utils/mailer";
 
 class PharmacyController {
   static listAll = async (req: Request, res: Response) => {
@@ -60,13 +61,14 @@ class PharmacyController {
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
     let { name, address, email, city, certificate } = req.body;
+    let password = randomAlphabetOnly(8);
     let pharmacy = new Pharmacy();
     pharmacy.name = name;
     pharmacy.address = address;
     pharmacy.city = city;
     pharmacy.certificate = certificate;
     pharmacy.email = email;
-    pharmacy.password = randomAlphabetOnly(8);
+    pharmacy.password = password;
     pharmacy.status = 1;
     0
     //Validade if the parameters are ok
@@ -103,6 +105,12 @@ class PharmacyController {
       return;
     }
 
+    try{
+      await sendMail(pharmacy.email, NewPasswordEmail(password, 'Farmasi').subject, NewPasswordEmail(password, 'Farmasi').body)
+    }catch(e){
+      console.log(e)
+    }
+    
     //If all ok, send 201 response
     res.status(201).send({ data: "Pharmacy created" });
   };

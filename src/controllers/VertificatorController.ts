@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { Verificator } from "../entity";
 import { randomAlphabetOnly } from "../utils/String";
+import { NewPasswordEmail, sendMail } from "../utils/mailer";
 
 class VerificatorController {
   static listAll = async (req: Request, res: Response) => {
@@ -41,12 +42,13 @@ class VerificatorController {
 
   static create = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { fullname, dateOfBirth, email, password } = req.body;
+    let { fullname, dateOfBirth, email } = req.body;
+    let password = randomAlphabetOnly(8);
     let verificator = new Verificator();
     verificator.fullname = fullname;
     verificator.dateOfBirth = dateOfBirth;
     verificator.email = email;
-    verificator.password = randomAlphabetOnly(8);
+    verificator.password = password;
     verificator.status = 1;
 
     //Validade if the parameters are ok
@@ -82,7 +84,11 @@ class VerificatorController {
       });
       return;
     }
-
+    try{
+      await sendMail(verificator.email, NewPasswordEmail(password, 'Verifikator').subject, NewPasswordEmail(password, 'Verifikator').body)
+    }catch(e){
+      console.log(e)
+    }
     //If all ok, send 201 response
     res.status(201).send({ data: "Verificator created" });
   };

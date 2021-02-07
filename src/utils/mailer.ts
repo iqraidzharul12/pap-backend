@@ -7,13 +7,13 @@ export const sendMail = async (recipient: string, subject: string, body: string)
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "noreply.paprogram@gmail.com",
-      pass: "PapProgram@321",
+      user: "pulihapp@gmail.com",
+      pass: "pappulih2021",
     },
   });
 
   return await transporter.sendMail({
-    from: '"No Reply PAP" <noreply.paprogram@gmail.com>', // sender address
+    from: '"No Reply PULIH" <pulihapp@gmail.com>', // sender address
     to: recipient, // list of receivers
     subject: subject, // Subject line
     text: body, // plain text body
@@ -93,5 +93,12 @@ export const ResetPasswordEmail = (password: String) => {
   return {
     subject: "Reset Password",
     body: `Anda telah melakukan reset password. \npassword baru Anda adalah ${password}.`
+  }
+}
+
+export const NewPasswordEmail = (password: String, role: String) => {
+  return {
+    subject: `Pendaftaran ${role}`,
+    body:  `Anda telah terdaftar sebagai ${role}. \npassword Anda adalah ${password}.`
   }
 }
