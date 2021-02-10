@@ -233,7 +233,7 @@ class PatientController {
     }
 
     //If all ok, send 201 response
-    res.status(201).send({ data: "Pasien berhasil dibuat" });
+    res.status(201).send({ data: "Pasien berhasil dibuat", code: patient.code });
   };
 
   static edit = async (req: Request, res: Response) => {
