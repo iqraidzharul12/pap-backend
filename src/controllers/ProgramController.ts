@@ -212,7 +212,7 @@ class ProgramController {
       else {
         res.status(404).send({
           error: false,
-          errorList: ["Anda telah memiliki program pap yang sedang aktif"],
+          errorList: ["Anda telah memiliki program PULIH yang sedang aktif"],
           data: null,
         });
         return;
@@ -554,13 +554,13 @@ class ProgramController {
         result.terminatedDate = new Date();
         repository.save(result)
 
-        const notificationMessage = `Anda telah berhenti dari program PAP dengan alasan: ${message}.`
+        const notificationMessage = `Anda telah berhenti dari program PULIH dengan alasan: ${message}.`
         const notification = await NotificationController.create(notificationMessage, result.patient)
         if (notification.error) {
           console.log(`failed to save notification for patient: ${result.patient}`);
         }
 
-        sendPushNotification(result.patient.clientToken, "Pemberhentian Program", `Anda telah berhenti dari program PAP dengan alasan: ${message}.`)
+        sendPushNotification(result.patient.clientToken, "Pemberhentian Program", `Anda telah berhenti dari program PULIH dengan alasan: ${message}.`)
 
         try {
           await sendMail(result.patient.email, TerminateProgramEmail.subject, TerminateProgramEmail.body)
@@ -861,7 +861,7 @@ class ProgramController {
         else {
           res.status(404).send({
             error: false,
-            errorList: ["Anda telah memiliki program pap yang sedang aktif"],
+            errorList: ["Anda telah memiliki program PULIH yang sedang aktif"],
             data: null,
           });
           return;

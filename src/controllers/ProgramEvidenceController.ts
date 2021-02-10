@@ -117,9 +117,8 @@ class ProgramEvidenceController {
       });
       return;
     }
-
     //If all ok, send 201 response
-    res.status(201).send({ data: "Resep berhasil diupload" });
+    res.status(201).send({ data: program.checkPoint });
   };
 
   static edit = async (req: Request, res: Response) => {

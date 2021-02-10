@@ -22,7 +22,7 @@ export const sendReminder = async () => {
   });
 
   programs.forEach(element => {
-    sendPushNotification(element.patient.clientToken, "Program PAP akan berakhir", "Program PAP Anda akan berakhir dalam beberapa hari.")
+    sendPushNotification(element.patient.clientToken, "program PULIH akan berakhir", "program PULIH Anda akan berakhir dalam beberapa hari.")
   });
 
   const programsDone = await programRepository.find({
@@ -37,6 +37,6 @@ export const sendReminder = async () => {
   });
 
   programsDone.forEach(element => {
-    sendPushNotification(element.patient.clientToken, "Program PAP telah berakhir", "Program PAP telah berakhir, Anda dapat meilih untuk melanjutkan program atau berhenti dari program melalui aplikasi.")
+    sendPushNotification(element.patient.clientToken, "program PULIH telah berakhir", "program PULIH telah berakhir, Anda dapat meilih untuk melanjutkan program atau berhenti dari program melalui aplikasi.")
   });
 }

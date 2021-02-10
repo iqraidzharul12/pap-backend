@@ -45,19 +45,19 @@ export const RegisterMail = {
 
 export const ChangePasswordEmail = {
   subject: "Password Berhasil Diubah",
-  body: "Password akun Anda telah berhasil diubah. \nJika Anda merasa tidak mengubah password Anda, hubungi kami di help@papprogram.com."
+  body: "Password akun Anda telah berhasil diubah. \nJika Anda merasa tidak mengubah password Anda, hubungi kami di pulihapp@gmail.com."
 }
 
 // export const ResetPasswordEmail = (url: string) => {
 //   return {
 //     subject: "Reset Password",
-//     body: `Password akun Anda akan direset dengan menggunakan link berikut: ${url}. \nJika Anda merasa tidak melakukan permintaan ini, hubungi kami di help@papprogram.com.`
+//     body: `Password akun Anda akan direset dengan menggunakan link berikut: ${url}. \nJika Anda merasa tidak melakukan permintaan ini, hubungi kami di pulihapp@gmail.com.`
 //   }
 // }
 
 export const SignedDocumentEmail = {
   subject: "Dokumen Persetujuan",
-  body: "Dokumen Persetujuan Anda telah berhasil ditanda tangani. \nJika Anda merasa tidak melakukan hal ini, hubungi kami di help@papprogram.com."
+  body: "Dokumen Persetujuan Anda telah berhasil ditanda tangani. \nJika Anda merasa tidak melakukan hal ini, hubungi kami di pulihapp@gmail.com."
 }
 
 export const ConfirmTestLabEmail = (testLab: TestLab) => {
@@ -69,7 +69,7 @@ export const ConfirmTestLabEmail = (testLab: TestLab) => {
 
 export const ConfirmTestEvidenceEmail = {
   subject: "Unggah Hasil Tes Laboratorium",
-  body: "Hasil tes laboratorium Anda telah berhasil diunggah. \nSilakan mengajukan program PAP di aplikasi."
+  body: "Hasil tes laboratorium Anda telah berhasil diunggah. \nSilakan mengajukan program PULIH di aplikasi."
 }
 
 export const ConfirmDrugsEmail = (pharmacy: Pharmacy) => {
@@ -81,12 +81,12 @@ export const ConfirmDrugsEmail = (pharmacy: Pharmacy) => {
 
 export const ContinueProgramEmail = {
   subject: "Perpanjangan Program",
-  body: "Program PAP Anda telah berhasil diperpanjang."
+  body: "program PULIH Anda telah berhasil diperpanjang."
 }
 
 export const TerminateProgramEmail = {
   subject: "Pemberhentian Program",
-  body: "Program PAP Anda telah diberhentikan."
+  body: "program PULIH Anda telah diberhentikan."
 }
 
 export const ResetPasswordEmail = (password: String) => {
