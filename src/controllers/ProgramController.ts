@@ -594,7 +594,7 @@ class ProgramController {
     try {
       const result = await repository.findOneOrFail({
         where: { id: id, status: 1, checkPoint: 5, isApproved: true, isDrugsTaken: true },
-        relations: ['patient', "doctor", "testLab", "programType"]
+        relations: ['patient', "doctor", "testLab", "programType", "pharmacy"]
       });
       if (result) {
         result.checkPoint = 6;
