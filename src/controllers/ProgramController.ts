@@ -97,6 +97,52 @@ class ProgramController {
     res.status(200).send(results);
   };
 
+  static historyProgram = async (req: Request, res: Response) => {
+
+    const bearerToken = <string>req.headers.authorization;
+    let token = ""
+    if (bearerToken) token = bearerToken.split(" ")[1];
+
+    let conditions = {}
+    let pharmacy: Pharmacy
+
+    //Try to validate the token and get data
+    try {
+      let jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+
+      const { userId, email, role } = jwtPayload;
+
+      if (role == "pharmacy") {
+        pharmacy = await getRepository(Pharmacy).findOneOrFail({
+          where: {
+            id: userId
+          }
+        })
+        conditions = { isApproved: true, pharmacy: pharmacy }
+      }
+    } catch (error) {
+      conditions = { isApproved: true, status: 1 }
+    }
+
+    //Get users from database
+    const repository = getRepository(Program);
+    const results = await repository.find({
+      where: conditions,
+      relations: [
+        "patient",
+        "doctor",
+        "programType",
+        "pharmacy",
+        "programEvidences",
+        "testLab",
+        "price",
+      ],
+    });
+
+    //Send the users object
+    res.status(200).send(results);
+  };
+
   static getOneById = async (req: Request, res: Response) => {
     //Get the ID from the url
     const id = req.params.id;
