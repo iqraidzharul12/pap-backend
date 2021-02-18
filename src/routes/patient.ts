@@ -6,6 +6,7 @@ const router = Router();
 
 //Get all data
 router.get("/", PatientController.listAll);
+router.get("/all", PatientController.getAllPatientData);
 
 // Get one data
 router.get("/:id", PatientController.getOneById);

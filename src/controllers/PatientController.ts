@@ -411,6 +411,53 @@ class PatientController {
 
     res.status(200).send({ data: "success" });
   };
+
+  static getAllPatientData = async (req: Request, res: Response) => {
+    //Get the user from database
+    const repository = getRepository(Patient);
+    const testLabRepository = getRepository(TestLab);
+    const programRepository = getRepository(Program);
+    const programTypeRepository = getRepository(ProgramType);
+    let patientList = []
+    try {
+      patientList = await repository.find({
+        where: { status: 1 }, order: {
+          createdAt: "ASC"
+        },
+        relations: ['programs', 'programs.doctor', 'programs.pharmacy', 'programs.prevProgram']
+      });
+    } catch (error) {
+      res.status(404).send({
+        error: false,
+        errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+
+    if(patientList && patientList.length){
+      for (let i = 0; i < patientList.length; i++) {
+        const patient = patientList[i];
+        if(patient.programs && patient.programs.length){
+          let activePrograms = patient.programs.filter((item)=> item.status === 1)
+          patient.programs = []
+          patient.program = activePrograms[0]
+          // }
+        }else{
+          patient.program = null
+        }
+      }
+      //Send the users object
+      res.status(200).send(patientList);
+    }else{
+      res.status(404).send({
+        error: false,
+        errorList: ["Data tidak ditemukan"],
+        data: null,
+      });
+      return;
+    }
+  };
 }
 
 export default PatientController;
