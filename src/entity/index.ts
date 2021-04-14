@@ -17,6 +17,7 @@ import { News } from "./News";
 import { Help } from "./Help";
 import { City } from "./City";
 import { TerminateReason } from "./TerminateReason";
+import { User } from "./User";
 
 export {
   Patient,
@@ -38,5 +39,6 @@ export {
   Help,
   City,
   TerminateReason,
+  User,
 };
 

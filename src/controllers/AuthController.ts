@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 
-import { Patient, Pharmacy, Program, ProgramType, TestLab, Verificator } from "../entity";
+import { Patient, Pharmacy, Program, ProgramType, TestLab, User, Verificator } from "../entity";
 import config from "../config/config";
 import { sendMail, ChangePasswordEmail, ResetPasswordEmail } from "../utils/mailer";
 import { randomString } from "../utils/String";
@@ -167,7 +167,52 @@ class AuthController {
       //Send the jwt in the response
       res.setHeader("Authorization", `Bearer ${token}`);
       res.status(200).send(pharmacy);
-    } else {
+    } else if (role && role.toLowerCase() === "dashboard"){
+      //Get user from database
+      const userRepository = getRepository(User);
+      let user: User;
+      try {
+        user = await userRepository.findOneOrFail({ where: { email } });
+      } catch (error) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid email"],
+          data: null,
+        });
+        return;
+      }
+
+      //Check if encrypted password match
+      if (!user.checkIfUnencryptedPasswordIsValid(password)) {
+        res.status(401).send({
+          error: true,
+          errorList: ["invalid password"],
+          data: null,
+        });
+        return;
+      }
+
+      //Sign JWT, valid for 1 hour
+      const token = jwt.sign(
+        { userId: user.id, email: user.email, role: user.role },
+        config.jwtSecret,
+        { expiresIn: "30d" }
+      );
+
+      delete user.password;
+
+      let response = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        accessToken: token
+      }
+
+      //Send the jwt in the response
+      res.setHeader("Authorization", `Bearer ${token}`);
+      res.status(200).send(response);
+    }
+    else {
       res.status(401).send({
         error: true,
         errorList: ["invalid email or password"],
